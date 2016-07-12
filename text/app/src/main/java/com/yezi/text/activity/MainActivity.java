@@ -75,4 +75,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void BezierClick(View view) {
         this.startActivity(new Intent(this,BezierActivity.class));
     }
+
+    public void DataBindingClick(View view) {
+        this.startActivity(new Intent(this,DataBindingActivity.class));
+    }
+
+    public void DataBindingClick2(View view) {
+        this.startActivity(new Intent(this,DataBinding2Activity.class));
+    }
 }

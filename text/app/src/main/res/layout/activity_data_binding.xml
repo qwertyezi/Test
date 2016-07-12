@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:bind="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <import type="android.view.View"/>
+
+        <variable
+            name="user"
+            type="com.yezi.text.module.User"/>
+
+        <variable
+            name="presenter"
+            type="com.yezi.text.activity.DataBindingActivity.Presenter"/>
+
+        <variable
+            name="gradient"
+            type="android.databinding.ObservableBoolean"/>
+    </data>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <ViewStub
+                android:id="@+id/view_stub"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout="@layout/viewstub_databinding"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@{user.firstName}"
+                />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@{user.lastName}"
+                />
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="@{presenter.onClick}"
+                android:text="点击"/>
+
+            <EditText
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onTextChanged="@{presenter.onTextChanged}"/>
+
+            <include
+                layout="@layout/include_data_binding"
+                bind:presenter="@{presenter}"
+                bind:user="@{user}"/>
+
+            <ProgressBar
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:fadeVisible="@{gradient.get()}"/>
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="@{presenter.onChangeGradientBoolean}"
+                android:text="控制进度条渐变动画"/>
+        </LinearLayout>
+
+    </ScrollView>
+
+
+</layout>
