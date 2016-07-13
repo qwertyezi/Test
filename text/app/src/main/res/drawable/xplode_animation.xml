@@ -3,20 +3,17 @@
                 android:oneshot="true">
     <item
         android:drawable="@drawable/idp"
-        android:duration="200"/>
+        android:duration="80"/>
     <item
         android:drawable="@drawable/idq"
-        android:duration="200"/>
+        android:duration="80"/>
     <item
         android:drawable="@drawable/idr"
-        android:duration="200"/>
+        android:duration="80"/>
     <item
         android:drawable="@drawable/ids"
-        android:duration="200"/>
+        android:duration="80"/>
     <item
         android:drawable="@drawable/idt"
-        android:duration="200"/>
-    <item
-        android:drawable="@android:color/transparent"
-        android:duration="200"/>
+        android:duration="80"/>
 </animation-list>

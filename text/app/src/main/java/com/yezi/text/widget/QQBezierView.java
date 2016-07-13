@@ -5,16 +5,19 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
+import android.graphics.PixelFormat;
 import android.graphics.PointF;
 import android.graphics.drawable.AnimationDrawable;
 import android.os.SystemClock;
 import android.util.AttributeSet;
+import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
 
 import com.yezi.text.R;
+import com.yezi.text.utils.ScreentUtil;
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -48,6 +51,7 @@ public class QQBezierView extends View {
     private BallState mBallState;
 
     private BallingRunnable mBallingRunnable;
+    private onExplodeListener mListener;
 
     public QQBezierView(Context context) {
         this(context, null);
@@ -64,10 +68,12 @@ public class QQBezierView extends View {
         init();
     }
 
-    private void init() {
-        TranslateX = getScreenWidth() / 2;
-        TranslateY = getScreenHeight() / 4;
+    public void setTranslate(float x, float y) {
+        TranslateX = x;
+        TranslateY = y;
+    }
 
+    private void init() {
         mPaint = new Paint();
         mPaint.setColor(Color.RED);
         mPaint.setDither(true);
@@ -91,7 +97,7 @@ public class QQBezierView extends View {
 
     @Override
     protected void onDraw(Canvas canvas) {
-        canvas.translate(TranslateX, TranslateY);
+        canvas.translate(TranslateX, TranslateY - ScreentUtil.getStatusBarHeight(mContext));
         switch (mBallState) {
             case STRETCH:
                 mPath.reset();
@@ -122,13 +128,13 @@ public class QQBezierView extends View {
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
             case MotionEvent.ACTION_MOVE:
-                mTouchPoint.x = event.getX() - TranslateX;
-                mTouchPoint.y = event.getY() - TranslateY;
+                mTouchPoint.x = event.getRawX() - TranslateX;
+                mTouchPoint.y = event.getRawY() - TranslateY;
                 judgeState(MotionEvent.ACTION_MOVE);
                 break;
             case MotionEvent.ACTION_UP:
-                mTouchUpPoint.x = event.getX() - TranslateX;
-                mTouchUpPoint.y = event.getY() - TranslateY;
+                mTouchUpPoint.x = event.getRawX() - TranslateX;
+                mTouchUpPoint.y = event.getRawY() - TranslateY;
                 judgeState(MotionEvent.ACTION_UP);
                 break;
         }
@@ -160,13 +166,14 @@ public class QQBezierView extends View {
         final WindowManager windowManager = (WindowManager) mContext.getSystemService(Context.WINDOW_SERVICE);
         final ImageView imageView = new ImageView(mContext);
         WindowManager.LayoutParams params = new WindowManager.LayoutParams();
-        params.alpha = 0.2f;
-        params.x = (int) mTouchUpPoint.x;
-        params.y = (int) (mTouchUpPoint.y - TranslateY / 2);
+        params.format = PixelFormat.RGBA_8888;
+        params.flags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE;
+        params.gravity = Gravity.LEFT | Gravity.TOP;
+        params.x = (int) (mTouchUpPoint.x + TranslateX - 35);
+        params.y = (int) (mTouchUpPoint.y + TranslateY - 35 - ScreentUtil.getStatusBarHeight(mContext));
         params.width = 70;
         params.height = 70;
         windowManager.addView(imageView, params);
-        imageView.setBackgroundColor(Color.GRAY);
         imageView.setImageResource(R.drawable.xplode_animation);
         ((AnimationDrawable) imageView.getDrawable()).start();
         new Timer().schedule(new TimerTask() {
@@ -174,10 +181,17 @@ public class QQBezierView extends View {
             public void run() {
                 ((AnimationDrawable) imageView.getDrawable()).stop();
                 windowManager.removeView(imageView);
-                mTouchPoint = new PointF(0, 0);
-                judgeState(MotionEvent.ACTION_MOVE);
+                mListener.onExplode();
             }
-        }, 1100);
+        }, 400);
+    }
+
+    public interface onExplodeListener {
+        void onExplode();
+    }
+
+    public void setOnExplodeListener(onExplodeListener listener) {
+        mListener = listener;
     }
 
     private void calculateBezierPoint() {
@@ -204,17 +218,6 @@ public class QQBezierView extends View {
         //
         mAssistPoint.x = mTouchPoint.x / 2;
         mAssistPoint.y = mTouchPoint.y / 2;
-        mBallState = BallState.STRETCH;
-    }
-
-    private int getScreenWidth() {
-        WindowManager windowManager = (WindowManager) mContext.getSystemService(Context.WINDOW_SERVICE);
-        return windowManager.getDefaultDisplay().getWidth();
-    }
-
-    private int getScreenHeight() {
-        WindowManager windowManager = (WindowManager) mContext.getSystemService(Context.WINDOW_SERVICE);
-        return windowManager.getDefaultDisplay().getHeight();
     }
 
     class BallingRunnable implements Runnable {
@@ -265,6 +268,7 @@ public class QQBezierView extends View {
                 }
 
                 mIsFinished = true;
+                mListener.onExplode();
             }
         }
 
