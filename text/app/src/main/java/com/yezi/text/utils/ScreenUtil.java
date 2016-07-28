@@ -5,7 +5,7 @@ import android.content.Context;
 import android.graphics.Rect;
 import android.view.WindowManager;
 
-public class ScreentUtil {
+public class ScreenUtil {
 
     public static int getScreenWidth(Context context) {
         WindowManager windowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);

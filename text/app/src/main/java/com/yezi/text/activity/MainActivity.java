@@ -83,4 +83,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void DataBindingClick2(View view) {
         this.startActivity(new Intent(this,DataBinding2Activity.class));
     }
+
+    public void TouchClick(View view) {
+        this.startActivity(new Intent(this,TouchActivity.class));
+    }
 }

@@ -11,7 +11,7 @@ import android.view.WindowManager;
 import android.widget.FrameLayout;
 
 import com.yezi.text.R;
-import com.yezi.text.utils.ScreentUtil;
+import com.yezi.text.utils.ScreenUtil;
 import com.yezi.text.widget.QQBezierView;
 
 public class QQBezierAdapter extends RecyclerView.Adapter<QQBezierAdapter.QQBezierVH> {
@@ -50,8 +50,8 @@ public class QQBezierAdapter extends RecyclerView.Adapter<QQBezierAdapter.QQBezi
                     switch (event.getAction()) {
                         case MotionEvent.ACTION_DOWN:
                             mLayout.requestDisallowInterceptTouchEvent(true);
-                            params.width = ScreentUtil.getScreenWidth(v.getContext());
-                            params.height = ScreentUtil.getScreenHeight(v.getContext());
+                            params.width = ScreenUtil.getScreenWidth(v.getContext());
+                            params.height = ScreenUtil.getScreenHeight(v.getContext());
                             params.format = PixelFormat.RGBA_8888;
                             params.flags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE;
                             int[] location = new int[2];

@@ -17,7 +17,7 @@ import android.view.WindowManager;
 import android.widget.ImageView;
 
 import com.yezi.text.R;
-import com.yezi.text.utils.ScreentUtil;
+import com.yezi.text.utils.ScreenUtil;
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -97,7 +97,7 @@ public class QQBezierView extends View {
 
     @Override
     protected void onDraw(Canvas canvas) {
-        canvas.translate(TranslateX, TranslateY - ScreentUtil.getStatusBarHeight(mContext));
+        canvas.translate(TranslateX, TranslateY - ScreenUtil.getStatusBarHeight(mContext));
         switch (mBallState) {
             case STRETCH:
                 mPath.reset();
@@ -170,7 +170,7 @@ public class QQBezierView extends View {
         params.flags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE;
         params.gravity = Gravity.LEFT | Gravity.TOP;
         params.x = (int) (mTouchUpPoint.x + TranslateX - 35);
-        params.y = (int) (mTouchUpPoint.y + TranslateY - 35 - ScreentUtil.getStatusBarHeight(mContext));
+        params.y = (int) (mTouchUpPoint.y + TranslateY - 35 - ScreenUtil.getStatusBarHeight(mContext));
         params.width = 70;
         params.height = 70;
         windowManager.addView(imageView, params);
