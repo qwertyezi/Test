@@ -89,6 +89,13 @@
             android:onClick="TouchClick"
             android:text="Touch"/>
 
+        <Button
+            android:id="@+id/btn_okhttp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="OkHttpClick"
+            android:text="OkHttp"/>
+
     </LinearLayout>
 </ScrollView>
 

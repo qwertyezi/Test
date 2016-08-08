@@ -43,6 +43,7 @@
         <activity android:name=".activity.DataBinding2Activity"/>
         <activity android:name=".activity.QQBezierListActivity"/>
         <activity android:name=".activity.TouchActivity"/>
+        <activity android:name=".activity.OkHttpActivity"/>
     </application>
 
 </manifest>

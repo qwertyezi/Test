@@ -87,4 +87,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void TouchClick(View view) {
         this.startActivity(new Intent(this,TouchActivity.class));
     }
+
+    public void OkHttpClick(View view) {
+        this.startActivity(new Intent(this,OkHttpActivity.class));
+    }
 }
