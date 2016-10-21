@@ -9,8 +9,8 @@ import com.yezi.text.activity.MyFragment;
 
 public class MyViewpagerAdapter extends FragmentPagerAdapter {
 
-    private static final String[] titles = new String[]{"page1", "page2", "page3", "page4",
-            "page5", "page6", "page7", "page8"};
+    private static final String[] titles = new String[]{"对方水电费", "都是", "水电费水电费水电费是", "豆腐坊",
+            "是的是的所", "都是", "水淀粉收多少", "是多少"};
 
     public MyViewpagerAdapter(FragmentManager fm) {
         super(fm);

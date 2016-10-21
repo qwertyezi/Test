@@ -23,7 +23,6 @@ import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.database.DataSetObserver;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
@@ -55,6 +54,7 @@ import android.view.ViewGroup;
 import android.view.ViewParent;
 import android.view.accessibility.AccessibilityEvent;
 import android.view.accessibility.AccessibilityNodeInfo;
+import android.widget.FrameLayout;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -70,6 +70,7 @@ import java.util.Iterator;
 import static android.support.v4.view.ViewPager.SCROLL_STATE_DRAGGING;
 import static android.support.v4.view.ViewPager.SCROLL_STATE_IDLE;
 import static android.support.v4.view.ViewPager.SCROLL_STATE_SETTLING;
+import static com.yezi.text.R.id.view;
 
 /**
  * TabLayout provides a horizontal layout to display tabs.
@@ -248,6 +249,7 @@ public class MyTabLayout extends HorizontalScrollView {
 
     int mTabTextAppearance;
     ColorStateList mTabTextColors;
+    int mTabSelectedColor;
     float mTabTextSize;
     float mTabTextMultiLineSize;
 
@@ -343,6 +345,7 @@ public class MyTabLayout extends HorizontalScrollView {
             // current colors. This is exposed so that developers can use theme attributes to set
             // this (theme attrs in ColorStateLists are Lollipop+)
             final int selected = a.getColor(R.styleable.TabLayout_tabSelectedTextColor, 0);
+            mTabSelectedColor = selected;
             mTabTextColors = createColorStateList(mTabTextColors.getDefaultColor(), selected);
         }
 
@@ -419,7 +422,7 @@ public class MyTabLayout extends HorizontalScrollView {
 
         // Update the 'selected state' view as we scroll, if enabled
         if (updateSelectedText) {
-            setSelectedTabView(roundedPosition);
+//            setSelectedTabView(roundedPosition);
         }
     }
 
@@ -1098,10 +1101,21 @@ public class MyTabLayout extends HorizontalScrollView {
 
     private void setSelectedTabView(int position) {
         final int tabCount = mTabStrip.getChildCount();
+        TextView colorTextView;
+        TextView textView;
+        LayoutParams lp;
         if (position < tabCount) {
             for (int i = 0; i < tabCount; i++) {
                 final View child = mTabStrip.getChildAt(i);
                 child.setSelected(i == position);
+
+                colorTextView = ((TabView) child).getColorTextView();
+                textView = ((TabView) child).getTextView();
+                colorTextView.setX(textView.getX());
+                colorTextView.setY(textView.getY());
+                lp = (LayoutParams) colorTextView.getLayoutParams();
+                lp.width = i == position ? textView.getWidth() : 0;
+                colorTextView.setLayoutParams(lp);
             }
         }
     }
@@ -1478,9 +1492,10 @@ public class MyTabLayout extends HorizontalScrollView {
         }
     }
 
-    class TabView extends LinearLayout implements OnLongClickListener {
+    class TabView extends FrameLayout implements OnLongClickListener {
         private Tab mTab;
         private TextView mTextView;
+        private TextView mColorTextView;
         private ImageView mIconView;
 
         private View mCustomView;
@@ -1496,9 +1511,15 @@ public class MyTabLayout extends HorizontalScrollView {
             }
             ViewCompat.setPaddingRelative(this, mTabPaddingStart, mTabPaddingTop,
                     mTabPaddingEnd, mTabPaddingBottom);
-            setGravity(Gravity.CENTER);
-            setOrientation(VERTICAL);
             setClickable(true);
+        }
+
+        public TextView getColorTextView() {
+            return mColorTextView;
+        }
+
+        public TextView getTextView() {
+            return mTextView;
         }
 
         @Override
@@ -1613,6 +1634,8 @@ public class MyTabLayout extends HorizontalScrollView {
                     if (updateTextView) {
                         mTextView.setTextSize(TypedValue.COMPLEX_UNIT_PX, textSize);
                         mTextView.setMaxLines(maxLines);
+                        mColorTextView.setTextSize(TypedValue.COMPLEX_UNIT_PX, textSize);
+                        mColorTextView.setMaxLines(maxLines);
                         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
                     }
                 }
@@ -1645,6 +1668,7 @@ public class MyTabLayout extends HorizontalScrollView {
                 mCustomView = custom;
                 if (mTextView != null) {
                     mTextView.setVisibility(GONE);
+                    mColorTextView.setVisibility(GONE);
                 }
                 if (mIconView != null) {
                     mIconView.setVisibility(GONE);
@@ -1679,13 +1703,29 @@ public class MyTabLayout extends HorizontalScrollView {
                             .inflate(R.layout.design_layout_tab_text, this, false);
                     addView(textView);
                     mTextView = textView;
-                    mDefaultMaxLines = TextViewCompat.getMaxLines(mTextView);
+                    LayoutParams lp = (LayoutParams) mTextView.getLayoutParams();
+                    lp.gravity = Gravity.CENTER;
+                    mTextView.setLayoutParams(lp);
+
+                    mColorTextView=new TextView(getContext());
+                    mColorTextView.setLines(1);
+                    addView(mColorTextView);
+                    LayoutParams lp2 = (LayoutParams) mColorTextView.getLayoutParams();
+                    lp2.width = 0;
+                    mColorTextView.setLayoutParams(lp2);
                 }
                 mTextView.setTextAppearance(getContext(), mTabTextAppearance);
+                mColorTextView.setTextAppearance(getContext(), mTabTextAppearance);
                 if (mTabTextColors != null) {
-                    mTextView.setTextColor(mTabTextColors);
+                    mTextView.setTextColor(mTabTextColors.getDefaultColor());
+                    if (mTabSelectedColor != 0) {
+                        mColorTextView.setTextColor(mTabSelectedColor);
+                    } else {
+                        mColorTextView.setTextColor(mTabTextColors);
+                    }
                 }
                 updateTextAndIcon(mTextView, mIconView);
+                updateTextAndIcon(mColorTextView, mIconView);
             } else {
                 // Else, we'll see if there is a TextView or ImageView present and update them
                 if (mCustomTextView != null || mCustomIconView != null) {
@@ -1842,6 +1882,61 @@ public class MyTabLayout extends HorizontalScrollView {
             mSelectedPosition = position;
             mSelectionOffset = positionOffset;
             updateIndicatorPosition();
+            updateColorTextPosition();
+        }
+
+        View view, nextView;
+        TextView text, nextText;
+        TextView colorText, nextColorText;
+        FrameLayout.LayoutParams lp, nextLp;
+        int left, right;
+        int nextLeft, nextRight;
+
+        void updateColorTextPosition() {
+            view = nextView = null;
+            text = nextText = colorText = nextColorText = null;
+            lp = nextLp = null;
+            left = right = nextLeft = nextRight = 0;
+
+            view = getChildAt(mSelectedPosition);
+            text = ((TabView) view).getTextView();
+            colorText = ((TabView) view).getColorTextView();
+            left = view.getLeft() + text.getLeft();
+            right = view.getLeft() + text.getRight();
+            lp = (FrameLayout.LayoutParams) colorText.getLayoutParams();
+
+            colorText.setX(text.getX());
+            colorText.setY(text.getY());
+
+            if (mIndicatorLeft > left && mIndicatorLeft < right) {
+                lp.width = right - mIndicatorLeft;
+            } else if (mIndicatorLeft <= left) {
+                lp.width = text.getWidth();
+            } else {
+                lp.width = 0;
+            }
+            colorText.setLayoutParams(lp);
+
+            if (mSelectionOffset > 0f && mSelectedPosition < getChildCount() - 1) {
+                nextView = getChildAt(mSelectedPosition + 1);
+                nextText = ((TabView) nextView).getTextView();
+                nextColorText = ((TabView) nextView).getColorTextView();
+                nextLeft = nextView.getLeft() + nextText.getLeft();
+                nextRight = nextView.getLeft() + nextText.getRight();
+                nextLp = (FrameLayout.LayoutParams) nextColorText.getLayoutParams();
+
+                nextColorText.setX(nextText.getX());
+                nextColorText.setY(nextText.getY());
+
+                if (mIndicatorRight > nextLeft && mIndicatorRight < nextRight) {
+                    nextLp.width = mIndicatorRight - nextLeft;
+                } else if (mIndicatorRight >= nextRight) {
+                    nextLp.width = nextText.getWidth();
+                } else {
+                    nextLp.width = 0;
+                }
+                nextColorText.setLayoutParams(nextLp);
+            }
         }
 
         float getIndicatorPosition() {
