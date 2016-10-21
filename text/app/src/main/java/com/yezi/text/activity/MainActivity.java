@@ -1,10 +1,11 @@
 package com.yezi.text.activity;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 
 import com.yezi.text.R;
 import com.yezi.text.widget.MyRecycleview;
@@ -18,6 +19,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private Button btLikeAnimation;
     private Button btAnnotationProcessing;
     private Button btCalendar;
+    private TextView mTextRxJava;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,8 +31,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         btStartUpAnimation = (Button) findViewById(R.id.canvas);
         btImageLoader = (Button) findViewById(R.id.imageloader);
         btLikeAnimation = (Button) findViewById(R.id.likeanimation);
-        btAnnotationProcessing=(Button) findViewById(R.id.annotationProcessing);
-        btCalendar=(Button)findViewById(R.id.btn_calendar);
+        btAnnotationProcessing = (Button) findViewById(R.id.annotationProcessing);
+        btCalendar = (Button) findViewById(R.id.btn_calendar);
 
         btSearch.setOnClickListener(this);
         btRecycleview.setOnClickListener(this);
@@ -73,22 +75,30 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     public void BezierClick(View view) {
-        this.startActivity(new Intent(this,BezierActivity.class));
+        this.startActivity(new Intent(this, BezierActivity.class));
     }
 
     public void DataBindingClick(View view) {
-        this.startActivity(new Intent(this,DataBindingActivity.class));
+        this.startActivity(new Intent(this, DataBindingActivity.class));
     }
 
     public void DataBindingClick2(View view) {
-        this.startActivity(new Intent(this,DataBinding2Activity.class));
+        this.startActivity(new Intent(this, DataBinding2Activity.class));
     }
 
     public void TouchClick(View view) {
-        this.startActivity(new Intent(this,TouchActivity.class));
+        this.startActivity(new Intent(this, TouchActivity.class));
     }
 
     public void OkHttpClick(View view) {
-        this.startActivity(new Intent(this,OkHttpActivity.class));
+        this.startActivity(new Intent(this, OkHttpActivity.class));
+    }
+
+    public void TransformClick(View view) {
+        this.startActivity(new Intent(this, TransformActivity.class));
+    }
+
+    public void MyTabLayoutClick(View view) {
+        this.startActivity(new Intent(this,MyTabLayoutActivity.class));
     }
 }

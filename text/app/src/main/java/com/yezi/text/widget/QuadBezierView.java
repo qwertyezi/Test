@@ -43,7 +43,7 @@ public class QuadBezierView extends View {
         mEndPoint = new Point(900, 300);
         mAssistPoint = new Point(600, 600);
 
-        mPath=new Path();
+        mPath = new Path();
 
     }
 

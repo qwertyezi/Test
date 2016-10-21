@@ -44,6 +44,7 @@
         <activity android:name=".activity.QQBezierListActivity"/>
         <activity android:name=".activity.TouchActivity"/>
         <activity android:name=".activity.OkHttpActivity"/>
+        <activity android:name=".activity.MyTabLayoutActivity"/>
     </application>
 
 </manifest>

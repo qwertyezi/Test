@@ -96,6 +96,20 @@
             android:onClick="OkHttpClick"
             android:text="OkHttp"/>
 
+        <Button
+            android:id="@+id/btn_transform"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="TransformClick"
+            android:text="btn_transform"/>
+
+        <Button
+            android:id="@+id/btn_mytablayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="MyTabLayoutClick"
+            android:text="btn_mytablayout"/>
+
     </LinearLayout>
 </ScrollView>
 
