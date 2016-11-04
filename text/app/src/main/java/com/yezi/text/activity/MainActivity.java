@@ -99,6 +99,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     public void MyTabLayoutClick(View view) {
-        this.startActivity(new Intent(this,MyTabLayoutActivity.class));
+        this.startActivity(new Intent(this, MyTabLayoutActivity.class));
+    }
+
+    public void RotatePagerClick(View view) {
+        this.startActivity(new Intent(this, RotatePagerTestActivity.class));
     }
 }

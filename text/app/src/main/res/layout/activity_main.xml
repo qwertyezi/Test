@@ -110,6 +110,13 @@
             android:onClick="MyTabLayoutClick"
             android:text="btn_mytablayout"/>
 
+        <Button
+            android:id="@+id/btn_RotatePager"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="RotatePagerClick"
+            android:text="RotatePager"/>
+
     </LinearLayout>
 </ScrollView>
 

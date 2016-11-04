@@ -6,6 +6,9 @@ import android.content.res.Resources;
 import android.support.annotation.StringRes;
 import android.widget.Toast;
 
+import com.facebook.drawee.backends.pipeline.Fresco;
+import com.facebook.imagepipeline.core.ImagePipelineConfig;
+
 public class TextApp extends Application {
     private static Context sAppContext;
 
@@ -13,6 +16,11 @@ public class TextApp extends Application {
     public void onCreate() {
         super.onCreate();
         sAppContext = getApplicationContext();
+
+        ImagePipelineConfig config = ImagePipelineConfig.newBuilder(sAppContext)
+                .setDownsampleEnabled(true)
+                .build();
+        Fresco.initialize(this, config);
     }
 
 
