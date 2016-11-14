@@ -11,10 +11,6 @@ import com.facebook.drawee.view.SimpleDraweeView;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by yezi on 16-11-4.
- */
-
 public class RotatePagerAdapter extends BaseAdapter {
 
     private static final int IMAGE_WIDTH = 300;

@@ -3,13 +3,12 @@ package com.yezi.text.widget.RotatePager;
 import android.content.Context;
 import android.database.DataSetObserver;
 import android.util.AttributeSet;
+import android.view.Gravity;
+import android.view.MotionEvent;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.HorizontalScrollView;
 import android.widget.LinearLayout;
-
-/**
- * Created by yezi on 16-11-4.
- */
 
 public class RotatePager extends HorizontalScrollView {
 
@@ -55,6 +54,13 @@ public class RotatePager extends HorizontalScrollView {
     }
 
     @Override
+    public boolean onTouchEvent(MotionEvent ev) {
+        return super.onTouchEvent(ev);
+    }
+
+
+
+    @Override
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
         if (mRotatePagerAdapter != null) {
@@ -67,6 +73,12 @@ public class RotatePager extends HorizontalScrollView {
         public void onChanged() {
             for (int i = 0; i < mRotatePagerAdapter.getCount(); i++) {
                 mLinearLayout.addView(mRotatePagerAdapter.getView(i, null, mLinearLayout));
+            }
+            for (int i = 0; i < mLinearLayout.getChildCount(); i++) {
+                View view = mLinearLayout.getChildAt(i);
+                LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams) view.getLayoutParams();
+                lp.gravity = Gravity.CENTER_VERTICAL;
+                view.setLayoutParams(lp);
             }
         }
     };
