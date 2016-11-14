@@ -6,15 +6,11 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 
 import com.facebook.common.util.UriUtil;
-import com.facebook.drawee.view.SimpleDraweeView;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class RotatePagerAdapter extends BaseAdapter {
-
-    private static final int IMAGE_WIDTH = 300;
-    private static final int DELTA = 30;
 
     private List<String> mData;
     private Context mContext;
@@ -49,21 +45,11 @@ public class RotatePagerAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        SimpleDraweeView simpleDraweeView = new SimpleDraweeView(mContext);
-        ViewGroup.LayoutParams lp = new ViewGroup.LayoutParams(
-                getImageWidthByPosition(position), getImageWidthByPosition(position));
-        simpleDraweeView.setLayoutParams(lp);
-        simpleDraweeView.setImageURI(UriUtil.parseUriOrNull(mData.get(position)));
-        return simpleDraweeView;
+        WrappingImage image = new WrappingImage(mContext);
+        image.setPosition(position);
+        image.setCount(getCount());
+        image.setImageURI(UriUtil.parseUriOrNull(mData.get(position)));
+        return image;
     }
 
-    private int getImageWidthByPosition(int position) {
-        int distancePosition;
-        if (position % 2 == 0) {
-            distancePosition = Math.abs(mData.size() / 2 - position);
-        } else {
-            distancePosition = Math.abs((mData.size() + 1) / 2 - position - 1);
-        }
-        return IMAGE_WIDTH - DELTA * distancePosition;
-    }
 }
