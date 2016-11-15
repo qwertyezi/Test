@@ -15,6 +15,7 @@ import android.widget.FrameLayout;
 public class RotatePager extends FrameLayout {
 
     private static final int ANIMATOR_TIME = 200;
+    private static final int DISTANCE = 20;
 
     private RotatePagerAdapter mRotatePagerAdapter;
 
@@ -39,9 +40,10 @@ public class RotatePager extends FrameLayout {
         mRotatePagerAdapter.registerDataSetObserver(mRotatePagerDataSetObserver);
     }
 
+    int downX, downY, upX, upY;
+
     @Override
     public boolean dispatchTouchEvent(MotionEvent ev) {
-        int downX = 0, downY = 0, upX = 0, upY = 0;
         switch (ev.getAction()) {
             case MotionEvent.ACTION_DOWN:
                 downX = (int) ev.getX();
@@ -50,36 +52,13 @@ public class RotatePager extends FrameLayout {
             case MotionEvent.ACTION_UP:
                 upX = (int) ev.getX();
                 upY = (int) ev.getY();
+                if (downX - upX> DISTANCE) {
+                    moveOneStep();
+                    return true;
+                }
                 break;
         }
-        if (Math.abs(downX - upX) < dp2px(getContext(), 3) &&
-                Math.abs(downY - upY) < dp2px(getContext(), 3)) {
-            return super.dispatchTouchEvent(ev);
-        } else {
-            return true;
-        }
-    }
-
-    public static int dp2px(Context context, float dpValue) {
-        final float scale = context.getResources().getDisplayMetrics().density;
-        return (int) (dpValue * scale + 0.5f);
-    }
-
-    @Override
-    public boolean onTouchEvent(MotionEvent ev) {
-        int downX = 0, upX = 0;
-        switch (ev.getAction()) {
-            case MotionEvent.ACTION_DOWN:
-                downX = (int) ev.getX();
-                break;
-            case MotionEvent.ACTION_UP:
-                upX = (int) ev.getX();
-                break;
-        }
-        if (upX - downX > 20) {
-            moveOneStep();
-        }
-        return true;
+        return super.dispatchTouchEvent(ev);
     }
 
     private void moveOneStep() {
@@ -97,7 +76,7 @@ public class RotatePager extends FrameLayout {
 
         image.setPosition(0);
         removeView(image);
-        addView(image);
+        addView(image,0);
 
         ValueAnimator positionAni = getAnimator(image, true, image.getImageLastLeft(), image.getImageLeft());
         ValueAnimator widthAni = getAnimator(image, false,
