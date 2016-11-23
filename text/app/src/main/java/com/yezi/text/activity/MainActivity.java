@@ -105,4 +105,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void RotatePagerClick(View view) {
         this.startActivity(new Intent(this, RotatePagerTestActivity.class));
     }
+
+    public void ImageViewClick(View view) {
+        this.startActivity(new Intent(this,ImageViewActivity.class));
+    }
 }

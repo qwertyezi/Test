@@ -46,6 +46,7 @@
         <activity android:name=".activity.OkHttpActivity"/>
         <activity android:name=".activity.MyTabLayoutActivity"/>
         <activity android:name=".activity.RotatePagerTestActivity"/>
+        <activity android:name=".activity.ImageViewActivity"/>
     </application>
 
 </manifest>
