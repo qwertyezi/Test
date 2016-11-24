@@ -107,6 +107,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     public void ImageViewClick(View view) {
-        this.startActivity(new Intent(this,ImageViewActivity.class));
+        this.startActivity(new Intent(this, ImageViewActivity.class));
+    }
+
+    public void SpringRecyclerViewClick(View view) {
+        this.startActivity(new Intent(this, SpringRecyclerViewActivity.class));
     }
 }
