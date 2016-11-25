@@ -14,6 +14,8 @@ import android.view.MotionEvent;
 import android.view.VelocityTracker;
 import android.view.View;
 
+import java.lang.reflect.Field;
+
 public class SpringRecyclerView extends RecyclerView {
 
     private static final float SCALE_FACTOR = 0.1f;
@@ -22,7 +24,7 @@ public class SpringRecyclerView extends RecyclerView {
 
     private int mMaxLength;
     private LinearLayoutManager mLayoutManager;
-    private boolean mDoScaling;
+    private boolean mDoAnimation;
     private VelocityTracker mVelocityTracker;
     private float downY, moveY, mVelocity, mScale = 1.0f;
 
@@ -60,8 +62,8 @@ public class SpringRecyclerView extends RecyclerView {
             case MotionEvent.ACTION_MOVE:
                 moveY = e.getY();
 
-                if ((mLayoutManager.findLastCompletelyVisibleItemPosition() == mLayoutManager.getItemCount() - 1 || isScaled())
-                        && moveY < downY && downY - moveY < mMaxLength && !mDoScaling) {
+                if (mLayoutManager.findLastCompletelyVisibleItemPosition() == mLayoutManager.getItemCount() - 1
+                        && moveY < downY && downY - moveY < mMaxLength && !mDoAnimation) {
                     mScale = (downY - moveY) / mMaxLength * SCALE_FACTOR + 1.0f;
                     if (mScale - 1.0f < 0.01f)
                         mScale = 1.0f;
@@ -69,8 +71,8 @@ public class SpringRecyclerView extends RecyclerView {
                     setPivotY(getBottom());
                     setScaleY(mScale);
                 }
-                if ((mLayoutManager.findFirstCompletelyVisibleItemPosition() == 0 || isScaled())
-                        && moveY > downY && moveY - downY < mMaxLength && !mDoScaling) {
+                if (mLayoutManager.findFirstCompletelyVisibleItemPosition() == 0
+                        && moveY > downY && moveY - downY < mMaxLength && !mDoAnimation) {
                     mScale = (moveY - downY) / mMaxLength * SCALE_FACTOR + 1.0f;
                     if (mScale - 1.0f < 0.01f)
                         mScale = 1.0f;
@@ -81,10 +83,11 @@ public class SpringRecyclerView extends RecyclerView {
                 break;
             case MotionEvent.ACTION_UP:
             case MotionEvent.ACTION_CANCEL:
-                if (isScaled()) {
+                if (isScaled() && !mDoAnimation) {
                     backToNoScale();
                 }
                 downY = moveY = 0.0f;
+                mScale = 1.0f;
                 break;
         }
 
@@ -106,16 +109,18 @@ public class SpringRecyclerView extends RecyclerView {
     private void doScaleAnimation(boolean isFling, boolean isHeader, float... values) {
         ObjectAnimator animator = ObjectAnimator.ofFloat(this, View.SCALE_Y, values);
         animator.setDuration(isFling ? 2 * SCALE_TIME : SCALE_TIME);
-//        animator.setInterpolator(new AccelerateDecelerateInterpolator());
         animator.addListener(new AnimatorListenerAdapter() {
             @Override
             public void onAnimationStart(Animator animation) {
-                mDoScaling = true;
+                mDoAnimation = true;
             }
 
             @Override
             public void onAnimationEnd(Animator animation) {
-                mDoScaling = false;
+                mDoAnimation = false;
+
+                changeRVScrollState();
+                //用于结束动画后将RV中的mScrollState置为SCROLL_STATE_IDLE，不然将会出现动画结束后第一次点击条目失效的Bug
             }
         });
         ObjectAnimator pivotX = ObjectAnimator.ofFloat(this, "pivotX", (getRight() - getLeft()) / 2);
@@ -126,11 +131,23 @@ public class SpringRecyclerView extends RecyclerView {
         animatorSet.start();
     }
 
+    private void changeRVScrollState() {
+        Class<?> clazz = getClass().getSuperclass();
+        try {
+            Field mScrollState = clazz.getDeclaredField("mScrollState");
+            mScrollState.setAccessible(true);
+            mScrollState.set(this, RecyclerView.SCROLL_STATE_IDLE);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
     private OnScrollListener mOnScrollListener = new OnScrollListener() {
         @Override
         public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
             super.onScrollStateChanged(recyclerView, newState);
-            if (mDoScaling && newState == RecyclerView.SCROLL_STATE_IDLE && (mLayoutManager.findFirstCompletelyVisibleItemPosition() == 0 ||
+            if (newState == RecyclerView.SCROLL_STATE_IDLE && (mLayoutManager.findFirstCompletelyVisibleItemPosition() == 0 ||
                     mLayoutManager.findLastCompletelyVisibleItemPosition() == mLayoutManager.getItemCount() - 1)) {
                 mVelocityTracker.computeCurrentVelocity(1000);
                 mVelocity = Math.abs(mVelocityTracker.getYVelocity());
