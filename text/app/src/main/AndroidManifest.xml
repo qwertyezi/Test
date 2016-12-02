@@ -48,6 +48,8 @@
         <activity android:name=".activity.RotatePagerTestActivity"/>
         <activity android:name=".activity.ImageViewActivity"/>
         <activity android:name=".activity.SpringRecyclerViewActivity"/>
+        <activity android:name=".activity.Dagger2Activity"/>
+        <activity android:name=".activity.Dagger2OtherActivity"/>
     </application>
 
 </manifest>

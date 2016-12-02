@@ -1,5 +1,6 @@
 package com.yezi.text.activity;
 
+import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -112,5 +113,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     public void SpringRecyclerViewClick(View view) {
         this.startActivity(new Intent(this, SpringRecyclerViewActivity.class));
+    }
+
+    public void DatePickerDialogClick(View view) {
+        new DatePickerDialog(this, null, 2016, 12, 1).show();
+    }
+
+    public void Dagger2Click(View view) {
+        this.startActivity(new Intent(this, Dagger2Activity.class));
     }
 }

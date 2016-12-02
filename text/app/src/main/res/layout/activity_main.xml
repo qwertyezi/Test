@@ -131,6 +131,20 @@
             android:onClick="SpringRecyclerViewClick"
             android:text="SpringRecyclerView"/>
 
+        <Button
+            android:id="@+id/btn_DatePickerDialog"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="DatePickerDialogClick"
+            android:text="DatePickerDialog"/>
+
+        <Button
+            android:id="@+id/btn_Dagger2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="Dagger2Click"
+            android:text="Dagger2"/>
+
     </LinearLayout>
 </ScrollView>
 
