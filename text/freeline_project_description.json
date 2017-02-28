@@ -1,0 +1,149 @@
+{
+    "android_gradle_plugin_version": "2.2.3",
+    "apk_path": "X:\\WorkSpace\\Owner\\Test\\text\\TestCge\\build\\outputs\\apk\\TestCge-debug.apk",
+    "apt": {
+        
+    },
+    "apt_libraries": {
+        "dagger": false,
+        "butterknife": false
+    },
+    "auto_dependency": true,
+    "build_cache_dir": "X:\\WorkSpace\\Owner\\Test\\text\\TestCge\\build\\freeline",
+    "build_directory": "X:\\WorkSpace\\Owner\\Test\\text\\TestCge\\build",
+    "build_script": "gradlew.bat :TestCge:assembleDebug",
+    "build_script_work_directory": "",
+    "build_tools_directory": "X:\\SDK\\build-tools\\25.0.2",
+    "build_tools_version": "25.0.2",
+    "check_sources_md5": [
+        
+    ],
+    "compile_sdk_directory": "X:\\SDK\\platforms\\android-25",
+    "compile_sdk_version": "android-25",
+    "databinding": [
+        
+    ],
+    "databinding_compiler_jar": "",
+    "databinding_modules": [
+        
+    ],
+    "debug_package": "com.yezi.testcge",
+    "exclude_dep_res_paths": [
+        
+    ],
+    "extra_dep_res_paths": [
+        
+    ],
+    "freeline_cache_dir": "X:\\WorkSpace\\Owner\\Test\\text",
+    "freeline_gradle_plugin_version": "0.8.6",
+    "ignore_resource_ids": [
+        "avd_hide_password_1",
+        "avd_hide_password_2",
+        "avd_hide_password_3",
+        "avd_show_password_1",
+        "avd_show_password_2",
+        "avd_show_password_3"
+    ],
+    "java_home": "X:\\JDK",
+    "launcher": "com.yezi.testcge.FullscreenActivity",
+    "main_assets_directory": [
+        "X:\\WorkSpace\\Owner\\Test\\text\\TestCge\\src\\debug\\assets",
+        "X:\\WorkSpace\\Owner\\Test\\text\\TestCge\\src\\main\\assets"
+    ],
+    "main_jniLibs_directory": [
+        "X:\\WorkSpace\\Owner\\Test\\text\\TestCge\\src\\debug\\jniLibs",
+        "X:\\WorkSpace\\Owner\\Test\\text\\TestCge\\src\\main\\jniLibs"
+    ],
+    "main_jni_directory": [
+        "X:\\WorkSpace\\Owner\\Test\\text\\TestCge\\src\\debug\\jni",
+        "X:\\WorkSpace\\Owner\\Test\\text\\TestCge\\src\\main\\jni"
+    ],
+    "main_manifest_path": "X:\\WorkSpace\\Owner\\Test\\text\\TestCge\\src\\main\\AndroidManifest.xml",
+    "main_project_dir": "TestCge",
+    "main_project_name": "TestCge",
+    "main_r_path": "X:\\WorkSpace\\Owner\\Test\\text\\TestCge\\build\\generated\\source\\r\\debug\\R.java",
+    "main_res_directory": [
+        "X:\\WorkSpace\\Owner\\Test\\text\\TestCge\\src\\debug\\res",
+        "X:\\WorkSpace\\Owner\\Test\\text\\TestCge\\src\\main\\res"
+    ],
+    "main_src_directory": [
+        "X:\\WorkSpace\\Owner\\Test\\text\\TestCge\\src\\debug\\java",
+        "X:\\WorkSpace\\Owner\\Test\\text\\TestCge\\src\\main\\java"
+    ],
+    "module_dependencies": {
+        "TestCge": [
+            "gpuimageplus"
+        ],
+        "gpuimageplus": [
+            
+        ]
+    },
+    "modules": [
+        {
+            "name": "TestCge",
+            "path": "X:\\WorkSpace\\Owner\\Test\\text\\TestCge"
+        },
+        {
+            "name": "gpuimageplus",
+            "path": "X:\\WorkSpace\\Owner\\Test\\text\\library\\gpuimageplus"
+        }
+    ],
+    "package": "com.yezi.testcge",
+    "product_flavor": "",
+    "project_source_sets": {
+        "TestCge": {
+            "main_assets_directory": [
+                "X:\\WorkSpace\\Owner\\Test\\text\\TestCge\\src\\debug\\assets",
+                "X:\\WorkSpace\\Owner\\Test\\text\\TestCge\\src\\main\\assets"
+            ],
+            "main_jniLibs_directory": [
+                "X:\\WorkSpace\\Owner\\Test\\text\\TestCge\\src\\debug\\jniLibs",
+                "X:\\WorkSpace\\Owner\\Test\\text\\TestCge\\src\\main\\jniLibs"
+            ],
+            "main_jni_directory": [
+                "X:\\WorkSpace\\Owner\\Test\\text\\TestCge\\src\\debug\\jni",
+                "X:\\WorkSpace\\Owner\\Test\\text\\TestCge\\src\\main\\jni"
+            ],
+            "main_manifest_path": "X:\\WorkSpace\\Owner\\Test\\text\\TestCge\\src\\main\\AndroidManifest.xml",
+            "main_res_directory": [
+                "X:\\WorkSpace\\Owner\\Test\\text\\TestCge\\src\\debug\\res",
+                "X:\\WorkSpace\\Owner\\Test\\text\\TestCge\\src\\main\\res"
+            ],
+            "main_src_directory": [
+                "X:\\WorkSpace\\Owner\\Test\\text\\TestCge\\src\\debug\\java",
+                "X:\\WorkSpace\\Owner\\Test\\text\\TestCge\\src\\main\\java"
+            ]
+        },
+        "gpuimageplus": {
+            "main_assets_directory": [
+                "X:\\WorkSpace\\Owner\\Test\\text\\library\\gpuimageplus\\src\\release\\assets",
+                "X:\\WorkSpace\\Owner\\Test\\text\\library\\gpuimageplus\\src\\main\\assets"
+            ],
+            "main_jniLibs_directory": [
+                "X:\\WorkSpace\\Owner\\Test\\text\\library\\gpuimageplus\\src\\release\\jniLibs",
+                "X:\\WorkSpace\\Owner\\Test\\text\\library\\gpuimageplus\\src\\main\\jniLibs",
+                "X:\\WorkSpace\\Owner\\Test\\text\\library\\gpuimageplus\\src\\main\\libs"
+            ],
+            "main_jni_directory": [
+                "X:\\WorkSpace\\Owner\\Test\\text\\library\\gpuimageplus\\src\\release\\jni"
+            ],
+            "main_manifest_path": "X:\\WorkSpace\\Owner\\Test\\text\\library\\gpuimageplus\\src\\main\\AndroidManifest.xml",
+            "main_res_directory": [
+                "X:\\WorkSpace\\Owner\\Test\\text\\library\\gpuimageplus\\src\\release\\res",
+                "X:\\WorkSpace\\Owner\\Test\\text\\library\\gpuimageplus\\src\\main\\res"
+            ],
+            "main_src_directory": [
+                "X:\\WorkSpace\\Owner\\Test\\text\\library\\gpuimageplus\\src\\release\\java",
+                "X:\\WorkSpace\\Owner\\Test\\text\\library\\gpuimageplus\\src\\main\\java"
+            ]
+        }
+    },
+    "project_type": "gradle",
+    "retrolambda": {
+        
+    },
+    "root_dir": "X:\\WorkSpace\\Owner\\Test\\text",
+    "sdk_directory": "X:\\SDK",
+    "use_jdk8": true,
+    "use_system_gradle": false
+}
