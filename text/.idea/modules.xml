@@ -5,6 +5,7 @@
       <module fileurl="file://$PROJECT_DIR$/TestCge/TestCge.iml" filepath="$PROJECT_DIR$/TestCge/TestCge.iml" />
       <module fileurl="file://$PROJECT_DIR$/TestOpenGlES/TestOpenGlES.iml" filepath="$PROJECT_DIR$/TestOpenGlES/TestOpenGlES.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/camera/camera.iml" filepath="$PROJECT_DIR$/camera/camera.iml" />
       <module fileurl="file://$PROJECT_DIR$/library/gpuimageplus/gpuimageplus.iml" filepath="$PROJECT_DIR$/library/gpuimageplus/gpuimageplus.iml" />
       <module fileurl="file://$PROJECT_DIR$/itemtouchhelper/itemtouchhelper.iml" filepath="$PROJECT_DIR$/itemtouchhelper/itemtouchhelper.iml" />
       <module fileurl="file://$PROJECT_DIR$/library/library.iml" filepath="$PROJECT_DIR$/library/library.iml" />
