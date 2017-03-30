@@ -2,41 +2,28 @@ package com.yezi.testmedia.render;
 
 import android.graphics.Bitmap;
 import android.opengl.GLES20;
-import android.opengl.GLSurfaceView;
 import android.opengl.GLUtils;
 
 import com.yezi.testmedia.filter.BaseFilter;
 
-import javax.microedition.khronos.egl.EGLConfig;
-import javax.microedition.khronos.opengles.GL10;
-
-public class ImageRender implements GLSurfaceView.Renderer {
-
-    private BaseFilter mFilter;
+public class ImageRender extends BaseRender {
 
     private Bitmap mBitmap;
 
     public ImageRender() {
-        mFilter = new BaseFilter(0, 0) {
-
-            @Override
-            public void onDraw() {
-
-            }
-
-            @Override
-            public void onCreated(int mProgram) {
-
-            }
-        };
+        super();
     }
 
     public ImageRender(BaseFilter filter) {
         mFilter = filter;
     }
 
+    @Override
     public void setFilter(BaseFilter filter) {
-        mFilter = filter;
+        super.setFilter(filter);
+        if (mBitmap != null) {
+            mFilter.setDataSize(mBitmap.getWidth(), mBitmap.getHeight());
+        }
     }
 
     public void setBitmap(Bitmap bitmap) {
@@ -44,6 +31,7 @@ public class ImageRender implements GLSurfaceView.Renderer {
         mFilter.setDataSize(mBitmap.getWidth(), mBitmap.getHeight());
     }
 
+    @Override
     public int createTexture() {
         int[] texture = new int[1];
         if (mBitmap != null && !mBitmap.isRecycled()) {
@@ -57,29 +45,6 @@ public class ImageRender implements GLSurfaceView.Renderer {
             return texture[0];
         }
         return BaseFilter.NO_FILTER;
-    }
-
-    @Override
-    public void onSurfaceCreated(GL10 gl, EGLConfig config) {
-        GLES20.glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
-        GLES20.glEnable(GLES20.GL_TEXTURE_2D);
-        GLES20.glDisable(GLES20.GL_DEPTH_TEST);
-        GLES20.glDisable(GLES20.GL_STENCIL_TEST);
-
-        mFilter.setTextureId(createTexture());
-        mFilter.onSurfaceCreated(gl, config);
-    }
-
-    @Override
-    public void onSurfaceChanged(GL10 gl, int width, int height) {
-        GLES20.glViewport(0, 0, width, height);
-        mFilter.onSurfaceChanged(gl, width, height);
-    }
-
-    @Override
-    public void onDrawFrame(GL10 gl) {
-        GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT | GLES20.GL_DEPTH_BUFFER_BIT);
-        mFilter.onDrawFrame(gl);
     }
 
 }
