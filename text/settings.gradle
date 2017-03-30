@@ -1,1 +1,1 @@
-include ':app', ':itemtouchhelper', ':TestOpenGlES', ':TestCge', ':library:gpuimageplus', ':camera'
+include ':app', ':itemtouchhelper', ':TestOpenGlES', ':TestCge', ':library:gpuimageplus', ':camera', ':TestMedia'
