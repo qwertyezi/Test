@@ -6,8 +6,8 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.SeekBar;
 
+import com.yezi.testmedia.filter.BrightnessFilter;
 import com.yezi.testmedia.filter.FilterGroup;
-import com.yezi.testmedia.filter.GrayFilter;
 import com.yezi.testmedia.view.ImageGLSurfaceView;
 
 public class TestImageGLActivity extends AppCompatActivity {
@@ -22,29 +22,29 @@ public class TestImageGLActivity extends AppCompatActivity {
         setContentView(R.layout.activity_test_imagegl);
 
         mSurfaceView = (ImageGLSurfaceView) findViewById(R.id.glsurfaceview);
-        mSeekBar = (SeekBar) findViewById(R.id.seek_bar);
+//        mSeekBar = (SeekBar) findViewById(R.id.seek_bar);
 
         mSurfaceView.setBitmap(BitmapFactory.decodeResource(getResources(), R.mipmap.h_img));
 //        mSurfaceView.setFilter(new GrayFilter());
-        mSurfaceView.setFilter(new FilterGroup(new GrayFilter()));
+        mSurfaceView.setFilter(new FilterGroup(new BrightnessFilter()));
 //        new BrightnessFilter().setBrightness(0.5f),
 
-        mSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-            @Override
-            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-
-            }
-
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
-
-            }
-
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
-
-            }
-        });
+//        mSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+//            @Override
+//            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+//
+//            }
+//
+//            @Override
+//            public void onStartTrackingTouch(SeekBar seekBar) {
+//
+//            }
+//
+//            @Override
+//            public void onStopTrackingTouch(SeekBar seekBar) {
+//
+//            }
+//        });
     }
 
     @Override
