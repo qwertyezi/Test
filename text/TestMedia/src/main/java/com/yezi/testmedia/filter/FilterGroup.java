@@ -2,6 +2,8 @@ package com.yezi.testmedia.filter;
 
 import android.opengl.GLES20;
 
+import com.yezi.testmedia.utils.ScaleType;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -44,6 +46,7 @@ public class FilterGroup extends BaseFilter {
     private void initFiltersSize(int width, int height) {
         for (BaseFilter filter : mFilterList) {
             filter.setDataSize(width, height);
+            filter.setScaleType(ScaleType.FIT_XY);
         }
     }
 
@@ -72,7 +75,6 @@ public class FilterGroup extends BaseFilter {
         for (BaseFilter filter : mFilterList) {
             filter.onSurfaceCreated(null, null);
         }
-        initFrameBuffer();
     }
 
     private void initFrameBuffer() {
@@ -87,14 +89,10 @@ public class FilterGroup extends BaseFilter {
                 GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, mTextures[i]);
                 GLES20.glTexImage2D(GLES20.GL_TEXTURE_2D, 0, GLES20.GL_RGBA, mDataWidth, mDataHeight, 0,
                         GLES20.GL_RGBA, GLES20.GL_UNSIGNED_BYTE, null);
-                GLES20.glTexParameterf(GLES20.GL_TEXTURE_2D,
-                        GLES20.GL_TEXTURE_MAG_FILTER, GLES20.GL_LINEAR);
-                GLES20.glTexParameterf(GLES20.GL_TEXTURE_2D,
-                        GLES20.GL_TEXTURE_MIN_FILTER, GLES20.GL_LINEAR);
-                GLES20.glTexParameterf(GLES20.GL_TEXTURE_2D,
-                        GLES20.GL_TEXTURE_WRAP_S, GLES20.GL_CLAMP_TO_EDGE);
-                GLES20.glTexParameterf(GLES20.GL_TEXTURE_2D,
-                        GLES20.GL_TEXTURE_WRAP_T, GLES20.GL_CLAMP_TO_EDGE);
+                GLES20.glTexParameterf(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_MIN_FILTER, GLES20.GL_NEAREST);
+                GLES20.glTexParameterf(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_MAG_FILTER, GLES20.GL_LINEAR);
+                GLES20.glTexParameterf(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_WRAP_S, GLES20.GL_CLAMP_TO_EDGE);
+                GLES20.glTexParameterf(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_WRAP_T, GLES20.GL_CLAMP_TO_EDGE);
 
                 GLES20.glBindFramebuffer(GLES20.GL_FRAMEBUFFER, mFrameBuffers[i]);
                 GLES20.glFramebufferTexture2D(GLES20.GL_FRAMEBUFFER, GLES20.GL_COLOR_ATTACHMENT0,
@@ -111,5 +109,6 @@ public class FilterGroup extends BaseFilter {
         for (BaseFilter filter : mFilterList) {
             filter.onSurfaceChanged(null, width, height);
         }
+        initFrameBuffer();
     }
 }

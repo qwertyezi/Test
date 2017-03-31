@@ -44,8 +44,8 @@ public class BaseRender implements GLSurfaceView.Renderer {
     public void onSurfaceCreated(GL10 gl, EGLConfig config) {
         GLES20.glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
         GLES20.glEnable(GLES20.GL_TEXTURE_2D);
-        GLES20.glDisable(GLES20.GL_DEPTH_TEST);
-        GLES20.glDisable(GLES20.GL_STENCIL_TEST);
+//        GLES20.glDisable(GLES20.GL_DEPTH_TEST);
+//        GLES20.glDisable(GLES20.GL_STENCIL_TEST);
 
         mFilter.setTextureId(createTexture());
         mFilter.onSurfaceCreated(gl, config);
@@ -59,7 +59,6 @@ public class BaseRender implements GLSurfaceView.Renderer {
 
     @Override
     public void onDrawFrame(GL10 gl) {
-        GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT | GLES20.GL_DEPTH_BUFFER_BIT);
         mFilter.onDrawFrame(gl);
     }
 
