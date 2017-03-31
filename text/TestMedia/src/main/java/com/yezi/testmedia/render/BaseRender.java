@@ -24,6 +24,11 @@ public class BaseRender implements GLSurfaceView.Renderer {
             public void onCreated(int mProgram) {
 
             }
+
+            @Override
+            public void onChanged(int width, int height) {
+
+            }
         };
     }
 

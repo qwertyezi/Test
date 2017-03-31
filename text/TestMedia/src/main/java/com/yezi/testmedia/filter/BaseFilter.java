@@ -28,8 +28,8 @@ public abstract class BaseFilter implements GLSurfaceView.Renderer {
     private FloatBuffer mPos;
     private FloatBuffer mCoord;
 
-    private int mDataWidth = 0;
-    private int mDataHeight = 0;
+    protected int mDataWidth = 0;
+    protected int mDataHeight = 0;
 
     private int mTextureId = NO_FILTER;
     private int mVertex;
@@ -52,6 +52,10 @@ public abstract class BaseFilter implements GLSurfaceView.Renderer {
             1.0f, 0.0f,
             1.0f, 1.0f,
     };
+
+    public BaseFilter() {
+        this(0, 0);
+    }
 
     public BaseFilter(int vertexRes, int fragmentRes) {
         mVertex = vertexRes == 0 ? R.raw.default_vertex : vertexRes;
@@ -80,6 +84,10 @@ public abstract class BaseFilter implements GLSurfaceView.Renderer {
         mTextureId = textureId;
     }
 
+    public int getTextureId() {
+        return mTextureId;
+    }
+
     public void setDataSize(int width, int height) {
         mDataWidth = width;
         mDataHeight = height;
@@ -103,6 +111,8 @@ public abstract class BaseFilter implements GLSurfaceView.Renderer {
 
     @Override
     public void onSurfaceChanged(GL10 gl, int width, int height) {
+        onChanged(width, height);
+
         int w = mDataWidth == 0 ? width : mDataWidth;
         int h = mDataHeight == 0 ? height : mDataHeight;
         float s1 = w / (float) width;
@@ -139,6 +149,8 @@ public abstract class BaseFilter implements GLSurfaceView.Renderer {
 
     @Override
     public void onDrawFrame(GL10 gl) {
+        onDraw();
+
         GLES20.glUseProgram(mProgram);
 
         GLES20.glUniformMatrix4fv(glMatrix, 1, false, mMVPMatrix, 0);
@@ -152,18 +164,17 @@ public abstract class BaseFilter implements GLSurfaceView.Renderer {
             GLES20.glActiveTexture(GLES20.GL_TEXTURE0);
             GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, mTextureId);
             GLES20.glUniform1i(glTexture, 0);
-        } else {
-            GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, 0);
         }
-
-        onDraw();
 
         GLES20.glDrawArrays(GLES20.GL_TRIANGLE_STRIP, 0, 4);
         GLES20.glDisableVertexAttribArray(glPosition);
         GLES20.glDisableVertexAttribArray(glCoordinate);
+        GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, 0);
     }
 
     public abstract void onDraw();
 
     public abstract void onCreated(int mProgram);
+
+    public abstract void onChanged(int width, int height);
 }

@@ -25,13 +25,13 @@ public class ImageGLSurfaceView extends GLSurfaceView {
 
     public void setBitmap(Bitmap bitmap) {
         mImageRender.setBitmap(bitmap);
-        requestRender();
+//        requestRender();
     }
 
     public void setFilter(BaseFilter filter) {
         mFilter = filter;
         mImageRender.setFilter(mFilter);
-        requestRender();
+//        requestRender();
     }
 
     private void init() {

@@ -16,8 +16,9 @@ public class BrightnessFilter extends BaseFilter {
         super(0, R.raw.brightness_fragment);
     }
 
-    public void setBrightness(float brightness) {
+    public BrightnessFilter setBrightness(float brightness) {
         mBrightness = Math.min(1.0f, Math.max(-1.0f, brightness));
+        return this;
     }
 
     @Override
@@ -28,5 +29,10 @@ public class BrightnessFilter extends BaseFilter {
     @Override
     public void onCreated(int mProgram) {
         glBrightness = GLES20.glGetUniformLocation(mProgram, "brightness");
+    }
+
+    @Override
+    public void onChanged(int width, int height) {
+
     }
 }
