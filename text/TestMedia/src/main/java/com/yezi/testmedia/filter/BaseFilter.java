@@ -111,8 +111,6 @@ public abstract class BaseFilter implements GLSurfaceView.Renderer {
 
     @Override
     public void onSurfaceChanged(GL10 gl, int width, int height) {
-        onChanged(width, height);
-
         int w = mDataWidth == 0 ? width : mDataWidth;
         int h = mDataHeight == 0 ? height : mDataHeight;
         float s1 = w / (float) width;
@@ -145,15 +143,18 @@ public abstract class BaseFilter implements GLSurfaceView.Renderer {
 
         Matrix.setLookAtM(mViewMatrix, 0, 0, 0, 1.0f, 0f, 0f, 0f, 0f, 1.0f, 0.0f);
         Matrix.multiplyMM(mMVPMatrix, 0, mProjectMatrix, 0, mViewMatrix, 0);
+
+        onChanged(width, height);
     }
 
     @Override
     public void onDrawFrame(GL10 gl) {
-
-        onDraw();
         GLES20.glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
         GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT | GLES20.GL_DEPTH_BUFFER_BIT);
+
         GLES20.glUseProgram(mProgram);
+
+        onDraw();
 
         GLES20.glUniformMatrix4fv(glMatrix, 1, false, mMVPMatrix, 0);
 

@@ -8,6 +8,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import javax.microedition.khronos.egl.EGLConfig;
+import javax.microedition.khronos.opengles.GL10;
+
 public class FilterGroup extends BaseFilter {
 
     private int[] mFrameBuffers;
@@ -51,7 +54,26 @@ public class FilterGroup extends BaseFilter {
     }
 
     @Override
-    public void onDraw() {
+    public void onSurfaceCreated(GL10 gl, EGLConfig config) {
+        super.onSurfaceCreated(gl, config);
+
+        for (BaseFilter filter : mFilterList) {
+            filter.onSurfaceCreated(null, null);
+        }
+        initFrameBuffer();
+    }
+
+    @Override
+    public void onSurfaceChanged(GL10 gl, int width, int height) {
+        super.onSurfaceChanged(gl, width, height);
+
+        for (BaseFilter filter : mFilterList) {
+            filter.onSurfaceChanged(null, width, height);
+        }
+    }
+
+    @Override
+    public void onDrawFrame(GL10 gl) {
         if (mFrameBuffers == null || mTextures == null) {
             return;
         }
@@ -68,13 +90,8 @@ public class FilterGroup extends BaseFilter {
             }
         }
         setTextureId(previousTexture);
-    }
 
-    @Override
-    public void onCreated(int mProgram) {
-        for (BaseFilter filter : mFilterList) {
-            filter.onSurfaceCreated(null, null);
-        }
+        super.onDrawFrame(gl);
     }
 
     private void initFrameBuffer() {
@@ -106,9 +123,16 @@ public class FilterGroup extends BaseFilter {
 
     @Override
     public void onChanged(int width, int height) {
-        for (BaseFilter filter : mFilterList) {
-            filter.onSurfaceChanged(null, width, height);
-        }
-        initFrameBuffer();
+
+    }
+
+    @Override
+    public void onDraw() {
+
+    }
+
+    @Override
+    public void onCreated(int mProgram) {
+
     }
 }
