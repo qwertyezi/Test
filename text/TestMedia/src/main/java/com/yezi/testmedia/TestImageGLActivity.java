@@ -4,6 +4,7 @@ import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
 import android.widget.SeekBar;
 
 import com.yezi.testmedia.filter.BrightnessFilter;
@@ -26,7 +27,7 @@ public class TestImageGLActivity extends AppCompatActivity {
 //        mSeekBar = (SeekBar) findViewById(R.id.seek_bar);
 
         mSurfaceView.setBitmap(BitmapFactory.decodeResource(getResources(), R.mipmap.girl));
-        mSurfaceView.setFilter(new FilterGroup(new BrightnessFilter().setBrightness(-0.3f), new GrayFilter()));
+        mSurfaceView.setFilter(new FilterGroup(new BrightnessFilter(),new GrayFilter()));
 
 //        mSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
 //            @Override
@@ -44,6 +45,10 @@ public class TestImageGLActivity extends AppCompatActivity {
 //
 //            }
 //        });
+    }
+
+    public void onSaveClick(View view) {
+        mSurfaceView.saveBitmap(null);
     }
 
     @Override

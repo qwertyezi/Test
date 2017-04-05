@@ -2,6 +2,8 @@ package com.yezi.testmedia.utils;
 
 import android.opengl.Matrix;
 
+import java.nio.IntBuffer;
+
 public class GL2Utils {
 
     public static float[] flip(float[] m, boolean x, boolean y) {
@@ -18,5 +20,14 @@ public class GL2Utils {
                 0, 0, 1, 0,
                 0, 0, 0, 1
         };
+    }
+
+    public static IntBuffer convertMirroredImage(IntBuffer image, int width, int height) {
+        int[] pixelArray = image.array();
+        int[] pixelMirroredArray = new int[width * height];
+        for (int i = 0; i < height; i++) {
+            System.arraycopy(pixelArray, i * width, pixelMirroredArray, (height - i - 1) * width, width);
+        }
+        return IntBuffer.wrap(pixelMirroredArray);
     }
 }

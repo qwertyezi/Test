@@ -39,7 +39,7 @@ public abstract class BaseFilter implements GLSurfaceView.Renderer {
     private float[] mViewMatrix = new float[16];
     private float[] mProjectMatrix = new float[16];
     private float[] mMVPMatrix = new float[16];
-    private ScaleType mScaleType = ScaleType.CENTER_INSIDE;
+    private ScaleType mScaleType = ScaleType.CENTER_CROP;
 
     private static final float[] sPos = {
             -1.0f, 1.0f,
