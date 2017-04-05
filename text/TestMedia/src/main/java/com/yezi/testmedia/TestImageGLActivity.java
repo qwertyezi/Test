@@ -8,6 +8,7 @@ import android.widget.SeekBar;
 
 import com.yezi.testmedia.filter.BrightnessFilter;
 import com.yezi.testmedia.filter.FilterGroup;
+import com.yezi.testmedia.filter.GrayFilter;
 import com.yezi.testmedia.view.ImageGLSurfaceView;
 
 public class TestImageGLActivity extends AppCompatActivity {
@@ -24,10 +25,8 @@ public class TestImageGLActivity extends AppCompatActivity {
         mSurfaceView = (ImageGLSurfaceView) findViewById(R.id.glsurfaceview);
 //        mSeekBar = (SeekBar) findViewById(R.id.seek_bar);
 
-        mSurfaceView.setBitmap(BitmapFactory.decodeResource(getResources(), R.mipmap.h_img));
-//        mSurfaceView.setFilter(new GrayFilter());
-        mSurfaceView.setFilter(new FilterGroup(new BrightnessFilter()));
-//        new BrightnessFilter().setBrightness(0.5f),
+        mSurfaceView.setBitmap(BitmapFactory.decodeResource(getResources(), R.mipmap.girl));
+        mSurfaceView.setFilter(new FilterGroup(new BrightnessFilter().setBrightness(-0.3f), new GrayFilter()));
 
 //        mSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
 //            @Override

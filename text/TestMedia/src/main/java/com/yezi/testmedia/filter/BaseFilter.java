@@ -30,6 +30,8 @@ public abstract class BaseFilter implements GLSurfaceView.Renderer {
 
     protected int mDataWidth = 0;
     protected int mDataHeight = 0;
+    protected int mViewWidth;
+    protected int mViewHeight;
 
     private int mTextureId = NO_FILTER;
     private int mVertex;
@@ -37,7 +39,7 @@ public abstract class BaseFilter implements GLSurfaceView.Renderer {
     private float[] mViewMatrix = new float[16];
     private float[] mProjectMatrix = new float[16];
     private float[] mMVPMatrix = new float[16];
-    private ScaleType mScaleType = ScaleType.FIT_XY;
+    private ScaleType mScaleType = ScaleType.CENTER_INSIDE;
 
     private static final float[] sPos = {
             -1.0f, 1.0f,
@@ -88,6 +90,22 @@ public abstract class BaseFilter implements GLSurfaceView.Renderer {
         return mTextureId;
     }
 
+    public float[] getMVPMatrix() {
+        return mMVPMatrix;
+    }
+
+    public void setMVPMatrix(float[] MVPMatrix) {
+        mMVPMatrix = MVPMatrix;
+    }
+
+    public int getGlMatrix() {
+        return glMatrix;
+    }
+
+    public void setGlMatrix(int glMatrix) {
+        this.glMatrix = glMatrix;
+    }
+
     public void setDataSize(int width, int height) {
         mDataWidth = width;
         mDataHeight = height;
@@ -111,6 +129,9 @@ public abstract class BaseFilter implements GLSurfaceView.Renderer {
 
     @Override
     public void onSurfaceChanged(GL10 gl, int width, int height) {
+        mViewWidth = width;
+        mViewHeight = height;
+
         int w = mDataWidth == 0 ? width : mDataWidth;
         int h = mDataHeight == 0 ? height : mDataHeight;
         float s1 = w / (float) width;
@@ -149,14 +170,14 @@ public abstract class BaseFilter implements GLSurfaceView.Renderer {
 
     @Override
     public void onDrawFrame(GL10 gl) {
-//        GLES20.glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
-//        GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT | GLES20.GL_DEPTH_BUFFER_BIT);
+        GLES20.glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+        GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT | GLES20.GL_DEPTH_BUFFER_BIT);
 
         GLES20.glUseProgram(mProgram);
 
         onDraw();
 
-        GLES20.glUniformMatrix4fv(glMatrix, 1, false, mProjectMatrix, 0);
+        GLES20.glUniformMatrix4fv(glMatrix, 1, false, mMVPMatrix, 0);
 
         GLES20.glEnableVertexAttribArray(glPosition);
         GLES20.glEnableVertexAttribArray(glCoordinate);

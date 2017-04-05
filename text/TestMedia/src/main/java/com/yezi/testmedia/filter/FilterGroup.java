@@ -1,7 +1,9 @@
 package com.yezi.testmedia.filter;
 
 import android.opengl.GLES20;
+import android.opengl.Matrix;
 
+import com.yezi.testmedia.utils.GL2Utils;
 import com.yezi.testmedia.utils.ScaleType;
 
 import java.util.ArrayList;
@@ -84,13 +86,20 @@ public class FilterGroup extends BaseFilter {
                 BaseFilter filter = mFilterList.get(i);
                 GLES20.glBindFramebuffer(GLES20.GL_FRAMEBUFFER, mFrameBuffers[i]);
                 filter.setTextureId(previousTexture);
+                GLES20.glViewport(0, 0, mDataWidth, mDataHeight);
                 filter.onDrawFrame(null);
                 GLES20.glBindFramebuffer(GLES20.GL_FRAMEBUFFER, 0);
                 previousTexture = mTextures[i];
             }
+            if (size % 2 == 1) {
+                float[] flipMatrix = new float[16];
+                Matrix.multiplyMM(flipMatrix, 0, getMVPMatrix(), 0, GL2Utils.flip(GL2Utils.getOriginalMatrix(), false, true), 0);
+                setMVPMatrix(flipMatrix);
+            }
         }
         setTextureId(previousTexture);
 
+        GLES20.glViewport(0, 0, mViewWidth, mViewHeight);
         super.onDrawFrame(gl);
     }
 
