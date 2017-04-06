@@ -10,9 +10,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import javax.microedition.khronos.egl.EGLConfig;
-import javax.microedition.khronos.opengles.GL10;
-
 public class FilterGroup extends BaseFilter {
 
     private int[] mFrameBuffers;
@@ -56,26 +53,26 @@ public class FilterGroup extends BaseFilter {
     }
 
     @Override
-    public void onSurfaceCreated(GL10 gl, EGLConfig config) {
-        super.onSurfaceCreated(gl, config);
+    public void onSurfaceCreated() {
+        super.onSurfaceCreated();
 
         for (BaseFilter filter : mFilterList) {
-            filter.onSurfaceCreated(null, null);
+            filter.onSurfaceCreated();
         }
         initFrameBuffer();
     }
 
     @Override
-    public void onSurfaceChanged(GL10 gl, int width, int height) {
-        super.onSurfaceChanged(gl, width, height);
+    public void onSurfaceChanged(int width, int height) {
+        super.onSurfaceChanged(width, height);
 
         for (BaseFilter filter : mFilterList) {
-            filter.onSurfaceChanged(null, width, height);
+            filter.onSurfaceChanged(width, height);
         }
     }
 
     @Override
-    public void onDrawFrame(GL10 gl) {
+    public void onDrawFrame() {
         if (mFrameBuffers == null || mTextures == null) {
             return;
         }
@@ -87,7 +84,7 @@ public class FilterGroup extends BaseFilter {
                 GLES20.glBindFramebuffer(GLES20.GL_FRAMEBUFFER, mFrameBuffers[i]);
                 filter.setTextureId(previousTexture);
                 GLES20.glViewport(0, 0, mDataWidth, mDataHeight);
-                filter.onDrawFrame(null);
+                filter.onDrawFrame();
                 GLES20.glBindFramebuffer(GLES20.GL_FRAMEBUFFER, 0);
                 previousTexture = mTextures[i];
             }
@@ -100,7 +97,7 @@ public class FilterGroup extends BaseFilter {
         setTextureId(previousTexture);
 
         GLES20.glViewport(0, 0, mViewWidth, mViewHeight);
-        super.onDrawFrame(gl);
+        super.onDrawFrame();
     }
 
     private void initFrameBuffer() {

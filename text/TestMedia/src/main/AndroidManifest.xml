@@ -23,6 +23,8 @@
         </activity>
 
         <activity android:name=".TestImageGLActivity"/>
+
+        <activity android:name=".TestVideoGLActivity"/>
     </application>
 
 </manifest>

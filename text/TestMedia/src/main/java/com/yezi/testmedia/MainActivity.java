@@ -17,4 +17,8 @@ public class MainActivity extends AppCompatActivity {
         startActivity(new Intent(this, TestImageGLActivity.class));
     }
 
+    public void onVideoViewClick(View view) {
+        startActivity(new Intent(this, TestVideoGLActivity.class));
+    }
+
 }

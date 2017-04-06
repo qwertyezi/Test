@@ -1,10 +1,11 @@
 package com.yezi.testmedia.filter;
 
+import android.opengl.GLES11Ext;
 import android.opengl.GLES20;
-import android.opengl.GLSurfaceView;
 import android.opengl.Matrix;
 
 import com.yezi.testmedia.R;
+import com.yezi.testmedia.utils.FilterType;
 import com.yezi.testmedia.utils.ScaleType;
 import com.yezi.testmedia.utils.ShaderUtils;
 
@@ -12,10 +13,7 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
 
-import javax.microedition.khronos.egl.EGLConfig;
-import javax.microedition.khronos.opengles.GL10;
-
-public abstract class BaseFilter implements GLSurfaceView.Renderer {
+public abstract class BaseFilter implements FilterRenderer {
 
     public static final int NO_FILTER = -1;
 
@@ -26,7 +24,7 @@ public abstract class BaseFilter implements GLSurfaceView.Renderer {
     private int glMatrix;
 
     private FloatBuffer mPos;
-    private FloatBuffer mCoord;
+    protected FloatBuffer mCoord;
 
     protected int mDataWidth = 0;
     protected int mDataHeight = 0;
@@ -39,7 +37,8 @@ public abstract class BaseFilter implements GLSurfaceView.Renderer {
     private float[] mViewMatrix = new float[16];
     private float[] mProjectMatrix = new float[16];
     private float[] mMVPMatrix = new float[16];
-    private ScaleType mScaleType = ScaleType.CENTER_CROP;
+    private ScaleType mScaleType = ScaleType.CENTER_INSIDE;
+    private FilterType mFilterType = FilterType.IMAGE;
 
     private static final float[] sPos = {
             -1.0f, 1.0f,
@@ -60,8 +59,8 @@ public abstract class BaseFilter implements GLSurfaceView.Renderer {
     }
 
     public BaseFilter(int vertexRes, int fragmentRes) {
-        mVertex = vertexRes == 0 ? R.raw.default_vertex : vertexRes;
-        mFragment = fragmentRes == 0 ? R.raw.default_fragment : fragmentRes;
+        mVertex = vertexRes == 0 ? R.raw.default_image_vertex : vertexRes;
+        mFragment = fragmentRes == 0 ? R.raw.default_image_fragment : fragmentRes;
 
         initBuffer();
     }
@@ -74,6 +73,10 @@ public abstract class BaseFilter implements GLSurfaceView.Renderer {
                 .put(sPos);
         mPos.position(0);
 
+        initTextureBuffer();
+    }
+
+    public void initTextureBuffer() {
         mCoord = ByteBuffer
                 .allocateDirect(sCoord.length * 4)
                 .order(ByteOrder.nativeOrder())
@@ -90,6 +93,26 @@ public abstract class BaseFilter implements GLSurfaceView.Renderer {
         return mTextureId;
     }
 
+    public int getViewWidth() {
+        return mViewWidth;
+    }
+
+    public int getViewHeight() {
+        return mViewHeight;
+    }
+
+    public int getDataWidth() {
+        return mDataWidth;
+    }
+
+    public int getDataHeight() {
+        return mDataHeight;
+    }
+
+    public ScaleType getScaleType() {
+        return mScaleType;
+    }
+
     public float[] getMVPMatrix() {
         return mMVPMatrix;
     }
@@ -98,37 +121,44 @@ public abstract class BaseFilter implements GLSurfaceView.Renderer {
         mMVPMatrix = MVPMatrix;
     }
 
-    public int getGlMatrix() {
-        return glMatrix;
-    }
-
-    public void setGlMatrix(int glMatrix) {
-        this.glMatrix = glMatrix;
-    }
-
     public void setDataSize(int width, int height) {
         mDataWidth = width;
         mDataHeight = height;
+
+        if (mViewWidth != 0 && mViewHeight != 0) {
+            onSurfaceChanged(mViewWidth, mViewHeight);
+        }
+    }
+
+    public void releaseTexture() {
+        if (mTextureId != BaseFilter.NO_FILTER) {
+            GLES20.glDeleteTextures(1, new int[]{mTextureId}, 0);
+            mTextureId = BaseFilter.NO_FILTER;
+        }
     }
 
     public void setScaleType(ScaleType type) {
         mScaleType = type;
     }
 
+    public void setFilterType(FilterType type) {
+        mFilterType = type;
+    }
+
     @Override
-    public void onSurfaceCreated(GL10 gl, EGLConfig config) {
+    public void onSurfaceCreated() {
         mProgram = ShaderUtils.createProgram(mVertex, mFragment);
 
-        glPosition = GLES20.glGetAttribLocation(mProgram, "vPosition");
-        glCoordinate = GLES20.glGetAttribLocation(mProgram, "vCoordinate");
-        glTexture = GLES20.glGetUniformLocation(mProgram, "vTexture");
-        glMatrix = GLES20.glGetUniformLocation(mProgram, "vMatrix");
+        glPosition = GLES20.glGetAttribLocation(mProgram, "aPosition");
+        glCoordinate = GLES20.glGetAttribLocation(mProgram, "aCoordinate");
+        glTexture = GLES20.glGetUniformLocation(mProgram, "uTexture");
+        glMatrix = GLES20.glGetUniformLocation(mProgram, "uMatrix");
 
         onCreated(mProgram);
     }
 
     @Override
-    public void onSurfaceChanged(GL10 gl, int width, int height) {
+    public void onSurfaceChanged(int width, int height) {
         mViewWidth = width;
         mViewHeight = height;
 
@@ -169,7 +199,7 @@ public abstract class BaseFilter implements GLSurfaceView.Renderer {
     }
 
     @Override
-    public void onDrawFrame(GL10 gl) {
+    public void onDrawFrame() {
         GLES20.glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
         GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT | GLES20.GL_DEPTH_BUFFER_BIT);
 
@@ -188,7 +218,8 @@ public abstract class BaseFilter implements GLSurfaceView.Renderer {
 
         if (mTextureId != NO_FILTER) {
             GLES20.glActiveTexture(GLES20.GL_TEXTURE0);
-            GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, mTextureId);
+            GLES20.glBindTexture(mFilterType == FilterType.IMAGE ?
+                    GLES20.GL_TEXTURE_2D : GLES11Ext.GL_TEXTURE_EXTERNAL_OES, mTextureId);
             GLES20.glUniform1i(glTexture, 0);
         }
 

@@ -28,7 +28,7 @@ public class BrightnessFilter extends BaseFilter {
 
     @Override
     public void onCreated(int mProgram) {
-        glBrightness = GLES20.glGetUniformLocation(mProgram, "brightness");
+        glBrightness = GLES20.glGetUniformLocation(mProgram, "uBrightness");
     }
 
     @Override

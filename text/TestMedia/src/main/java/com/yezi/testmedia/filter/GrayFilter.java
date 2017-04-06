@@ -19,7 +19,7 @@ public class GrayFilter extends BaseFilter {
 
     @Override
     public void onCreated(int mProgram) {
-        glChangeColor = GLES20.glGetUniformLocation(mProgram, "vChangeColor");
+        glChangeColor = GLES20.glGetUniformLocation(mProgram, "uChangeColor");
     }
 
     @Override

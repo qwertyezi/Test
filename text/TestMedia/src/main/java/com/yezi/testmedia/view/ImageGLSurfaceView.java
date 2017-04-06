@@ -102,4 +102,8 @@ public class ImageGLSurfaceView extends GLSurfaceView {
         setRenderer(mImageRender);
         setRenderMode(GLSurfaceView.RENDERMODE_WHEN_DIRTY);
     }
+
+    public void release() {
+        mFilter.releaseTexture();
+    }
 }

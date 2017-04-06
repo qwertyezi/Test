@@ -7,8 +7,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.SeekBar;
 
+import com.yezi.testmedia.filter.BaseFilter;
 import com.yezi.testmedia.filter.BrightnessFilter;
-import com.yezi.testmedia.filter.FilterGroup;
 import com.yezi.testmedia.filter.GrayFilter;
 import com.yezi.testmedia.view.ImageGLSurfaceView;
 
@@ -16,6 +16,16 @@ public class TestImageGLActivity extends AppCompatActivity {
 
     private ImageGLSurfaceView mSurfaceView;
     private SeekBar mSeekBar;
+    private static final int[] images = {
+            R.mipmap.image_1, R.mipmap.image_2,
+            R.mipmap.image_3, R.mipmap.image_4,
+            R.mipmap.image_5, R.mipmap.image_6
+    };
+    private static final BaseFilter[] filters = {
+            new GrayFilter(), new BrightnessFilter().setBrightness(-0.3f)
+    };
+    private int mCurrentImage;
+    private int mCurrentFilter;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -26,8 +36,9 @@ public class TestImageGLActivity extends AppCompatActivity {
         mSurfaceView = (ImageGLSurfaceView) findViewById(R.id.glsurfaceview);
 //        mSeekBar = (SeekBar) findViewById(R.id.seek_bar);
 
-        mSurfaceView.setBitmap(BitmapFactory.decodeResource(getResources(), R.mipmap.girl));
-        mSurfaceView.setFilter(new FilterGroup(new BrightnessFilter(),new GrayFilter()));
+        mSurfaceView.setBitmap(BitmapFactory.decodeResource(getResources(), R.mipmap.image_1));
+        mCurrentImage = 0;
+        mCurrentFilter = 0;
 
 //        mSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
 //            @Override
@@ -51,6 +62,22 @@ public class TestImageGLActivity extends AppCompatActivity {
         mSurfaceView.saveBitmap(null);
     }
 
+    public void onImageChangeClick(View view) {
+        ++mCurrentImage;
+        if (mCurrentImage == images.length) {
+            mCurrentImage = 0;
+        }
+        mSurfaceView.setBitmap(BitmapFactory.decodeResource(getResources(), images[mCurrentImage]));
+    }
+
+    public void onFilterChangeClick(View view) {
+        ++mCurrentFilter;
+        if (mCurrentFilter == filters.length) {
+            mCurrentFilter = 0;
+        }
+        mSurfaceView.setFilter(filters[mCurrentFilter]);
+    }
+
     @Override
     protected void onResume() {
         super.onResume();
@@ -61,5 +88,11 @@ public class TestImageGLActivity extends AppCompatActivity {
     protected void onPause() {
         super.onPause();
         mSurfaceView.onPause();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mSurfaceView.release();
     }
 }

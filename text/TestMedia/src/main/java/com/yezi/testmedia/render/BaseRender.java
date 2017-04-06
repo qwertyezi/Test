@@ -37,6 +37,13 @@ public class BaseRender implements GLSurfaceView.Renderer {
     }
 
     public void setFilter(BaseFilter filter) {
+        filter.setTextureId(mFilter.getTextureId());
+        filter.setDataSize(mFilter.getDataWidth(), mFilter.getDataHeight());
+        filter.setScaleType(mFilter.getScaleType());
+
+        filter.onSurfaceCreated();
+        filter.onSurfaceChanged(mFilter.getViewWidth(), mFilter.getViewHeight());
+
         mFilter = filter;
     }
 
@@ -44,25 +51,23 @@ public class BaseRender implements GLSurfaceView.Renderer {
     public void onSurfaceCreated(GL10 gl, EGLConfig config) {
         GLES20.glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
         GLES20.glEnable(GLES20.GL_TEXTURE_2D);
-//        GLES20.glDisable(GLES20.GL_DEPTH_TEST);
-//        GLES20.glDisable(GLES20.GL_STENCIL_TEST);
 
-        mFilter.setTextureId(createTexture());
-        mFilter.onSurfaceCreated(gl, config);
+        mFilter.onSurfaceCreated();
     }
 
     @Override
     public void onSurfaceChanged(GL10 gl, int width, int height) {
         GLES20.glViewport(0, 0, width, height);
-        mFilter.onSurfaceChanged(gl, width, height);
+
+        mFilter.onSurfaceChanged(width, height);
     }
 
     @Override
     public void onDrawFrame(GL10 gl) {
-        mFilter.onDrawFrame(gl);
+        mFilter.onDrawFrame();
     }
 
-    public int createTexture() {
+    public int createTexture(int textureId) {
         return BaseFilter.NO_FILTER;
     }
 }

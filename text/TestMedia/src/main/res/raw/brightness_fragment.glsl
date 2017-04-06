@@ -1,11 +1,11 @@
 precision mediump float;
 
-uniform sampler2D vTexture;
-uniform lowp float brightness;
+uniform sampler2D uTexture;
+uniform lowp float uBrightness;
 
-varying vec2 aCoordinate;
+varying vec2 vCoordinate;
 
 void main(){
-    lowp vec4 textureColor = texture2D(vTexture,aCoordinate);
-    gl_FragColor = vec4((textureColor.rgb + vec3(brightness)), textureColor.w);
+    lowp vec4 textureColor = texture2D(uTexture,vCoordinate);
+    gl_FragColor = vec4((textureColor.rgb + vec3(uBrightness)), textureColor.w);
 }
