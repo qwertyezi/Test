@@ -29,6 +29,13 @@
             android:text="VideoView"
             android:textAllCaps="false"/>
 
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="onCameraViewClick"
+            android:text="CameraView"
+            android:textAllCaps="false"/>
+
     </LinearLayout>
 
 </ScrollView>

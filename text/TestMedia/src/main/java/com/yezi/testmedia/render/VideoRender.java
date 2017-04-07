@@ -6,12 +6,15 @@ import android.opengl.GLES20;
 
 import com.yezi.testmedia.filter.BaseFilter;
 import com.yezi.testmedia.filter.video.VideoFilter;
+import com.yezi.testmedia.utils.GL2Utils;
+import com.yezi.testmedia.utils.VideoType;
 
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
 public class VideoRender extends BaseRender {
 
+    private VideoType mVideoType = VideoType.VIDEO;
     private SurfaceTexture mSurfaceTexture;
     private int[] mTextures = new int[1];
 
@@ -19,8 +22,17 @@ public class VideoRender extends BaseRender {
         this(new VideoFilter());
     }
 
+    public VideoRender(VideoType type) {
+        this(new VideoFilter(), type);
+    }
+
     public VideoRender(VideoFilter filter) {
+        this(filter, VideoType.VIDEO);
+    }
+
+    public VideoRender(VideoFilter filter, VideoType type) {
         mFilter = filter;
+        mVideoType = type;
     }
 
     public void setDataSize(int width, int height) {
@@ -32,9 +44,25 @@ public class VideoRender extends BaseRender {
         if (textureId == BaseFilter.NO_FILTER) {
             GLES20.glGenTextures(1, mTextures, 0);
             GLES20.glBindTexture(GLES11Ext.GL_TEXTURE_EXTERNAL_OES, mTextures[0]);
+
+            GLES20.glTexParameteri(GLES11Ext.GL_TEXTURE_EXTERNAL_OES, GLES20.GL_TEXTURE_MIN_FILTER, GLES20.GL_LINEAR);
+            GLES20.glTexParameteri(GLES11Ext.GL_TEXTURE_EXTERNAL_OES, GLES20.GL_TEXTURE_MAG_FILTER, GLES20.GL_LINEAR);
+            GLES20.glTexParameteri(GLES11Ext.GL_TEXTURE_EXTERNAL_OES, GLES20.GL_TEXTURE_WRAP_S, GLES20.GL_CLAMP_TO_EDGE);
+            GLES20.glTexParameteri(GLES11Ext.GL_TEXTURE_EXTERNAL_OES, GLES20.GL_TEXTURE_WRAP_T, GLES20.GL_CLAMP_TO_EDGE);
+
             return mTextures[0];
         }
         return textureId;
+    }
+
+    public interface onSurfaceCreatedListener {
+        void onSurfaceCreated();
+    }
+
+    private onSurfaceCreatedListener mListener;
+
+    public void setOnSurfaceCreatedListener(onSurfaceCreatedListener listener) {
+        mListener = listener;
     }
 
     @Override
@@ -43,14 +71,23 @@ public class VideoRender extends BaseRender {
 
         mFilter.setTextureId(createTexture(mFilter.getTextureId()));
         mSurfaceTexture = new SurfaceTexture(mTextures[0]);
+
+        if (mVideoType == VideoType.CAMERA && mListener != null) {
+            mListener.onSurfaceCreated();
+        }
     }
 
     @Override
     public void onDrawFrame(GL10 gl) {
         mSurfaceTexture.updateTexImage();
-        float[] mTransformMatrix = new float[16];
-        mSurfaceTexture.getTransformMatrix(mTransformMatrix);
-        ((VideoFilter) mFilter).setTransformMatrix(mTransformMatrix);
+
+        if (mVideoType == VideoType.VIDEO) {
+            float[] mTransformMatrix = new float[16];
+            mSurfaceTexture.getTransformMatrix(mTransformMatrix);
+            ((VideoFilter) mFilter).setTransformMatrix(mTransformMatrix);
+        } else if (mVideoType == VideoType.CAMERA) {
+            ((VideoFilter) mFilter).setTransformMatrix(GL2Utils.getOriginalMatrix());
+        }
 
         super.onDrawFrame(gl);
     }

@@ -14,7 +14,7 @@ public class TestVideoGLActivity extends AppCompatActivity {
 
     private VideoGLSurfaceView mSurfaceView;
     private static final VideoFilter[] filters = {
-            new GrayVideoFilter(), new BrightnessVideoFilter().setBrightness(-0.3f)
+            new GrayVideoFilter(), new BrightnessVideoFilter().setBrightness(-0.3f), new VideoFilter()
     };
     private int mCurrentFilter = 0;
 
