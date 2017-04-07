@@ -42,11 +42,18 @@ public class VideoGLSurfaceView extends GLSurfaceView implements SurfaceTexture.
         mLoopPlay = loopPlay;
     }
 
-    public void playVideo(String uri) {
-        playVideo(uri, null);
+    public void setFilter(final VideoFilter filter) {
+        if (filter != null) {
+            queueEvent(new Runnable() {
+                @Override
+                public void run() {
+                    mVideoRender.setFilter(filter);
+                }
+            });
+        }
     }
 
-    public void playVideo(String uri, final VideoFilter filter) {
+    public void playVideo(String uri) {
         if (TextUtils.isEmpty(uri)) {
             return;
         }
@@ -65,9 +72,6 @@ public class VideoGLSurfaceView extends GLSurfaceView implements SurfaceTexture.
             mMediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
                 @Override
                 public void onPrepared(MediaPlayer mp) {
-                    if (filter != null) {
-                        mVideoRender.setFilter(filter);
-                    }
                     mVideoRender.setDataSize(mp.getVideoWidth(), mp.getVideoHeight());
 
                     mp.start();
@@ -80,10 +84,10 @@ public class VideoGLSurfaceView extends GLSurfaceView implements SurfaceTexture.
         queueEvent(new Runnable() {
             @Override
             public void run() {
-                if(mMediaPlayer != null) {
+                if (mMediaPlayer != null) {
 
                     mMediaPlayer.setSurface(null);
-                    if(mMediaPlayer.isPlaying())
+                    if (mMediaPlayer.isPlaying())
                         mMediaPlayer.stop();
                     mMediaPlayer.release();
                     mMediaPlayer = null;
