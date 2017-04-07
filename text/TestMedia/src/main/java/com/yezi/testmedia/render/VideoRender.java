@@ -5,7 +5,7 @@ import android.opengl.GLES11Ext;
 import android.opengl.GLES20;
 
 import com.yezi.testmedia.filter.BaseFilter;
-import com.yezi.testmedia.filter.VideoFilter;
+import com.yezi.testmedia.filter.video.VideoFilter;
 
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
@@ -65,6 +65,6 @@ public class VideoRender extends BaseRender {
             mSurfaceTexture = null;
         }
 
-        mFilter.releaseTexture();
+        mFilter.release();
     }
 }

@@ -1,8 +1,9 @@
-package com.yezi.testmedia.filter;
+package com.yezi.testmedia.filter.video;
 
 import android.opengl.GLES20;
 
 import com.yezi.testmedia.R;
+import com.yezi.testmedia.filter.BaseFilter;
 import com.yezi.testmedia.utils.FilterType;
 
 import java.nio.ByteBuffer;
@@ -25,7 +26,12 @@ public class VideoFilter extends BaseFilter {
     }
 
     public VideoFilter() {
-        super(R.raw.default_video_vertex, R.raw.default_video_fragment);
+        this(0, 0);
+    }
+
+    public VideoFilter(int vertexRes, int fragmentRes) {
+        super(vertexRes == 0 ? R.raw.default_video_vertex : vertexRes,
+                fragmentRes == 0 ? R.raw.default_video_fragment : fragmentRes);
         setFilterType(FilterType.VIDEO);
     }
 

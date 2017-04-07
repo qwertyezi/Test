@@ -8,8 +8,8 @@ import android.view.View;
 import android.widget.SeekBar;
 
 import com.yezi.testmedia.filter.BaseFilter;
-import com.yezi.testmedia.filter.BrightnessFilter;
-import com.yezi.testmedia.filter.GrayFilter;
+import com.yezi.testmedia.filter.image.BrightnessFilter;
+import com.yezi.testmedia.filter.image.GrayFilter;
 import com.yezi.testmedia.view.ImageGLSurfaceView;
 
 public class TestImageGLActivity extends AppCompatActivity {

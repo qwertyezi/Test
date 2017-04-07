@@ -1,8 +1,9 @@
-package com.yezi.testmedia.filter;
+package com.yezi.testmedia.filter.image;
 
 import android.opengl.GLES20;
 import android.opengl.Matrix;
 
+import com.yezi.testmedia.filter.BaseFilter;
 import com.yezi.testmedia.utils.GL2Utils;
 import com.yezi.testmedia.utils.ScaleType;
 

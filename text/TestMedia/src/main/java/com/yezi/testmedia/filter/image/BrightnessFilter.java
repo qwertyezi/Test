@@ -1,8 +1,9 @@
-package com.yezi.testmedia.filter;
+package com.yezi.testmedia.filter.image;
 
 import android.opengl.GLES20;
 
 import com.yezi.testmedia.R;
+import com.yezi.testmedia.filter.BaseFilter;
 
 /**
  * brightness value ranges from -1.0 to 1.0, with 0.0 as the normal level

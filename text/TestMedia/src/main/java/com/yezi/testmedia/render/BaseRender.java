@@ -40,10 +40,12 @@ public class BaseRender implements GLSurfaceView.Renderer {
         filter.setTextureId(mFilter.getTextureId());
         filter.setDataSize(mFilter.getDataWidth(), mFilter.getDataHeight());
         filter.setScaleType(mFilter.getScaleType());
+        filter.setFilterType(mFilter.getFilterType());
 
         filter.onSurfaceCreated();
         filter.onSurfaceChanged(mFilter.getViewWidth(), mFilter.getViewHeight());
 
+        GLES20.glDeleteProgram(mFilter.getProgram());
         mFilter = filter;
     }
 

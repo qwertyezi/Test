@@ -5,6 +5,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
+import com.yezi.testmedia.filter.video.GrayVideoFilter;
 import com.yezi.testmedia.view.VideoGLSurfaceView;
 
 public class TestVideoGLActivity extends AppCompatActivity {
@@ -21,7 +22,7 @@ public class TestVideoGLActivity extends AppCompatActivity {
 
     public void onPlayClick(View view) {
         mSurfaceView.setLoopPlay(true);
-        mSurfaceView.playVideo("android.resource://" + getPackageName() + "/" + R.raw.test);
+        mSurfaceView.playVideo("android.resource://" + getPackageName() + "/" + R.raw.test, new GrayVideoFilter());
     }
 
     @Override

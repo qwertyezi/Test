@@ -109,8 +109,16 @@ public abstract class BaseFilter implements FilterRenderer {
         return mDataHeight;
     }
 
+    public int getProgram() {
+        return mProgram;
+    }
+
     public ScaleType getScaleType() {
         return mScaleType;
+    }
+
+    public FilterType getFilterType() {
+        return mFilterType;
     }
 
     public float[] getMVPMatrix() {
@@ -130,11 +138,14 @@ public abstract class BaseFilter implements FilterRenderer {
         }
     }
 
-    public void releaseTexture() {
+    public void release() {
         if (mTextureId != BaseFilter.NO_FILTER) {
             GLES20.glDeleteTextures(1, new int[]{mTextureId}, 0);
             mTextureId = BaseFilter.NO_FILTER;
         }
+        GLES20.glDeleteProgram(mProgram);
+        mCoord.clear();
+        mPos.clear();
     }
 
     public void setScaleType(ScaleType type) {

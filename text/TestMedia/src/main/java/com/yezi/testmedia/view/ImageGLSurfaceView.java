@@ -85,15 +85,20 @@ public class ImageGLSurfaceView extends GLSurfaceView {
         });
     }
 
-    public void setBitmap(Bitmap bitmap) {
-        mImageRender.setBitmap(bitmap);
-        requestRender();
+    public void setBitmap(final Bitmap bitmap) {
+                mImageRender.setBitmap(bitmap);
+                requestRender();
     }
 
     public void setFilter(BaseFilter filter) {
         mFilter = filter;
-        mImageRender.setFilter(mFilter);
-        requestRender();
+        queueEvent(new Runnable() {
+            @Override
+            public void run() {
+                mImageRender.setFilter(mFilter);
+                requestRender();
+            }
+        });
     }
 
     private void init() {
@@ -104,6 +109,11 @@ public class ImageGLSurfaceView extends GLSurfaceView {
     }
 
     public void release() {
-        mFilter.releaseTexture();
+        queueEvent(new Runnable() {
+            @Override
+            public void run() {
+                mFilter.release();
+            }
+        });
     }
 }
