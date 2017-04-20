@@ -8,18 +8,18 @@ import android.hardware.Camera.Size;
 import java.io.IOException;
 
 public class CameraEngine {
-    private static Camera camera = null;
-    private static int cameraID = 0;
-    private static SurfaceTexture surfaceTexture;
+    private static Camera sCamera = null;
+    private static int sCameraID = 0;
+    private static SurfaceTexture sSurfaceTexture;
 
     public static Camera getCamera() {
-        return camera;
+        return sCamera;
     }
 
     public static boolean openCamera() {
-        if (camera == null) {
+        if (sCamera == null) {
             try {
-                camera = Camera.open(cameraID);
+                sCamera = Camera.open(sCameraID);
                 setDefaultParameters();
                 return true;
             } catch (RuntimeException e) {
@@ -30,10 +30,10 @@ public class CameraEngine {
     }
 
     public static boolean openCamera(int id) {
-        if (camera == null) {
+        if (sCamera == null) {
             try {
-                camera = Camera.open(id);
-                cameraID = id;
+                sCamera = Camera.open(id);
+                sCameraID = id;
                 setDefaultParameters();
                 return true;
             } catch (RuntimeException e) {
@@ -44,11 +44,11 @@ public class CameraEngine {
     }
 
     public static void releaseCamera() {
-        if (camera != null) {
-            camera.setPreviewCallback(null);
-            camera.stopPreview();
-            camera.release();
-            camera = null;
+        if (sCamera != null) {
+            sCamera.setPreviewCallback(null);
+            sCamera.stopPreview();
+            sCamera.release();
+            sCamera = null;
         }
     }
 
@@ -57,89 +57,83 @@ public class CameraEngine {
     }
 
     public void setParameters(Parameters parameters) {
-        camera.setParameters(parameters);
+        sCamera.setParameters(parameters);
     }
 
     public Parameters getParameters() {
-        if (camera != null)
-            camera.getParameters();
+        if (sCamera != null)
+            sCamera.getParameters();
         return null;
     }
 
     public static void switchCamera() {
         releaseCamera();
-        cameraID = cameraID == 0 ? 1 : 0;
-        openCamera(cameraID);
-        startPreview(surfaceTexture);
+        sCameraID = sCameraID == 0 ? 1 : 0;
+        openCamera(sCameraID);
+        startPreview(sSurfaceTexture);
     }
 
     private static void setDefaultParameters() {
-        Parameters parameters = camera.getParameters();
+        Parameters parameters = sCamera.getParameters();
         if (parameters.getSupportedFocusModes().contains(
                 Parameters.FOCUS_MODE_CONTINUOUS_PICTURE)) {
             parameters.setFocusMode(Parameters.FOCUS_MODE_CONTINUOUS_PICTURE);
         }
-        Size previewSize = CameraUtils.getLargePreviewSize(camera);
+        Size previewSize = CameraUtils.getLargePreviewSize(sCamera);
         parameters.setPreviewSize(previewSize.width, previewSize.height);
-        Size pictureSize = CameraUtils.getLargePictureSize(camera);
+        Size pictureSize = CameraUtils.getLargePictureSize(sCamera);
         parameters.setPictureSize(pictureSize.width, pictureSize.height);
-        camera.setParameters(parameters);
+        sCamera.setParameters(parameters);
     }
 
     public static boolean isFrontCamera() {
         android.hardware.Camera.CameraInfo info = new android.hardware.Camera.CameraInfo();
-        android.hardware.Camera.getCameraInfo(cameraID, info);
+        android.hardware.Camera.getCameraInfo(sCameraID, info);
         return info.facing == Camera.CameraInfo.CAMERA_FACING_FRONT;
     }
 
     private static Size getPreviewSize() {
-        return camera.getParameters().getPreviewSize();
+        return sCamera.getParameters().getPreviewSize();
     }
 
     private static Size getPictureSize() {
-        return camera.getParameters().getPictureSize();
+        return sCamera.getParameters().getPictureSize();
     }
 
     public static void startPreview(SurfaceTexture surfaceTexture) {
-        if (camera != null)
+        if (sCamera != null)
             try {
-                camera.setPreviewTexture(surfaceTexture);
-                CameraEngine.surfaceTexture = surfaceTexture;
-                camera.startPreview();
+                sCamera.setPreviewTexture(surfaceTexture);
+                CameraEngine.sSurfaceTexture = surfaceTexture;
+                sCamera.startPreview();
             } catch (IOException e) {
                 e.printStackTrace();
             }
     }
 
     public static void startPreview() {
-        if (camera != null)
-            camera.startPreview();
+        if (sCamera != null)
+            sCamera.startPreview();
     }
 
     public static void stopPreview() {
-        camera.stopPreview();
-    }
-
-    public static void setRotation(int rotation) {
-        Parameters params = camera.getParameters();
-        params.setRotation(rotation);
-        camera.setParameters(params);
+        sCamera.stopPreview();
     }
 
     public static void takePicture(Camera.ShutterCallback shutterCallback, Camera.PictureCallback rawCallback,
                                    Camera.PictureCallback jpegCallback) {
-        camera.takePicture(shutterCallback, rawCallback, jpegCallback);
+        sCamera.takePicture(shutterCallback, rawCallback, jpegCallback);
     }
 
     public static CameraInfo getCameraInfo() {
         CameraInfo info = new CameraInfo();
         Size size = getPreviewSize();
         Camera.CameraInfo cameraInfo = new Camera.CameraInfo();
-        Camera.getCameraInfo(cameraID, cameraInfo);
+        Camera.getCameraInfo(sCameraID, cameraInfo);
         info.previewWidth = size.width;
         info.previewHeight = size.height;
         info.orientation = cameraInfo.orientation;
-        info.isFront = cameraID == 1 ? true : false;
+        info.isFront = sCameraID == 1 ? true : false;
         size = getPictureSize();
         info.pictureWidth = size.width;
         info.pictureHeight = size.height;

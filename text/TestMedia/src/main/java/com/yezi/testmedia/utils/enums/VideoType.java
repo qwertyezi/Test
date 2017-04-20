@@ -1,4 +1,4 @@
-package com.yezi.testmedia.utils;
+package com.yezi.testmedia.utils.enums;
 
 public enum  VideoType {
     VIDEO,

@@ -5,9 +5,9 @@ import android.opengl.GLES20;
 import android.opengl.Matrix;
 
 import com.yezi.testmedia.R;
-import com.yezi.testmedia.utils.FilterType;
+import com.yezi.testmedia.utils.enums.FilterType;
 import com.yezi.testmedia.utils.GL2Utils;
-import com.yezi.testmedia.utils.ScaleType;
+import com.yezi.testmedia.utils.enums.ScaleType;
 import com.yezi.testmedia.utils.ShaderUtils;
 
 import java.nio.ByteBuffer;

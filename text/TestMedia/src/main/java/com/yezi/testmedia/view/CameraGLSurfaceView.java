@@ -7,7 +7,7 @@ import android.util.AttributeSet;
 
 import com.yezi.testmedia.filter.video.VideoFilter;
 import com.yezi.testmedia.render.VideoRender;
-import com.yezi.testmedia.utils.VideoType;
+import com.yezi.testmedia.utils.enums.VideoType;
 import com.yezi.testmedia.utils.camera.CameraEngine;
 
 public class CameraGLSurfaceView extends GLSurfaceView implements SurfaceTexture.OnFrameAvailableListener {

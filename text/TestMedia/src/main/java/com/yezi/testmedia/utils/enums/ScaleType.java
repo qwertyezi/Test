@@ -1,4 +1,4 @@
-package com.yezi.testmedia.utils;
+package com.yezi.testmedia.utils.enums;
 
 public enum ScaleType {
     CENTER_INSIDE,//将图片的内容完整居中显示

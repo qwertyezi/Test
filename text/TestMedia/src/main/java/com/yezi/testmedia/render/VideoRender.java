@@ -7,7 +7,7 @@ import android.opengl.GLES20;
 import com.yezi.testmedia.filter.BaseFilter;
 import com.yezi.testmedia.filter.video.VideoFilter;
 import com.yezi.testmedia.utils.GL2Utils;
-import com.yezi.testmedia.utils.VideoType;
+import com.yezi.testmedia.utils.enums.VideoType;
 
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
