@@ -9,6 +9,7 @@ import android.widget.SeekBar;
 
 import com.yezi.testmedia.filter.BaseFilter;
 import com.yezi.testmedia.filter.image.BrightnessFilter;
+import com.yezi.testmedia.filter.image.FilterGroup;
 import com.yezi.testmedia.filter.image.GrayFilter;
 import com.yezi.testmedia.view.ImageGLSurfaceView;
 
@@ -22,7 +23,7 @@ public class TestImageGLActivity extends AppCompatActivity {
             R.mipmap.image_5, R.mipmap.image_6
     };
     private static final BaseFilter[] filters = {
-            new GrayFilter(), new BrightnessFilter().setBrightness(-0.3f)
+            new GrayFilter(), new BrightnessFilter().setBrightness(-0.3f), new FilterGroup(new GrayFilter(), new BrightnessFilter().setBrightness(-0.3f))
     };
     private int mCurrentImage;
     private int mCurrentFilter;

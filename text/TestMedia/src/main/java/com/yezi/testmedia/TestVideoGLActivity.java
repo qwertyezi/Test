@@ -29,7 +29,6 @@ public class TestVideoGLActivity extends AppCompatActivity {
     public void onPlayClick(View view) {
         mSurfaceView.setLoopPlay(true);
         mSurfaceView.playVideo("android.resource://" + getPackageName() + "/" + R.raw.test);
-//        mSurfaceView.setFilter(new BrightnessVideoFilter());
     }
 
     public void onFilterChangeClick(View view) {

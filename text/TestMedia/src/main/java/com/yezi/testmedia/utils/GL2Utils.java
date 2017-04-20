@@ -30,4 +30,40 @@ public class GL2Utils {
         }
         return IntBuffer.wrap(pixelMirroredArray);
     }
+
+    public static final float[] VERTEX_POSITION = {
+            -1.0f, 1.0f,
+            -1.0f, -1.0f,
+            1.0f, 1.0f,
+            1.0f, -1.0f
+    };
+
+    public static final float[] FRAGMENT_POSITION = {
+            0.0f, 0.0f,
+            0.0f, 1.0f,
+            1.0f, 0.0f,
+            1.0f, 1.0f,
+    };
+
+    //逆时针方向
+    public static final float[] FRAGMENT_POSITION_90 = {
+            0.0f, 1.0f,
+            1.0f, 1.0f,
+            0.0f, 0.0f,
+            1.0f, 0.0f,
+    };
+
+    public static final float[] FRAGMENT_POSITION_180 = {
+            1.0f, 1.0f,
+            1.0f, 0.0f,
+            0.0f, 1.0f,
+            0.0f, 0.0f,
+    };
+
+    public static final float[] FRAGMENT_POSITION_270 = {
+            1.0f, 0.0f,
+            0.0f, 0.0f,
+            1.0f, 1.0f,
+            0.0f, 1.0f,
+    };
 }

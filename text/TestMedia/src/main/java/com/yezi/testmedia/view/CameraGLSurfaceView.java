@@ -5,6 +5,7 @@ import android.graphics.SurfaceTexture;
 import android.opengl.GLSurfaceView;
 import android.util.AttributeSet;
 
+import com.yezi.testmedia.filter.video.VideoFilter;
 import com.yezi.testmedia.render.VideoRender;
 import com.yezi.testmedia.utils.VideoType;
 import com.yezi.testmedia.utils.camera.CameraEngine;
@@ -21,6 +22,16 @@ public class CameraGLSurfaceView extends GLSurfaceView implements SurfaceTexture
         super(context, attrs);
 
         init();
+    }
+
+    public void setFilter(final VideoFilter filter) {
+        queueEvent(new Runnable() {
+            @Override
+            public void run() {
+                mVideoRender.setFilter(filter);
+                requestRender();
+            }
+        });
     }
 
     private void init() {

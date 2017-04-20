@@ -28,7 +28,9 @@
 
         <activity android:name=".TestVideoGLActivity"/>
 
-        <activity android:name=".TestCameraGLActivity"/>
+        <activity
+            android:name=".TestCameraGLActivity"
+            android:screenOrientation="userPortrait"/>
     </application>
 
 </manifest>

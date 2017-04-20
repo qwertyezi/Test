@@ -1,10 +1,14 @@
 package com.yezi.testmedia.filter.video;
 
 import android.opengl.GLES20;
+import android.opengl.Matrix;
 
 import com.yezi.testmedia.R;
 import com.yezi.testmedia.filter.BaseFilter;
 import com.yezi.testmedia.utils.FilterType;
+import com.yezi.testmedia.utils.GL2Utils;
+import com.yezi.testmedia.utils.VideoType;
+import com.yezi.testmedia.utils.camera.CameraEngine;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
@@ -13,13 +17,8 @@ public class VideoFilter extends BaseFilter {
 
     private int glSTMatrix;
     private float[] mTransformMatrix = new float[16];
-
-    private static final float[] sCoord = {
-            1.0f, 1.0f,
-            1.0f, 0.0f,
-            0.0f, 1.0f,
-            0.0f, 0.0f,
-    };
+    private VideoType mVideoType = VideoType.VIDEO;
+    private float[] mMvpMatrix;
 
     public void setTransformMatrix(float[] matrix) {
         mTransformMatrix = matrix;
@@ -35,18 +34,33 @@ public class VideoFilter extends BaseFilter {
         setFilterType(FilterType.VIDEO);
     }
 
+    public void setVideoType(VideoType videoType) {
+        mVideoType = videoType;
+    }
+
     @Override
     public void initTextureBuffer() {
+        float[] position = mVideoType == VideoType.VIDEO ? GL2Utils.FRAGMENT_POSITION_180 : GL2Utils.FRAGMENT_POSITION_90;
         mCoord = ByteBuffer
-                .allocateDirect(sCoord.length * 4)
+                .allocateDirect(position.length * 4)
                 .order(ByteOrder.nativeOrder())
                 .asFloatBuffer()
-                .put(sCoord);
+                .put(position);
         mCoord.position(0);
     }
 
     @Override
     public void onDraw() {
+        if (mVideoType == VideoType.CAMERA) {
+            if (CameraEngine.isFrontCamera()) {
+                float[] flipMatrix = new float[16];
+                Matrix.multiplyMM(flipMatrix, 0, mMvpMatrix, 0, GL2Utils.flip(GL2Utils.getOriginalMatrix(), false, true), 0);
+                setMVPMatrix(flipMatrix);
+            } else {
+                setMVPMatrix(mMvpMatrix);
+            }
+        }
+
         GLES20.glUniformMatrix4fv(glSTMatrix, 1, false, mTransformMatrix, 0);
     }
 
@@ -57,6 +71,6 @@ public class VideoFilter extends BaseFilter {
 
     @Override
     public void onChanged(int width, int height) {
-
+        mMvpMatrix = getMVPMatrix();
     }
 }

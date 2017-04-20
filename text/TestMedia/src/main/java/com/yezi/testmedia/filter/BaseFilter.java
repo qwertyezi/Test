@@ -6,6 +6,7 @@ import android.opengl.Matrix;
 
 import com.yezi.testmedia.R;
 import com.yezi.testmedia.utils.FilterType;
+import com.yezi.testmedia.utils.GL2Utils;
 import com.yezi.testmedia.utils.ScaleType;
 import com.yezi.testmedia.utils.ShaderUtils;
 
@@ -40,20 +41,6 @@ public abstract class BaseFilter implements FilterRenderer {
     private ScaleType mScaleType = ScaleType.CENTER_INSIDE;
     private FilterType mFilterType = FilterType.IMAGE;
 
-    private static final float[] sPos = {
-            -1.0f, 1.0f,
-            -1.0f, -1.0f,
-            1.0f, 1.0f,
-            1.0f, -1.0f
-    };
-
-    private static final float[] sCoord = {
-            0.0f, 0.0f,
-            0.0f, 1.0f,
-            1.0f, 0.0f,
-            1.0f, 1.0f,
-    };
-
     public BaseFilter() {
         this(0, 0);
     }
@@ -61,16 +48,14 @@ public abstract class BaseFilter implements FilterRenderer {
     public BaseFilter(int vertexRes, int fragmentRes) {
         mVertex = vertexRes == 0 ? R.raw.default_image_vertex : vertexRes;
         mFragment = fragmentRes == 0 ? R.raw.default_image_fragment : fragmentRes;
-
-        initBuffer();
     }
 
     private void initBuffer() {
         mPos = ByteBuffer
-                .allocateDirect(sPos.length * 4)
+                .allocateDirect(GL2Utils.VERTEX_POSITION.length * 4)
                 .order(ByteOrder.nativeOrder())
                 .asFloatBuffer()
-                .put(sPos);
+                .put(GL2Utils.VERTEX_POSITION);
         mPos.position(0);
 
         initTextureBuffer();
@@ -78,10 +63,10 @@ public abstract class BaseFilter implements FilterRenderer {
 
     public void initTextureBuffer() {
         mCoord = ByteBuffer
-                .allocateDirect(sCoord.length * 4)
+                .allocateDirect(GL2Utils.FRAGMENT_POSITION.length * 4)
                 .order(ByteOrder.nativeOrder())
                 .asFloatBuffer()
-                .put(sCoord);
+                .put(GL2Utils.FRAGMENT_POSITION);
         mCoord.position(0);
     }
 
@@ -158,6 +143,8 @@ public abstract class BaseFilter implements FilterRenderer {
 
     @Override
     public void onSurfaceCreated() {
+        initBuffer();
+
         mProgram = ShaderUtils.createProgram(mVertex, mFragment);
 
         glPosition = GLES20.glGetAttribLocation(mProgram, "aPosition");

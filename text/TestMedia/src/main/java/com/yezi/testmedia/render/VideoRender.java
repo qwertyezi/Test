@@ -31,12 +31,19 @@ public class VideoRender extends BaseRender {
     }
 
     public VideoRender(VideoFilter filter, VideoType type) {
+        filter.setVideoType(type);
         mFilter = filter;
         mVideoType = type;
     }
 
     public void setDataSize(int width, int height) {
         mFilter.setDataSize(width, height);
+    }
+
+    @Override
+    public void setFilter(BaseFilter filter) {
+        ((VideoFilter) filter).setVideoType(mVideoType);
+        super.setFilter(filter);
     }
 
     @Override
