@@ -5,10 +5,9 @@ import android.opengl.Matrix;
 
 import com.yezi.testmedia.R;
 import com.yezi.testmedia.filter.BaseFilter;
-import com.yezi.testmedia.utils.enums.FilterType;
 import com.yezi.testmedia.utils.GL2Utils;
+import com.yezi.testmedia.utils.enums.FilterType;
 import com.yezi.testmedia.utils.enums.VideoType;
-import com.yezi.testmedia.utils.camera.CameraEngine;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
@@ -17,8 +16,8 @@ public class VideoFilter extends BaseFilter {
 
     private int glSTMatrix;
     private float[] mTransformMatrix = new float[16];
+    private float[] mFlipMatrix = new float[16];
     private VideoType mVideoType = VideoType.VIDEO;
-    private float[] mMvpMatrix;
 
     public void setTransformMatrix(float[] matrix) {
         mTransformMatrix = matrix;
@@ -40,6 +39,7 @@ public class VideoFilter extends BaseFilter {
 
     @Override
     public void initTextureBuffer() {
+        super.initTextureBuffer();
         float[] position = mVideoType == VideoType.VIDEO ? GL2Utils.FRAGMENT_POSITION_180 : GL2Utils.FRAGMENT_POSITION_90;
         mCoord = ByteBuffer
                 .allocateDirect(position.length * 4)
@@ -51,16 +51,6 @@ public class VideoFilter extends BaseFilter {
 
     @Override
     public void onDraw() {
-        if (mVideoType == VideoType.CAMERA) {
-            if (CameraEngine.isFrontCamera()) {
-                float[] flipMatrix = new float[16];
-                Matrix.multiplyMM(flipMatrix, 0, mMvpMatrix, 0, GL2Utils.flip(GL2Utils.getOriginalMatrix(), false, true), 0);
-                setMVPMatrix(flipMatrix);
-            } else {
-                setMVPMatrix(mMvpMatrix);
-            }
-        }
-
         GLES20.glUniformMatrix4fv(glSTMatrix, 1, false, mTransformMatrix, 0);
     }
 
@@ -71,6 +61,9 @@ public class VideoFilter extends BaseFilter {
 
     @Override
     public void onChanged(int width, int height) {
-        mMvpMatrix = getMVPMatrix();
+        if (mVideoType == VideoType.CAMERA) {
+            Matrix.multiplyMM(mFlipMatrix, 0, getMVPMatrix(), 0, GL2Utils.flip(GL2Utils.getOriginalMatrix(), true, false), 0);
+            setMVPMatrix(mFlipMatrix);
+        }
     }
 }
