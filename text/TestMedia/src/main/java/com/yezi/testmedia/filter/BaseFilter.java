@@ -14,7 +14,7 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
 
-public abstract class BaseFilter implements FilterRenderer {
+public abstract class BaseFilter implements IRendererCallback {
 
     public static final int NO_FILTER = -1;
 
@@ -38,7 +38,7 @@ public abstract class BaseFilter implements FilterRenderer {
     private float[] mViewMatrix = new float[16];
     private float[] mProjectMatrix = new float[16];
     private float[] mMVPMatrix = new float[16];
-    private ScaleType mScaleType = ScaleType.CENTER_INSIDE;
+    private ScaleType mScaleType = ScaleType.FIT_XY;
     private FilterType mFilterType = FilterType.IMAGE;
 
     public BaseFilter() {

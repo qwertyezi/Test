@@ -1,6 +1,6 @@
 package com.yezi.testmedia.filter;
 
-public interface FilterRenderer {
+public interface IRendererCallback {
 
     void onSurfaceCreated();
 

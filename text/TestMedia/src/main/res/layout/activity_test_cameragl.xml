@@ -27,6 +27,20 @@
             android:layout_height="wrap_content"
             android:onClick="onFilterChangeClick"
             android:text="滤镜"/>
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="onEncoderClick"
+            android:text="录制"/>
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="onStopClick"
+            android:text="停止"/>
+
+
     </LinearLayout>
 
 </LinearLayout>

@@ -6,7 +6,6 @@ import android.opengl.GLES20;
 
 import com.yezi.testmedia.filter.BaseFilter;
 import com.yezi.testmedia.filter.video.VideoFilter;
-import com.yezi.testmedia.utils.GL2Utils;
 import com.yezi.testmedia.utils.enums.VideoType;
 
 import javax.microedition.khronos.egl.EGLConfig;
@@ -15,8 +14,9 @@ import javax.microedition.khronos.opengles.GL10;
 public class VideoRender extends BaseRender {
 
     private VideoType mVideoType = VideoType.VIDEO;
-    private SurfaceTexture mSurfaceTexture;
+    protected SurfaceTexture mSurfaceTexture;
     private int[] mTextures = new int[1];
+    protected float[] mTransformMatrix = new float[16];
 
     public VideoRender() {
         this(new VideoFilter());
@@ -79,7 +79,7 @@ public class VideoRender extends BaseRender {
         mFilter.setTextureId(createTexture(mFilter.getTextureId()));
         mSurfaceTexture = new SurfaceTexture(mTextures[0]);
 
-        if (mVideoType == VideoType.CAMERA && mListener != null) {
+        if (mListener != null) {
             mListener.onSurfaceCreated();
         }
     }
@@ -88,13 +88,8 @@ public class VideoRender extends BaseRender {
     public void onDrawFrame(GL10 gl) {
         mSurfaceTexture.updateTexImage();
 
-        if (mVideoType == VideoType.VIDEO) {
-            float[] mTransformMatrix = new float[16];
-            mSurfaceTexture.getTransformMatrix(mTransformMatrix);
-            ((VideoFilter) mFilter).setTransformMatrix(mTransformMatrix);
-        } else if (mVideoType == VideoType.CAMERA) {
-            ((VideoFilter) mFilter).setTransformMatrix(GL2Utils.getOriginalMatrix());
-        }
+        mSurfaceTexture.getTransformMatrix(mTransformMatrix);
+        ((VideoFilter) mFilter).setTransformMatrix(mTransformMatrix);
 
         super.onDrawFrame(gl);
     }
@@ -111,4 +106,5 @@ public class VideoRender extends BaseRender {
 
         mFilter.release();
     }
+
 }

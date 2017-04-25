@@ -2,17 +2,19 @@ package com.yezi.testmedia.view;
 
 import android.content.Context;
 import android.graphics.SurfaceTexture;
+import android.opengl.EGL14;
 import android.opengl.GLSurfaceView;
 import android.util.AttributeSet;
 
 import com.yezi.testmedia.filter.video.VideoFilter;
+import com.yezi.testmedia.render.VideoRecordRender;
 import com.yezi.testmedia.render.VideoRender;
-import com.yezi.testmedia.utils.enums.VideoType;
 import com.yezi.testmedia.utils.camera.CameraEngine;
+import com.yezi.testmedia.utils.enums.VideoType;
 
 public class CameraGLSurfaceView extends GLSurfaceView implements SurfaceTexture.OnFrameAvailableListener {
 
-    private VideoRender mVideoRender;
+    private VideoRecordRender mVideoRender;
 
     public CameraGLSurfaceView(Context context) {
         this(context, null);
@@ -34,8 +36,21 @@ public class CameraGLSurfaceView extends GLSurfaceView implements SurfaceTexture
         });
     }
 
+    public void startRecording() {
+        queueEvent(new Runnable() {
+            @Override
+            public void run() {
+                mVideoRender.startRecording(EGL14.eglGetCurrentContext());
+            }
+        });
+    }
+
+    public void stopRecording() {
+        mVideoRender.stopRecording();
+    }
+
     private void init() {
-        mVideoRender = new VideoRender(VideoType.CAMERA);
+        mVideoRender = new VideoRecordRender(VideoType.CAMERA);
         setEGLContextClientVersion(2);
         setRenderer(mVideoRender);
         setRenderMode(RENDERMODE_WHEN_DIRTY);

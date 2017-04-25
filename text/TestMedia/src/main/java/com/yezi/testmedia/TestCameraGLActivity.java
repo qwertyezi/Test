@@ -41,6 +41,14 @@ public class TestCameraGLActivity extends AppCompatActivity {
         mSurfaceView.setFilter(filters[mCurrentFilter]);
     }
 
+    public void onStopClick(View view) {
+        mSurfaceView.stopRecording();
+    }
+
+    public void onEncoderClick(View view) {
+        mSurfaceView.startRecording();
+    }
+
     @Override
     protected void onResume() {
         super.onResume();
