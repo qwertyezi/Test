@@ -52,7 +52,7 @@ public class VideoRecordRender extends VideoRender {
         if (DEBUG) Log.v(TAG, "startRecording:");
         try {
             mMuxer = new MediaMuxerWrapper(".mp4");    // if you record audio only, ".m4a" is also OK.
-            MediaVideoEncoder videoEncoder = new MediaVideoEncoder(mMuxer, mMediaEncoderListener, 480, 720);
+            MediaVideoEncoder videoEncoder = new MediaVideoEncoder(mMuxer, mMediaEncoderListener, 720, 1280);
             new MediaAudioEncoder(mMuxer, mMediaEncoderListener);
             mMuxer.prepare();
             mRenderHandler = new RenderHandler((VideoFilter) mFilter,

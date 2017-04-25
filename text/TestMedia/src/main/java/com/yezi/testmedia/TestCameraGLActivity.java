@@ -82,6 +82,7 @@ public class TestCameraGLActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        mSurfaceView.onDestroy();
         CameraEngine.releaseCamera();
     }
 }

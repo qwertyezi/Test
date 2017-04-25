@@ -46,6 +46,10 @@ public class CameraGLSurfaceView extends GLSurfaceView implements SurfaceTexture
         });
     }
 
+    public void onDestroy() {
+        mVideoRender.stopRecording();
+    }
+
     public void stopRecording() {
         mVideoRender.stopRecording();
     }

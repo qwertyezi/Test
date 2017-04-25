@@ -13,7 +13,8 @@ public class MediaVideoEncoder extends MediaEncoder {
     private static final String TAG = "MediaVideoEncoder";
 
     private static final String MIME_TYPE = "video/avc";
-    private static final int FRAME_RATE = 25;
+    private static final int FRAME_RATE = 30;
+    private static final int I_FRAME_INTERVAL = 5;
     private static final float BPP = 0.25f;
 
     private final int mWidth;
@@ -44,7 +45,7 @@ public class MediaVideoEncoder extends MediaEncoder {
         format.setInteger(MediaFormat.KEY_COLOR_FORMAT, MediaCodecInfo.CodecCapabilities.COLOR_FormatSurface);
         format.setInteger(MediaFormat.KEY_BIT_RATE, calcBitRate());
         format.setInteger(MediaFormat.KEY_FRAME_RATE, FRAME_RATE);
-        format.setInteger(MediaFormat.KEY_I_FRAME_INTERVAL, 10);
+        format.setInteger(MediaFormat.KEY_I_FRAME_INTERVAL, I_FRAME_INTERVAL);
         if (DEBUG) Log.i(TAG, "format: " + format);
 
         mMediaCodec = MediaCodec.createEncoderByType(MIME_TYPE);
@@ -81,24 +82,16 @@ public class MediaVideoEncoder extends MediaEncoder {
         return bitrate;
     }
 
-    /**
-     * select the first codec that match a specific MIME type
-     *
-     * @param mimeType
-     * @return null if no codec matched
-     */
-    protected static final MediaCodecInfo selectVideoCodec(final String mimeType) {
+    private static MediaCodecInfo selectVideoCodec(final String mimeType) {
         if (DEBUG) Log.v(TAG, "selectVideoCodec:");
 
-        // get the list of available codecs
         final int numCodecs = MediaCodecList.getCodecCount();
         for (int i = 0; i < numCodecs; i++) {
             final MediaCodecInfo codecInfo = MediaCodecList.getCodecInfoAt(i);
 
-            if (!codecInfo.isEncoder()) {    // skipp decoder
+            if (!codecInfo.isEncoder()) {
                 continue;
             }
-            // select first codec that match a specific MIME type and color format
             final String[] types = codecInfo.getSupportedTypes();
             for (int j = 0; j < types.length; j++) {
                 if (types[j].equalsIgnoreCase(mimeType)) {
@@ -113,12 +106,7 @@ public class MediaVideoEncoder extends MediaEncoder {
         return null;
     }
 
-    /**
-     * select color format available on specific codec and we can use.
-     *
-     * @return 0 if no colorFormat is matched
-     */
-    protected static final int selectColorFormat(final MediaCodecInfo codecInfo, final String mimeType) {
+    private static int selectColorFormat(final MediaCodecInfo codecInfo, final String mimeType) {
         if (DEBUG) Log.i(TAG, "selectColorFormat: ");
         int result = 0;
         final MediaCodecInfo.CodecCapabilities caps;
@@ -132,8 +120,7 @@ public class MediaVideoEncoder extends MediaEncoder {
         for (int i = 0; i < caps.colorFormats.length; i++) {
             colorFormat = caps.colorFormats[i];
             if (isRecognizedViewoFormat(colorFormat)) {
-                if (result == 0)
-                    result = colorFormat;
+                result = colorFormat;
                 break;
             }
         }
@@ -142,9 +129,7 @@ public class MediaVideoEncoder extends MediaEncoder {
         return result;
     }
 
-    /**
-     * color formats that we can use in this class
-     */
+
     protected static int[] recognizedFormats;
 
     static {
@@ -170,7 +155,7 @@ public class MediaVideoEncoder extends MediaEncoder {
     @Override
     protected void signalEndOfInputStream() {
         if (DEBUG) Log.d(TAG, "sending EOS to encoder");
-        mMediaCodec.signalEndOfInputStream();    // API >= 18
+        mMediaCodec.signalEndOfInputStream();
         mIsEOS = true;
     }
 
