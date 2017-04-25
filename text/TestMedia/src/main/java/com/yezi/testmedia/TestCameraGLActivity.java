@@ -5,7 +5,6 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
-
 import com.yezi.testmedia.filter.video.BrightnessVideoFilter;
 import com.yezi.testmedia.filter.video.GrayVideoFilter;
 import com.yezi.testmedia.filter.video.VideoFilter;

@@ -25,7 +25,7 @@ public class CodecInputSurface {
         mSurface = surface;
     }
 
-    public void setupEGL(EGLContext eglContext) {
+    public CodecInputSurface setupEGL(EGLContext eglContext) {
         mEGLDisplay = EGL14.eglGetDisplay(EGL14.EGL_DEFAULT_DISPLAY);
         if (mEGLDisplay == EGL14.EGL_NO_DISPLAY) {
             throw new RuntimeException("unable to get EGL14 display");
@@ -64,6 +64,8 @@ public class CodecInputSurface {
         mEGLSurface = EGL14.eglCreateWindowSurface(mEGLDisplay, configs[0], mSurface,
                 surfaceAttribs, 0);
         checkEglError("eglCreateWindowSurface");
+
+        return this;
     }
 
     public void release() {

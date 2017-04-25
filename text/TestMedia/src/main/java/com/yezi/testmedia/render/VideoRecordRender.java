@@ -4,7 +4,7 @@ import android.opengl.EGLContext;
 import android.util.Log;
 
 import com.yezi.testmedia.BuildConfig;
-import com.yezi.testmedia.recorder.CodecInputSurface;
+import com.yezi.testmedia.filter.video.VideoFilter;
 import com.yezi.testmedia.recorder.MediaAudioEncoder;
 import com.yezi.testmedia.recorder.MediaEncoder;
 import com.yezi.testmedia.recorder.MediaMuxerWrapper;
@@ -53,11 +53,10 @@ public class VideoRecordRender extends VideoRender {
         try {
             mMuxer = new MediaMuxerWrapper(".mp4");    // if you record audio only, ".m4a" is also OK.
             MediaVideoEncoder videoEncoder = new MediaVideoEncoder(mMuxer, mMediaEncoderListener, 480, 720);
-            MediaAudioEncoder audioEncoder = new MediaAudioEncoder(mMuxer, mMediaEncoderListener);
+            new MediaAudioEncoder(mMuxer, mMediaEncoderListener);
             mMuxer.prepare();
-            CodecInputSurface inputSurface = videoEncoder.getInputSurface();
-            inputSurface.setupEGL(eglContext);
-            mRenderHandler = new RenderHandler(inputSurface, mFilter.getTextureId(), VideoType.CAMERA, 480, 720);
+            mRenderHandler = new RenderHandler((VideoFilter) mFilter,
+                    videoEncoder.getInputSurface().setupEGL(eglContext));
             mRenderHandler.startRender();
             mMuxer.startRecording();
             mIsRecording = true;
