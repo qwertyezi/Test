@@ -4,6 +4,7 @@ import android.opengl.GLES20;
 import android.opengl.GLSurfaceView;
 
 import com.yezi.testmedia.filter.BaseFilter;
+import com.yezi.testmedia.utils.enums.ScaleType;
 
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
@@ -47,6 +48,14 @@ public class BaseRender implements GLSurfaceView.Renderer {
 
         GLES20.glDeleteProgram(mFilter.getProgram());
         mFilter = filter;
+    }
+
+    public void setScaleType(ScaleType scaleType) {
+        mFilter.setScaleType(scaleType);
+    }
+
+    public ScaleType getScaleType() {
+        return mFilter.getScaleType();
     }
 
     @Override

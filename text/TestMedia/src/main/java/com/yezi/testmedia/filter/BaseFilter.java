@@ -38,7 +38,7 @@ public abstract class BaseFilter implements IRendererCallback {
     private float[] mViewMatrix = new float[16];
     private float[] mProjectMatrix = new float[16];
     private float[] mMVPMatrix = new float[16];
-    private ScaleType mScaleType = ScaleType.FIT_XY;
+    private ScaleType mScaleType = ScaleType.CENTER_INSIDE;
     private FilterType mFilterType = FilterType.IMAGE;
 
     public BaseFilter() {
@@ -135,6 +135,10 @@ public abstract class BaseFilter implements IRendererCallback {
 
     public void setScaleType(ScaleType type) {
         mScaleType = type;
+
+        if (mViewWidth != 0 && mViewHeight != 0) {
+            onSurfaceChanged(mViewWidth, mViewHeight);
+        }
     }
 
     public void setFilterType(FilterType type) {

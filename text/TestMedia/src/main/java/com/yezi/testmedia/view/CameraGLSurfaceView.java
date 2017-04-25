@@ -10,6 +10,7 @@ import com.yezi.testmedia.filter.video.VideoFilter;
 import com.yezi.testmedia.render.VideoRecordRender;
 import com.yezi.testmedia.render.VideoRender;
 import com.yezi.testmedia.utils.camera.CameraEngine;
+import com.yezi.testmedia.utils.enums.ScaleType;
 import com.yezi.testmedia.utils.enums.VideoType;
 
 public class CameraGLSurfaceView extends GLSurfaceView implements SurfaceTexture.OnFrameAvailableListener {
@@ -49,6 +50,14 @@ public class CameraGLSurfaceView extends GLSurfaceView implements SurfaceTexture
         mVideoRender.stopRecording();
     }
 
+    public void setScaleType(ScaleType scaleType) {
+        mVideoRender.setScaleType(scaleType);
+    }
+
+    public ScaleType getScaleType() {
+        return mVideoRender.getScaleType();
+    }
+
     private void init() {
         mVideoRender = new VideoRecordRender(VideoType.CAMERA);
         setEGLContextClientVersion(2);
@@ -60,6 +69,7 @@ public class CameraGLSurfaceView extends GLSurfaceView implements SurfaceTexture
             public void onSurfaceCreated() {
                 mVideoRender.getSurfaceTexture().setOnFrameAvailableListener(CameraGLSurfaceView.this);
                 CameraEngine.openCamera();
+                mVideoRender.setDataSize(CameraEngine.getPreviewSize().width, CameraEngine.getPreviewSize().height);
                 CameraEngine.startPreview(mVideoRender.getSurfaceTexture());
             }
         });

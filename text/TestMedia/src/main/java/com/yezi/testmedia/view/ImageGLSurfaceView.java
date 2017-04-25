@@ -10,6 +10,7 @@ import android.util.AttributeSet;
 import com.yezi.testmedia.filter.BaseFilter;
 import com.yezi.testmedia.render.ImageRender;
 import com.yezi.testmedia.utils.GL2Utils;
+import com.yezi.testmedia.utils.enums.ScaleType;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -86,8 +87,8 @@ public class ImageGLSurfaceView extends GLSurfaceView {
     }
 
     public void setBitmap(final Bitmap bitmap) {
-                mImageRender.setBitmap(bitmap);
-                requestRender();
+        mImageRender.setBitmap(bitmap);
+        requestRender();
     }
 
     public void setFilter(BaseFilter filter) {
@@ -99,6 +100,15 @@ public class ImageGLSurfaceView extends GLSurfaceView {
                 requestRender();
             }
         });
+    }
+
+    public void setScaleType(ScaleType scaleType) {
+        mImageRender.setScaleType(scaleType);
+        requestRender();
+    }
+
+    public ScaleType getScaleType() {
+        return mImageRender.getScaleType();
     }
 
     private void init() {

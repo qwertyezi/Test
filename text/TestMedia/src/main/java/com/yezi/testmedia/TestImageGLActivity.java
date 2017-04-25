@@ -5,12 +5,14 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.widget.Button;
 import android.widget.SeekBar;
 
 import com.yezi.testmedia.filter.BaseFilter;
 import com.yezi.testmedia.filter.image.BrightnessFilter;
 import com.yezi.testmedia.filter.image.FilterGroup;
 import com.yezi.testmedia.filter.image.GrayFilter;
+import com.yezi.testmedia.utils.enums.ScaleType;
 import com.yezi.testmedia.view.ImageGLSurfaceView;
 
 public class TestImageGLActivity extends AppCompatActivity {
@@ -25,8 +27,13 @@ public class TestImageGLActivity extends AppCompatActivity {
     private static final BaseFilter[] filters = {
             new GrayFilter(), new BrightnessFilter().setBrightness(-0.3f), new FilterGroup(new GrayFilter(), new BrightnessFilter().setBrightness(-0.3f))
     };
+    private static final ScaleType[] scaleTypes = {
+            ScaleType.CENTER_INSIDE, ScaleType.CENTER_CROP, ScaleType.FIT_XY
+    };
     private int mCurrentImage;
     private int mCurrentFilter;
+    private int mCurrentScaleType;
+    private Button mBtnScaleType;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -35,11 +42,15 @@ public class TestImageGLActivity extends AppCompatActivity {
         setContentView(R.layout.activity_test_imagegl);
 
         mSurfaceView = (ImageGLSurfaceView) findViewById(R.id.glsurfaceview);
+        mBtnScaleType = (Button) findViewById(R.id.btn_scale_type);
 //        mSeekBar = (SeekBar) findViewById(R.id.seek_bar);
 
         mSurfaceView.setBitmap(BitmapFactory.decodeResource(getResources(), R.mipmap.image_1));
+        mBtnScaleType.setText(mSurfaceView.getScaleType().toString());
+
         mCurrentImage = 0;
         mCurrentFilter = 0;
+        mCurrentScaleType = 0;
 
 //        mSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
 //            @Override
@@ -77,6 +88,15 @@ public class TestImageGLActivity extends AppCompatActivity {
             mCurrentFilter = 0;
         }
         mSurfaceView.setFilter(filters[mCurrentFilter]);
+    }
+
+    public void onScaleTypeChangeClick(View view) {
+        ++mCurrentScaleType;
+        if (mCurrentScaleType == scaleTypes.length) {
+            mCurrentScaleType = 0;
+        }
+        mSurfaceView.setScaleType(scaleTypes[mCurrentScaleType]);
+        mBtnScaleType.setText(scaleTypes[mCurrentScaleType].toString());
     }
 
     @Override

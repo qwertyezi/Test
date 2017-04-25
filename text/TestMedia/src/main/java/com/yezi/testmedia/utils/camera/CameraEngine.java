@@ -92,7 +92,7 @@ public class CameraEngine {
         return info.facing == Camera.CameraInfo.CAMERA_FACING_FRONT;
     }
 
-    private static Size getPreviewSize() {
+    public static Size getPreviewSize() {
         return sCamera.getParameters().getPreviewSize();
     }
 

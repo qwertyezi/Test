@@ -11,6 +11,7 @@ import android.view.Surface;
 
 import com.yezi.testmedia.filter.video.VideoFilter;
 import com.yezi.testmedia.render.VideoRender;
+import com.yezi.testmedia.utils.enums.ScaleType;
 
 import java.io.IOException;
 
@@ -78,6 +79,14 @@ public class VideoGLSurfaceView extends GLSurfaceView implements SurfaceTexture.
                 }
             });
         }
+    }
+
+    public void setScaleType(ScaleType scaleType) {
+        mVideoRender.setScaleType(scaleType);
+    }
+
+    public ScaleType getScaleType() {
+        return mVideoRender.getScaleType();
     }
 
     public void release() {
