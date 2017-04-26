@@ -16,6 +16,16 @@ public class CameraEngine {
         return sCamera;
     }
 
+    public interface onCameraSwitchListener {
+        void onCameraSwitch(boolean isFront);
+    }
+
+    private static onCameraSwitchListener sSwitchListener;
+
+    public static void setOnCameraSwitchListener(onCameraSwitchListener listener) {
+        sSwitchListener = listener;
+    }
+
     public static boolean openCamera() {
         if (sCamera == null) {
             try {
@@ -106,6 +116,10 @@ public class CameraEngine {
                 sCamera.setPreviewTexture(surfaceTexture);
                 CameraEngine.sSurfaceTexture = surfaceTexture;
                 sCamera.startPreview();
+
+                if (sSwitchListener != null) {
+                    sSwitchListener.onCameraSwitch(isFrontCamera());
+                }
             } catch (IOException e) {
                 e.printStackTrace();
             }

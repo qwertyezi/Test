@@ -14,10 +14,10 @@ import java.nio.ByteOrder;
 
 public class VideoFilter extends BaseFilter {
 
-    private int glSTMatrix;
-    private float[] mTransformMatrix = new float[16];
-    private float[] mFlipMatrix = new float[16];
-    private VideoType mVideoType = VideoType.VIDEO;
+    protected int glSTMatrix;
+    protected float[] mTransformMatrix = new float[16];
+    protected float[] mFlipMatrix = new float[16];
+    protected VideoType mVideoType = VideoType.VIDEO;
 
     public void setTransformMatrix(float[] matrix) {
         mTransformMatrix = matrix;
