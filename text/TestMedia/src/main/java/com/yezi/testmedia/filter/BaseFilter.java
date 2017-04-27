@@ -63,10 +63,10 @@ public abstract class BaseFilter implements IRendererCallback {
 
     public void initTextureBuffer() {
         mCoord = ByteBuffer
-                .allocateDirect(GL2Utils.FRAGMENT_POSITION.length * 4)
+                .allocateDirect(GL2Utils.FRAGMENT_POSITION_IMAGE.length * 4)
                 .order(ByteOrder.nativeOrder())
                 .asFloatBuffer()
-                .put(GL2Utils.FRAGMENT_POSITION);
+                .put(GL2Utils.FRAGMENT_POSITION_IMAGE);
         mCoord.position(0);
     }
 

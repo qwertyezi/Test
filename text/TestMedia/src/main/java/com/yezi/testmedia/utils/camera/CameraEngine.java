@@ -4,6 +4,7 @@ import android.graphics.SurfaceTexture;
 import android.hardware.Camera;
 import android.hardware.Camera.Parameters;
 import android.hardware.Camera.Size;
+import android.view.Surface;
 
 import java.io.IOException;
 
@@ -11,19 +12,10 @@ public class CameraEngine {
     private static Camera sCamera = null;
     private static int sCameraID = 0;
     private static SurfaceTexture sSurfaceTexture;
+    private static int sRotation = 90;
 
     public static Camera getCamera() {
         return sCamera;
-    }
-
-    public interface onCameraSwitchListener {
-        void onCameraSwitch(boolean isFront);
-    }
-
-    private static onCameraSwitchListener sSwitchListener;
-
-    public static void setOnCameraSwitchListener(onCameraSwitchListener listener) {
-        sSwitchListener = listener;
     }
 
     public static boolean openCamera() {
@@ -62,6 +54,10 @@ public class CameraEngine {
         }
     }
 
+    public static void setRotation(int rotation) {
+        sRotation = rotation;
+    }
+
     public void resumeCamera() {
         openCamera();
     }
@@ -94,6 +90,36 @@ public class CameraEngine {
         Size pictureSize = CameraUtils.getLargePictureSize(sCamera);
         parameters.setPictureSize(pictureSize.width, pictureSize.height);
         sCamera.setParameters(parameters);
+        setCameraDisplayOrientation();
+    }
+
+    private static void setCameraDisplayOrientation() {
+        android.hardware.Camera.CameraInfo info =
+                new android.hardware.Camera.CameraInfo();
+        android.hardware.Camera.getCameraInfo(sCameraID, info);
+        int degrees = 0;
+        switch (sRotation) {
+            case Surface.ROTATION_0:
+                degrees = 0;
+                break;
+            case Surface.ROTATION_90:
+                degrees = 90;
+                break;
+            case Surface.ROTATION_180:
+                degrees = 180;
+                break;
+            case Surface.ROTATION_270:
+                degrees = 270;
+                break;
+        }
+        int result;
+        if (info.facing == Camera.CameraInfo.CAMERA_FACING_FRONT) {
+            result = (info.orientation + degrees) % 360;
+            result = (360 - result) % 360;  // compensate the mirror
+        } else {  // back-facing
+            result = (info.orientation - degrees + 360) % 360;
+        }
+        sCamera.setDisplayOrientation(result);
     }
 
     public static boolean isFrontCamera() {
@@ -116,10 +142,6 @@ public class CameraEngine {
                 sCamera.setPreviewTexture(surfaceTexture);
                 CameraEngine.sSurfaceTexture = surfaceTexture;
                 sCamera.startPreview();
-
-                if (sSwitchListener != null) {
-                    sSwitchListener.onCameraSwitch(isFrontCamera());
-                }
             } catch (IOException e) {
                 e.printStackTrace();
             }

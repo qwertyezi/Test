@@ -1,5 +1,5 @@
 attribute vec4 aPosition;
-attribute vec4 aCoordinate;
+attribute vec2 aCoordinate;
 
 varying vec2 vCoordinate;
 varying vec2 vBlurCoord1s[14];
@@ -13,7 +13,7 @@ uniform mat4 uSTMatrix;
 void main( )
 {
     gl_Position = uMatrix*aPosition;
-    vCoordinate=(uSTMatrix*aCoordinate).xy;
+    vCoordinate=aCoordinate;
 
     highp float mul_x = 2.0 / mWidth;
     highp float mul_y = 2.0 / mHeight;

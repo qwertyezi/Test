@@ -1,22 +1,21 @@
 package com.yezi.testmedia.filter.video;
 
 import android.opengl.GLES20;
-import android.opengl.Matrix;
 
 import com.yezi.testmedia.R;
 import com.yezi.testmedia.filter.BaseFilter;
-import com.yezi.testmedia.utils.GL2Utils;
 import com.yezi.testmedia.utils.enums.FilterType;
 import com.yezi.testmedia.utils.enums.VideoType;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
+import static com.yezi.testmedia.utils.GL2Utils.FRAGMENT_POSITION_VIDEO;
+
 public class VideoFilter extends BaseFilter {
 
     protected int glSTMatrix;
     protected float[] mTransformMatrix = new float[16];
-    protected float[] mFlipMatrix = new float[16];
     protected VideoType mVideoType = VideoType.VIDEO;
 
     public void setTransformMatrix(float[] matrix) {
@@ -39,13 +38,11 @@ public class VideoFilter extends BaseFilter {
 
     @Override
     public void initTextureBuffer() {
-        super.initTextureBuffer();
-        float[] position = mVideoType == VideoType.VIDEO ? GL2Utils.FRAGMENT_POSITION_180 : GL2Utils.FRAGMENT_POSITION_90;
         mCoord = ByteBuffer
-                .allocateDirect(position.length * 4)
+                .allocateDirect(FRAGMENT_POSITION_VIDEO.length * 4)
                 .order(ByteOrder.nativeOrder())
                 .asFloatBuffer()
-                .put(position);
+                .put(FRAGMENT_POSITION_VIDEO);
         mCoord.position(0);
     }
 
@@ -61,9 +58,6 @@ public class VideoFilter extends BaseFilter {
 
     @Override
     public void onChanged(int width, int height) {
-        if (mVideoType == VideoType.CAMERA) {
-            Matrix.multiplyMM(mFlipMatrix, 0, getMVPMatrix(), 0, GL2Utils.flip(GL2Utils.getOriginalMatrix(), true, false), 0);
-            setMVPMatrix(mFlipMatrix);
-        }
+
     }
 }

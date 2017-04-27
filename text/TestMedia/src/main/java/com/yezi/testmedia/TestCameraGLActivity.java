@@ -19,7 +19,7 @@ public class TestCameraGLActivity extends AppCompatActivity {
     private CameraGLSurfaceView mSurfaceView;
 
     private static final VideoFilter[] filters = {
-            new GrayVideoFilter(), new BrightnessVideoFilter().setBrightness(-0.3f), new VideoFilter(), new BeautyVideoFilter().setFlag(6)
+            new GrayVideoFilter(), new BrightnessVideoFilter().setBrightness(-0.3f), new BeautyVideoFilter().setFlag(6)
     };
     private static final ScaleType[] scaleTypes = {
             ScaleType.CENTER_INSIDE, ScaleType.CENTER_CROP, ScaleType.FIT_XY
@@ -38,6 +38,8 @@ public class TestCameraGLActivity extends AppCompatActivity {
         mSurfaceView = (CameraGLSurfaceView) findViewById(R.id.surface_view);
         mBtnScaleType = (Button) findViewById(R.id.btn_scale_type);
         mBtnScaleType.setText(mSurfaceView.getScaleType().toString());
+
+        CameraEngine.setRotation(getWindowManager().getDefaultDisplay().getRotation());
     }
 
     public void onSwitchClick(View view) {

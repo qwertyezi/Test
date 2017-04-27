@@ -1,8 +1,15 @@
 package com.yezi.testmedia.filter.video;
 
 import android.opengl.GLES20;
+import android.opengl.Matrix;
 
 import com.yezi.testmedia.R;
+import com.yezi.testmedia.utils.GL2Utils;
+import com.yezi.testmedia.utils.camera.CameraEngine;
+import com.yezi.testmedia.utils.enums.VideoType;
+
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
 
 public class BeautyVideoFilter extends VideoFilter {
 
@@ -14,7 +21,8 @@ public class BeautyVideoFilter extends VideoFilter {
     private float mixCoef;
     private int iternum;
 
-    private float[] mMVPMatrix = new float[16];
+    private float[] mOriginalMVPMatrix = new float[16];
+    private float[] mMatrix = new float[16];
 
     public BeautyVideoFilter() {
         super(R.raw.beauty_vertex, R.raw.beauty_fragment);
@@ -54,12 +62,31 @@ public class BeautyVideoFilter extends VideoFilter {
     }
 
     @Override
+    public void initTextureBuffer() {
+        mCoord = ByteBuffer
+                .allocateDirect(GL2Utils.FRAGMENT_POSITION_BEAUTY.length * 4)
+                .order(ByteOrder.nativeOrder())
+                .asFloatBuffer()
+                .put(GL2Utils.FRAGMENT_POSITION_BEAUTY);
+        mCoord.position(0);
+    }
+
+    @Override
     public void onDraw() {
         super.onDraw();
 
         GLES20.glUniform1f(glAaCoef, aaCoef);
         GLES20.glUniform1f(glMixCoef, mixCoef);
         GLES20.glUniform1i(glIternum, iternum);
+
+        if (mVideoType == VideoType.CAMERA) {
+            if (!CameraEngine.isFrontCamera()) {
+                Matrix.multiplyMM(mMatrix, 0, mOriginalMVPMatrix, 0, GL2Utils.flip(GL2Utils.getOriginalMatrix(), false, true), 0);
+                setMVPMatrix(mMatrix);
+            } else {
+                setMVPMatrix(mOriginalMVPMatrix);
+            }
+        }
     }
 
     @Override
@@ -69,25 +96,11 @@ public class BeautyVideoFilter extends VideoFilter {
         glAaCoef = GLES20.glGetUniformLocation(mProgram, "uAaCoef");
         glMixCoef = GLES20.glGetUniformLocation(mProgram, "uMixCoef");
         glIternum = GLES20.glGetUniformLocation(mProgram, "uIternum");
-
-//        if (mVideoType == VideoType.CAMERA) {
-//            CameraEngine.setOnCameraSwitchListener(new CameraEngine.onCameraSwitchListener() {
-//                @Override
-//                public void onCameraSwitch(boolean isFront) {
-//                    if (isFront) {
-//                        Matrix.multiplyMM(mFlipMatrix, 0, mMVPMatrix, 0, GL2Utils.flip(GL2Utils.getOriginalMatrix(), false, true), 0);
-//                        setMVPMatrix(mFlipMatrix);
-//                    } else {
-//                        setMVPMatrix(mMVPMatrix);
-//                    }
-//                }
-//            });
-//        }
     }
 
     @Override
     public void onChanged(int width, int height) {
-//        mMVPMatrix = getMVPMatrix();
         super.onChanged(width, height);
+        mOriginalMVPMatrix = getMVPMatrix();
     }
 }
