@@ -20,10 +20,10 @@ public class TestCameraGLActivity extends AppCompatActivity {
     private CameraGLSurfaceView mSurfaceView;
 
     private static final VideoFilter[] filters = {
-            new GrayVideoFilter(), new BrightnessVideoFilter().setBrightness(-0.3f), new BeautyVideoFilter().setFlag(6)
+            new GrayVideoFilter(), new BrightnessVideoFilter().setBrightness(-0.3f), new BeautyVideoFilter().setFlag(4)
     };
     private static final ScaleType[] scaleTypes = {
-            ScaleType.CENTER_INSIDE, ScaleType.CENTER_CROP, ScaleType.FIT_XY
+            ScaleType.CENTER_INSIDE, ScaleType.CENTER_CROP, ScaleType.CENTER_CROP
     };
     private int mCurrentScaleType;
     private int mCurrentFilter;
