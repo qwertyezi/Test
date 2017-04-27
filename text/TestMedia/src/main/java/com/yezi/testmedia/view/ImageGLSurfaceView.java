@@ -4,18 +4,14 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.opengl.GLES20;
 import android.opengl.GLSurfaceView;
-import android.text.TextUtils;
 import android.util.AttributeSet;
 
 import com.yezi.testmedia.filter.BaseFilter;
 import com.yezi.testmedia.render.ImageRender;
+import com.yezi.testmedia.utils.BitmapUtils;
 import com.yezi.testmedia.utils.GL2Utils;
 import com.yezi.testmedia.utils.enums.ScaleType;
 
-import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.nio.IntBuffer;
 
 public class ImageGLSurfaceView extends GLSurfaceView {
@@ -63,25 +59,7 @@ public class ImageGLSurfaceView extends GLSurfaceView {
         getResultBitmap(new ResultBitmapCallback() {
             @Override
             public void resultBitmap(Bitmap bitmap) {
-                if (bitmap == null) {
-                    return;
-                }
-                File file;
-                if (TextUtils.isEmpty(filePath)) {
-                    file = new File(mContext.getExternalMediaDirs()[0].getAbsolutePath() + "/" + System.currentTimeMillis() + ".jpg");
-                } else {
-                    file = new File(filePath);
-                }
-                try {
-                    FileOutputStream fout = new FileOutputStream(file);
-                    BufferedOutputStream bos = new BufferedOutputStream(fout);
-                    bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bos);
-                    bos.flush();
-                    bos.close();
-                    bitmap.recycle();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+                BitmapUtils.saveBitmap(bitmap, filePath);
             }
         });
     }

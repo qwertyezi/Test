@@ -5,7 +5,7 @@ import android.opengl.Matrix;
 
 import com.yezi.testmedia.R;
 import com.yezi.testmedia.utils.GL2Utils;
-import com.yezi.testmedia.utils.camera.CameraEngine;
+import com.yezi.testmedia.utils.camera.CameraInstance;
 import com.yezi.testmedia.utils.enums.VideoType;
 
 import java.nio.ByteBuffer;
@@ -80,7 +80,7 @@ public class BeautyVideoFilter extends VideoFilter {
         GLES20.glUniform1i(glIternum, iternum);
 
         if (mVideoType == VideoType.CAMERA) {
-            if (!CameraEngine.isFrontCamera()) {
+            if (!CameraInstance.getInstance().isFrontCamera()) {
                 Matrix.multiplyMM(mMatrix, 0, mOriginalMVPMatrix, 0, GL2Utils.flip(GL2Utils.getOriginalMatrix(), false, true), 0);
                 setMVPMatrix(mMatrix);
             } else {

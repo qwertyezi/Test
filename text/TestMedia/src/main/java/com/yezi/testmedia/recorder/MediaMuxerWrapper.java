@@ -3,25 +3,19 @@ package com.yezi.testmedia.recorder;
 import android.media.MediaCodec;
 import android.media.MediaFormat;
 import android.media.MediaMuxer;
-import android.os.Environment;
 import android.text.TextUtils;
 import android.util.Log;
 
 import com.yezi.testmedia.BuildConfig;
+import com.yezi.testmedia.TestMediaApp;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.ByteBuffer;
-import java.text.SimpleDateFormat;
-import java.util.GregorianCalendar;
-import java.util.Locale;
 
 public class MediaMuxerWrapper {
     private static final boolean DEBUG = BuildConfig.DEBUG;
     private static final String TAG = "MediaMuxerWrapper";
-
-    private static final String DIR_NAME = "TestMedia";
-    private static final SimpleDateFormat mDateTimeFormat = new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss", Locale.US);
 
     private String mOutputPath;
     private final MediaMuxer mMediaMuxer;
@@ -29,10 +23,15 @@ public class MediaMuxerWrapper {
     private boolean mIsStarted;
     private MediaEncoder mVideoEncoder, mAudioEncoder;
 
-    public MediaMuxerWrapper(String ext) throws IOException {
-        if (TextUtils.isEmpty(ext)) ext = ".mp4";
+    public MediaMuxerWrapper(String filePath) throws IOException {
         try {
-            mOutputPath = getCaptureFile(Environment.DIRECTORY_MOVIES, ext).toString();
+            File file;
+            if (TextUtils.isEmpty(filePath)) {
+                file = new File(TestMediaApp.getAppContext().getExternalMediaDirs()[0].getAbsolutePath() + "/" + System.currentTimeMillis() + ".mp4");
+            } else {
+                file = new File(filePath);
+            }
+            mOutputPath = file.toString();
         } catch (final NullPointerException e) {
             throw new RuntimeException("This app has no permission of writing external storage");
         }
@@ -127,21 +126,6 @@ public class MediaMuxerWrapper {
     synchronized void writeSampleData(final int trackIndex, final ByteBuffer byteBuf, final MediaCodec.BufferInfo bufferInfo) {
         if (mStatredCount > 0)
             mMediaMuxer.writeSampleData(trackIndex, byteBuf, bufferInfo);
-    }
-
-    public static final File getCaptureFile(final String type, final String ext) {
-        final File dir = new File(Environment.getExternalStoragePublicDirectory(type), DIR_NAME);
-        Log.d(TAG, "path=" + dir.toString());
-        dir.mkdirs();
-        if (dir.canWrite()) {
-            return new File(dir, getDateTimeString() + ext);
-        }
-        return null;
-    }
-
-    private static final String getDateTimeString() {
-        final GregorianCalendar now = new GregorianCalendar();
-        return mDateTimeFormat.format(now.getTime());
     }
 
 }

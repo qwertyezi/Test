@@ -4,13 +4,14 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 
 import com.yezi.testmedia.filter.video.BeautyVideoFilter;
 import com.yezi.testmedia.filter.video.BrightnessVideoFilter;
 import com.yezi.testmedia.filter.video.GrayVideoFilter;
 import com.yezi.testmedia.filter.video.VideoFilter;
-import com.yezi.testmedia.utils.camera.CameraEngine;
+import com.yezi.testmedia.utils.camera.CameraInstance;
 import com.yezi.testmedia.utils.enums.ScaleType;
 import com.yezi.testmedia.view.CameraGLSurfaceView;
 
@@ -33,17 +34,18 @@ public class TestCameraGLActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_test_cameragl);
 
         mSurfaceView = (CameraGLSurfaceView) findViewById(R.id.surface_view);
         mBtnScaleType = (Button) findViewById(R.id.btn_scale_type);
         mBtnScaleType.setText(mSurfaceView.getScaleType().toString());
 
-        CameraEngine.setRotation(getWindowManager().getDefaultDisplay().getRotation());
+        CameraInstance.getInstance().setRotation(getWindowManager().getDefaultDisplay().getRotation());
     }
 
     public void onSwitchClick(View view) {
-        CameraEngine.switchCamera();
+        CameraInstance.getInstance().switchCamera();
     }
 
     public void onFilterChangeClick(View view) {
@@ -71,6 +73,10 @@ public class TestCameraGLActivity extends AppCompatActivity {
         mBtnScaleType.setText(scaleTypes[mCurrentScaleType].toString());
     }
 
+    public void onCameraClick(View view) {
+        mSurfaceView.saveBitmap(null);
+    }
+
     @Override
     protected void onResume() {
         super.onResume();
@@ -87,6 +93,5 @@ public class TestCameraGLActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         mSurfaceView.onDestroy();
-        CameraEngine.releaseCamera();
     }
 }
