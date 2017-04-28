@@ -1,8 +1,10 @@
 package com.yezi.testmedia.utils;
 
 import android.content.res.Resources;
+import android.text.TextUtils;
 
 import com.yezi.testmedia.TestMediaApp;
+import com.yezi.testmedia.utils.enums.FilterType;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -37,5 +39,22 @@ public class TextResourceUtils {
         }
 
         return body.toString();
+    }
+
+    public static String formatVertexSource(FilterType filterType, String vertex) {
+        if (TextUtils.isEmpty(vertex)) {
+            return null;
+        }
+        return vertex.replace("%s", filterType == FilterType.IMAGE ? "1.0" : "uSTMatrix");
+    }
+
+    public static String formatFragmentSource(FilterType filterType, String fragment) {
+        if (TextUtils.isEmpty(fragment)) {
+            return null;
+        }
+        return fragment.replace("%1s", filterType == FilterType.IMAGE ?
+                " " : "#extension GL_OES_EGL_image_external : require").
+                replace("%2s", filterType == FilterType.IMAGE ?
+                        "sampler2D" : "samplerExternalOES");
     }
 }

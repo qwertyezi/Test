@@ -6,19 +6,23 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 
-import com.yezi.testmedia.filter.video.BrightnessVideoFilter;
-import com.yezi.testmedia.filter.video.GrayVideoFilter;
-import com.yezi.testmedia.filter.video.VideoFilter;
+import com.yezi.testmedia.filter.BaseFilter;
+import com.yezi.testmedia.filter.BeautyVideoFilter;
+import com.yezi.testmedia.filter.BrightnessFilter;
+import com.yezi.testmedia.filter.GrayFilter;
+import com.yezi.testmedia.utils.enums.FilterType;
 import com.yezi.testmedia.utils.enums.ScaleType;
 import com.yezi.testmedia.view.VideoGLSurfaceView;
 
 public class TestVideoGLActivity extends AppCompatActivity {
 
     private VideoGLSurfaceView mSurfaceView;
-    private static final VideoFilter[] filters = {
-            new GrayVideoFilter(), new BrightnessVideoFilter().setBrightness(-0.3f)
+    private final BaseFilter[] filters = {
+            new GrayFilter(FilterType.VIDEO),
+            new BrightnessFilter(FilterType.VIDEO).setBrightness(-0.3f),
+            new BeautyVideoFilter(FilterType.VIDEO)
     };
-    private static final ScaleType[] scaleTypes = {
+    private final ScaleType[] scaleTypes = {
             ScaleType.CENTER_INSIDE, ScaleType.CENTER_CROP, ScaleType.FIT_XY
     };
     private int mCurrentScaleType;

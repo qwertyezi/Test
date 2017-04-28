@@ -8,14 +8,13 @@ import android.opengl.GLES20;
 import android.opengl.GLSurfaceView;
 import android.util.AttributeSet;
 
-import com.yezi.testmedia.filter.video.VideoFilter;
+import com.yezi.testmedia.filter.BaseFilter;
 import com.yezi.testmedia.render.VideoRecordRender;
 import com.yezi.testmedia.render.VideoRender;
 import com.yezi.testmedia.utils.BitmapUtils;
 import com.yezi.testmedia.utils.GL2Utils;
 import com.yezi.testmedia.utils.camera.CameraInstance;
 import com.yezi.testmedia.utils.enums.ScaleType;
-import com.yezi.testmedia.utils.enums.VideoType;
 
 import java.nio.IntBuffer;
 
@@ -33,7 +32,7 @@ public class CameraGLSurfaceView extends GLSurfaceView implements SurfaceTexture
         init();
     }
 
-    public void setFilter(final VideoFilter filter) {
+    public void setFilter(final BaseFilter filter) {
         queueEvent(new Runnable() {
             @Override
             public void run() {
@@ -76,7 +75,7 @@ public class CameraGLSurfaceView extends GLSurfaceView implements SurfaceTexture
     }
 
     private void init() {
-        mVideoRender = new VideoRecordRender(VideoType.CAMERA);
+        mVideoRender = new VideoRecordRender();
         mVideoRender.setScaleType(ScaleType.CENTER_CROP);
         setEGLContextClientVersion(2);
         setRenderer(mVideoRender);

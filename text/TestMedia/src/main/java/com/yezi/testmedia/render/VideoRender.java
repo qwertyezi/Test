@@ -5,45 +5,28 @@ import android.opengl.GLES11Ext;
 import android.opengl.GLES20;
 
 import com.yezi.testmedia.filter.BaseFilter;
-import com.yezi.testmedia.filter.video.VideoFilter;
-import com.yezi.testmedia.utils.enums.VideoType;
+import com.yezi.testmedia.utils.enums.FilterType;
 
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
 public class VideoRender extends BaseRender {
 
-    private VideoType mVideoType = VideoType.VIDEO;
     protected SurfaceTexture mSurfaceTexture;
     private int[] mTextures = new int[1];
     protected float[] mTransformMatrix = new float[16];
 
     public VideoRender() {
-        this(new VideoFilter());
+        super();
+        mFilter.setFilterType(FilterType.VIDEO);
     }
 
-    public VideoRender(VideoType type) {
-        this(new VideoFilter(), type);
-    }
-
-    public VideoRender(VideoFilter filter) {
-        this(filter, VideoType.VIDEO);
-    }
-
-    public VideoRender(VideoFilter filter, VideoType type) {
-        filter.setVideoType(type);
+    public VideoRender(BaseFilter filter) {
         mFilter = filter;
-        mVideoType = type;
     }
 
     public void setDataSize(int width, int height) {
         mFilter.setDataSize(width, height);
-    }
-
-    @Override
-    public void setFilter(BaseFilter filter) {
-        ((VideoFilter) filter).setVideoType(mVideoType);
-        super.setFilter(filter);
     }
 
     @Override
@@ -89,7 +72,7 @@ public class VideoRender extends BaseRender {
         mSurfaceTexture.updateTexImage();
 
         mSurfaceTexture.getTransformMatrix(mTransformMatrix);
-        ((VideoFilter) mFilter).setTransformMatrix(mTransformMatrix);
+        mFilter.setTransformMatrix(mTransformMatrix);
 
         super.onDrawFrame(gl);
     }

@@ -1,4 +1,4 @@
-package com.yezi.testmedia.filter.video;
+package com.yezi.testmedia.filter;
 
 import android.opengl.GLES20;
 import android.opengl.Matrix;
@@ -6,12 +6,12 @@ import android.opengl.Matrix;
 import com.yezi.testmedia.R;
 import com.yezi.testmedia.utils.GL2Utils;
 import com.yezi.testmedia.utils.camera.CameraInstance;
-import com.yezi.testmedia.utils.enums.VideoType;
+import com.yezi.testmedia.utils.enums.FilterType;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
-public class BeautyVideoFilter extends VideoFilter {
+public class BeautyVideoFilter extends BaseFilter {
 
     private int glAaCoef;
     private int glMixCoef;
@@ -23,9 +23,15 @@ public class BeautyVideoFilter extends VideoFilter {
 
     private float[] mOriginalMVPMatrix = new float[16];
     private float[] mMatrix = new float[16];
+    private boolean mIsCamera = false;
 
     public BeautyVideoFilter() {
+        this(FilterType.IMAGE);
+    }
+
+    public BeautyVideoFilter(FilterType filterType) {
         super(R.raw.beauty_vertex, R.raw.beauty_fragment);
+        setFilterType(filterType);
     }
 
     public BeautyVideoFilter setFlag(int flag) {
@@ -71,15 +77,17 @@ public class BeautyVideoFilter extends VideoFilter {
         mCoord.position(0);
     }
 
+    public void setCamera(boolean camera) {
+        mIsCamera = camera;
+    }
+
     @Override
     public void onDraw() {
-        super.onDraw();
-
         GLES20.glUniform1f(glAaCoef, aaCoef);
         GLES20.glUniform1f(glMixCoef, mixCoef);
         GLES20.glUniform1i(glIternum, iternum);
 
-        if (mVideoType == VideoType.CAMERA) {
+        if (mFilterType == FilterType.VIDEO && mIsCamera) {
             if (!CameraInstance.getInstance().isFrontCamera()) {
                 Matrix.multiplyMM(mMatrix, 0, mOriginalMVPMatrix, 0, GL2Utils.flip(GL2Utils.getOriginalMatrix(), false, true), 0);
                 setMVPMatrix(mMatrix);
@@ -91,8 +99,6 @@ public class BeautyVideoFilter extends VideoFilter {
 
     @Override
     public void onCreated(int mProgram) {
-        super.onCreated(mProgram);
-
         glAaCoef = GLES20.glGetUniformLocation(mProgram, "uAaCoef");
         glMixCoef = GLES20.glGetUniformLocation(mProgram, "uMixCoef");
         glIternum = GLES20.glGetUniformLocation(mProgram, "uIternum");
@@ -100,7 +106,6 @@ public class BeautyVideoFilter extends VideoFilter {
 
     @Override
     public void onChanged(int width, int height) {
-        super.onChanged(width, height);
         mOriginalMVPMatrix = getMVPMatrix();
     }
 }

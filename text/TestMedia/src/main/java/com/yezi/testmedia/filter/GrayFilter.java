@@ -1,16 +1,21 @@
-package com.yezi.testmedia.filter.image;
+package com.yezi.testmedia.filter;
 
 import android.opengl.GLES20;
 
 import com.yezi.testmedia.R;
-import com.yezi.testmedia.filter.BaseFilter;
+import com.yezi.testmedia.utils.enums.FilterType;
 
 public class GrayFilter extends BaseFilter {
 
     private int glChangeColor;
 
     public GrayFilter() {
-        super(0, R.raw.gray_image_fragment);
+        this(FilterType.IMAGE);
+    }
+
+    public GrayFilter(FilterType filterType) {
+        super(0, R.raw.gray_fragment);
+        setFilterType(filterType);
     }
 
     @Override

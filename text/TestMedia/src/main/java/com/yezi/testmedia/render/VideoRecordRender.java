@@ -4,13 +4,11 @@ import android.opengl.EGLContext;
 import android.util.Log;
 
 import com.yezi.testmedia.BuildConfig;
-import com.yezi.testmedia.filter.video.VideoFilter;
 import com.yezi.testmedia.recorder.MediaAudioEncoder;
 import com.yezi.testmedia.recorder.MediaEncoder;
 import com.yezi.testmedia.recorder.MediaMuxerWrapper;
 import com.yezi.testmedia.recorder.MediaVideoEncoder;
 import com.yezi.testmedia.recorder.RenderHandler;
-import com.yezi.testmedia.utils.enums.VideoType;
 
 import java.io.IOException;
 
@@ -27,10 +25,6 @@ public class VideoRecordRender extends VideoRender {
     private boolean mIsRecording = false;
 
     public VideoRecordRender() {
-    }
-
-    public VideoRecordRender(VideoType type) {
-        super(type);
     }
 
     @Override
@@ -55,7 +49,7 @@ public class VideoRecordRender extends VideoRender {
             MediaVideoEncoder videoEncoder = new MediaVideoEncoder(mMuxer, mMediaEncoderListener, 720, 1280);
             new MediaAudioEncoder(mMuxer, mMediaEncoderListener);
             mMuxer.prepare();
-            mRenderHandler = new RenderHandler((VideoFilter) mFilter,
+            mRenderHandler = new RenderHandler(mFilter,
                     videoEncoder.getInputSurface().setupEGL(eglContext));
             mRenderHandler.startRender();
             mMuxer.startRecording();

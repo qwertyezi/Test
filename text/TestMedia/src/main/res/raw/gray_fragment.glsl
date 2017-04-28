@@ -1,8 +1,8 @@
-#extension GL_OES_EGL_image_external : require
+%1s
 
 precision mediump float;
 
-uniform samplerExternalOES uTexture;
+uniform %2s uTexture;
 uniform vec3 uChangeColor;
 
 varying vec2 vCoordinate;

@@ -1,16 +1,16 @@
 package com.yezi.testmedia.recorder;
 
-import com.yezi.testmedia.filter.video.VideoFilter;
+import com.yezi.testmedia.filter.BaseFilter;
 
 public class RenderHandler {
 
     private CodecInputSurface mCodecInputSurface;
     private Thread mThread;
-    private VideoFilter mVideoFilter;
+    private BaseFilter mVideoFilter;
     private boolean mCanRender = false;
     private float[] mTransformMatrix = new float[16];
 
-    public RenderHandler(VideoFilter videoFilter, CodecInputSurface inputSurface) {
+    public RenderHandler(BaseFilter videoFilter, CodecInputSurface inputSurface) {
         mVideoFilter = videoFilter;
         mCodecInputSurface = inputSurface;
     }

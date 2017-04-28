@@ -7,11 +7,12 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 
-import com.yezi.testmedia.filter.video.BeautyVideoFilter;
-import com.yezi.testmedia.filter.video.BrightnessVideoFilter;
-import com.yezi.testmedia.filter.video.GrayVideoFilter;
-import com.yezi.testmedia.filter.video.VideoFilter;
+import com.yezi.testmedia.filter.BaseFilter;
+import com.yezi.testmedia.filter.BeautyVideoFilter;
+import com.yezi.testmedia.filter.BrightnessFilter;
+import com.yezi.testmedia.filter.GrayFilter;
 import com.yezi.testmedia.utils.camera.CameraInstance;
+import com.yezi.testmedia.utils.enums.FilterType;
 import com.yezi.testmedia.utils.enums.ScaleType;
 import com.yezi.testmedia.view.CameraGLSurfaceView;
 
@@ -19,10 +20,12 @@ public class TestCameraGLActivity extends AppCompatActivity {
 
     private CameraGLSurfaceView mSurfaceView;
 
-    private static final VideoFilter[] filters = {
-            new GrayVideoFilter(), new BrightnessVideoFilter().setBrightness(-0.3f), new BeautyVideoFilter().setFlag(6)
+    private final BaseFilter[] filters = {
+            new GrayFilter(FilterType.VIDEO),
+            new BrightnessFilter(FilterType.VIDEO).setBrightness(-0.3f),
+            new BeautyVideoFilter(FilterType.VIDEO).setFlag(6)
     };
-    private static final ScaleType[] scaleTypes = {
+    private final ScaleType[] scaleTypes = {
             ScaleType.CENTER_INSIDE, ScaleType.CENTER_CROP, ScaleType.FIT_XY
     };
     private int mCurrentScaleType;

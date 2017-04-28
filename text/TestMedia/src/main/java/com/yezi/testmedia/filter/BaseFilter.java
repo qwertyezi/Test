@@ -24,6 +24,7 @@ public abstract class BaseFilter implements IRendererCallback {
     private int glTexture;
     private int glCoordinate;
     private int glMatrix;
+    protected int glSTMatrix;
 
     private FloatBuffer mPos;
     protected FloatBuffer mCoord;
@@ -39,16 +40,17 @@ public abstract class BaseFilter implements IRendererCallback {
     private float[] mViewMatrix = new float[16];
     private float[] mProjectMatrix = new float[16];
     private float[] mMVPMatrix = new float[16];
+    protected float[] mTransformMatrix = new float[16];
     private ScaleType mScaleType = ScaleType.CENTER_INSIDE;
-    private FilterType mFilterType = FilterType.IMAGE;
+    protected FilterType mFilterType = FilterType.IMAGE;
 
     public BaseFilter() {
         this(0, 0);
     }
 
     public BaseFilter(int vertexRes, int fragmentRes) {
-        mVertex = vertexRes == 0 ? R.raw.default_image_vertex : vertexRes;
-        mFragment = fragmentRes == 0 ? R.raw.default_image_fragment : fragmentRes;
+        mVertex = vertexRes == 0 ? R.raw.default_vertex : vertexRes;
+        mFragment = fragmentRes == 0 ? R.raw.default_fragment : fragmentRes;
     }
 
     private void initBuffer() {
@@ -63,11 +65,13 @@ public abstract class BaseFilter implements IRendererCallback {
     }
 
     public void initTextureBuffer() {
+        float[] position = mFilterType == FilterType.IMAGE ?
+                GL2Utils.FRAGMENT_POSITION_IMAGE : GL2Utils.FRAGMENT_POSITION_VIDEO;
         mCoord = ByteBuffer
-                .allocateDirect(GL2Utils.FRAGMENT_POSITION_IMAGE.length * 4)
+                .allocateDirect(position.length * 4)
                 .order(ByteOrder.nativeOrder())
                 .asFloatBuffer()
-                .put(GL2Utils.FRAGMENT_POSITION_IMAGE);
+                .put(position);
         mCoord.position(0);
     }
 
@@ -115,6 +119,10 @@ public abstract class BaseFilter implements IRendererCallback {
         mMVPMatrix = MVPMatrix;
     }
 
+    public void setTransformMatrix(float[] transformMatrix) {
+        mTransformMatrix = transformMatrix;
+    }
+
     public void setDataSize(int width, int height) {
         mDataWidth = width;
         mDataHeight = height;
@@ -134,28 +142,31 @@ public abstract class BaseFilter implements IRendererCallback {
         mPos.clear();
     }
 
-    public void setScaleType(ScaleType type) {
+    public BaseFilter setScaleType(ScaleType type) {
         mScaleType = type;
 
         if (mViewWidth != 0 && mViewHeight != 0) {
             onSurfaceChanged(mViewWidth, mViewHeight);
         }
+        return this;
     }
 
-    public void setFilterType(FilterType type) {
+    public BaseFilter setFilterType(FilterType type) {
         mFilterType = type;
+        return this;
     }
 
     @Override
     public void onSurfaceCreated() {
         initBuffer();
 
-        mProgram = ShaderUtils.createProgram(mVertex, mFragment);
+        mProgram = ShaderUtils.createProgram(mFilterType, mVertex, mFragment);
 
         glPosition = GLES20.glGetAttribLocation(mProgram, "aPosition");
         glCoordinate = GLES20.glGetAttribLocation(mProgram, "aCoordinate");
         glTexture = GLES20.glGetUniformLocation(mProgram, "uTexture");
         glMatrix = GLES20.glGetUniformLocation(mProgram, "uMatrix");
+        glSTMatrix = GLES20.glGetUniformLocation(mProgram, "uSTMatrix");
 
         onCreated(mProgram);
     }
@@ -211,6 +222,7 @@ public abstract class BaseFilter implements IRendererCallback {
         onDraw();
 
         GLES20.glUniformMatrix4fv(glMatrix, 1, false, mMVPMatrix, 0);
+        GLES20.glUniformMatrix4fv(glSTMatrix, 1, false, mTransformMatrix, 0);
 
         GLES20.glEnableVertexAttribArray(glPosition);
         GLES20.glEnableVertexAttribArray(glCoordinate);

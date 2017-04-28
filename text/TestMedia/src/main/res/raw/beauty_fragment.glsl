@@ -1,9 +1,9 @@
-#extension GL_OES_EGL_image_external : require
+%1s
 
 precision mediump float;
 precision mediump int;
 
-uniform samplerExternalOES uTexture;
+uniform %2s uTexture;
 uniform int uIternum;
 uniform float uAaCoef; //参数
 uniform float uMixCoef; //混合系数

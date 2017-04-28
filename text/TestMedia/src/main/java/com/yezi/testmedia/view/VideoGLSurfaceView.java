@@ -9,7 +9,7 @@ import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.Surface;
 
-import com.yezi.testmedia.filter.video.VideoFilter;
+import com.yezi.testmedia.filter.BaseFilter;
 import com.yezi.testmedia.render.VideoRender;
 import com.yezi.testmedia.utils.enums.ScaleType;
 
@@ -43,7 +43,7 @@ public class VideoGLSurfaceView extends GLSurfaceView implements SurfaceTexture.
         mLoopPlay = loopPlay;
     }
 
-    public void setFilter(final VideoFilter filter) {
+    public void setFilter(final BaseFilter filter) {
         if (filter != null) {
             queueEvent(new Runnable() {
                 @Override

@@ -1,8 +1,6 @@
-package com.yezi.testmedia.filter.image;
+package com.yezi.testmedia.filter;
 
 import android.opengl.GLES20;
-
-import com.yezi.testmedia.filter.BaseFilter;
 
 public class BlurFilter extends BaseFilter {
 

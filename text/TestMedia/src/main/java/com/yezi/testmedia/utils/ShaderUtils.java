@@ -3,6 +3,12 @@ package com.yezi.testmedia.utils;
 import android.opengl.GLES20;
 import android.util.Log;
 
+import com.yezi.testmedia.utils.enums.FilterType;
+
+import static com.yezi.testmedia.utils.TextResourceUtils.formatFragmentSource;
+import static com.yezi.testmedia.utils.TextResourceUtils.formatVertexSource;
+import static com.yezi.testmedia.utils.TextResourceUtils.readTextFileFromResource;
+
 public class ShaderUtils {
 
     private static final String TAG = ShaderUtils.class.getName();
@@ -32,7 +38,7 @@ public class ShaderUtils {
     }
 
     public static int loadShader(int shaderType, int res) {
-        return loadShader(shaderType, TextResourceUtils.readTextFileFromResource(res));
+        return loadShader(shaderType, readTextFileFromResource(res));
     }
 
     public static int createProgram(String vertexSource, String fragmentSource) {
@@ -58,9 +64,9 @@ public class ShaderUtils {
         return program;
     }
 
-    public static int createProgram(int vertexRes, int fragmentRes) {
-        return createProgram(TextResourceUtils.readTextFileFromResource(vertexRes),
-                TextResourceUtils.readTextFileFromResource(fragmentRes));
+    public static int createProgram(FilterType filterType, int vertexRes, int fragmentRes) {
+        return createProgram(formatVertexSource(filterType, readTextFileFromResource(vertexRes)),
+                formatFragmentSource(filterType, readTextFileFromResource(fragmentRes)));
     }
 
 }

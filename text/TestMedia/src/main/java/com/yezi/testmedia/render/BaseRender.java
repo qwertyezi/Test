@@ -14,7 +14,7 @@ public class BaseRender implements GLSurfaceView.Renderer {
     protected BaseFilter mFilter;
 
     public BaseRender() {
-        mFilter = new BaseFilter(0, 0) {
+        mFilter = new BaseFilter() {
 
             @Override
             public void onDraw() {

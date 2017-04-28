@@ -1,6 +1,8 @@
+%1s
+
 precision mediump float;
 
-uniform sampler2D uTexture;
+uniform %2s uTexture;
 
 varying vec2 vCoordinate;
 

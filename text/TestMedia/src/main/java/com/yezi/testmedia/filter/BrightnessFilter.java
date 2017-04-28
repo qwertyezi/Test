@@ -1,9 +1,9 @@
-package com.yezi.testmedia.filter.image;
+package com.yezi.testmedia.filter;
 
 import android.opengl.GLES20;
 
 import com.yezi.testmedia.R;
-import com.yezi.testmedia.filter.BaseFilter;
+import com.yezi.testmedia.utils.enums.FilterType;
 
 /**
  * brightness value ranges from -1.0 to 1.0, with 0.0 as the normal level
@@ -13,8 +13,13 @@ public class BrightnessFilter extends BaseFilter {
     private int glBrightness;
     private float mBrightness = 0.0f;
 
-    public BrightnessFilter() {
-        super(0, R.raw.brightness_image_fragment);
+    public BrightnessFilter(){
+        this(FilterType.IMAGE);
+    }
+
+    public BrightnessFilter(FilterType filterType) {
+        super(0, R.raw.brightness_fragment);
+        setFilterType(filterType);
     }
 
     public BrightnessFilter setBrightness(float brightness) {
