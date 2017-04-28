@@ -9,7 +9,8 @@ import android.widget.Button;
 import android.widget.SeekBar;
 
 import com.yezi.testmedia.filter.BaseFilter;
-import com.yezi.testmedia.filter.BeautyVideoFilter;
+import com.yezi.testmedia.filter.BeautyFilter;
+import com.yezi.testmedia.filter.BlurFilter;
 import com.yezi.testmedia.filter.BrightnessFilter;
 import com.yezi.testmedia.filter.GrayFilter;
 import com.yezi.testmedia.utils.enums.ScaleType;
@@ -25,7 +26,10 @@ public class TestImageGLActivity extends AppCompatActivity {
             R.mipmap.image_5, R.mipmap.image_6
     };
     private final BaseFilter[] filters = {
-            new GrayFilter(), new BrightnessFilter().setBrightness(-0.3f), new BeautyVideoFilter().setFlag(6)
+            new GrayFilter(),
+            new BrightnessFilter().setBrightness(-0.3f),
+            new BeautyFilter().setFlag(6),
+            new BlurFilter().setIntensity(16)
     };
     private final ScaleType[] scaleTypes = {
             ScaleType.CENTER_INSIDE, ScaleType.CENTER_CROP, ScaleType.FIT_XY
@@ -43,7 +47,7 @@ public class TestImageGLActivity extends AppCompatActivity {
 
         mSurfaceView = (ImageGLSurfaceView) findViewById(R.id.glsurfaceview);
         mBtnScaleType = (Button) findViewById(R.id.btn_scale_type);
-//        mSeekBar = (SeekBar) findViewById(R.id.seek_bar);
+        mSeekBar = (SeekBar) findViewById(R.id.seek_bar);
 
         mSurfaceView.setBitmap(BitmapFactory.decodeResource(getResources(), R.mipmap.image_1));
         mBtnScaleType.setText(mSurfaceView.getScaleType().toString());
@@ -52,22 +56,22 @@ public class TestImageGLActivity extends AppCompatActivity {
         mCurrentFilter = 0;
         mCurrentScaleType = 0;
 
-//        mSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-//            @Override
-//            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-//
-//            }
-//
-//            @Override
-//            public void onStartTrackingTouch(SeekBar seekBar) {
-//
-//            }
-//
-//            @Override
-//            public void onStopTrackingTouch(SeekBar seekBar) {
-//
-//            }
-//        });
+        mSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, final int progress, boolean fromUser) {
+
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
     }
 
     public void onSaveClick(View view) {

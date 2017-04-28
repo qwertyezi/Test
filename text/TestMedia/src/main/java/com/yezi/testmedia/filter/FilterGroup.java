@@ -14,6 +14,7 @@ public class FilterGroup extends BaseFilter {
 
     private int[] mFrameBuffers;
     private int[] mTextures;
+    private float[] mFlipMatrix = new float[16];
     private List<BaseFilter> mFilterList = new ArrayList<>();
 
     public FilterGroup() {
@@ -89,9 +90,8 @@ public class FilterGroup extends BaseFilter {
                 previousTexture = mTextures[i];
             }
             if (size % 2 == 1) {
-                float[] flipMatrix = new float[16];
-                Matrix.multiplyMM(flipMatrix, 0, getMVPMatrix(), 0, GL2Utils.flip(GL2Utils.getOriginalMatrix(), false, true), 0);
-                setMVPMatrix(flipMatrix);
+                Matrix.multiplyMM(mFlipMatrix, 0, getMVPMatrix(), 0, GL2Utils.flip(GL2Utils.getOriginalMatrix(), false, true), 0);
+                setMVPMatrix(mFlipMatrix);
             }
         }
         setTextureId(previousTexture);

@@ -11,7 +11,7 @@ import com.yezi.testmedia.utils.enums.FilterType;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
-public class BeautyVideoFilter extends BaseFilter {
+public class BeautyFilter extends BaseFilter {
 
     private int glAaCoef;
     private int glMixCoef;
@@ -25,16 +25,16 @@ public class BeautyVideoFilter extends BaseFilter {
     private float[] mMatrix = new float[16];
     private boolean mIsCamera = false;
 
-    public BeautyVideoFilter() {
+    public BeautyFilter() {
         this(FilterType.IMAGE);
     }
 
-    public BeautyVideoFilter(FilterType filterType) {
+    public BeautyFilter(FilterType filterType) {
         super(R.raw.beauty_vertex, R.raw.beauty_fragment);
         setFilterType(filterType);
     }
 
-    public BeautyVideoFilter setFlag(int flag) {
+    public BeautyFilter setFlag(int flag) {
         switch (flag) {
             case 1:
                 a(1, 0.19f, 0.54f);
@@ -69,6 +69,10 @@ public class BeautyVideoFilter extends BaseFilter {
 
     @Override
     public void initTextureBuffer() {
+        if (mFilterType == FilterType.IMAGE || (mFilterType == FilterType.VIDEO && !mIsCamera)) {
+            super.initTextureBuffer();
+            return;
+        }
         mCoord = ByteBuffer
                 .allocateDirect(GL2Utils.FRAGMENT_POSITION_BEAUTY.length * 4)
                 .order(ByteOrder.nativeOrder())
@@ -77,8 +81,9 @@ public class BeautyVideoFilter extends BaseFilter {
         mCoord.position(0);
     }
 
-    public void setCamera(boolean camera) {
+    public BeautyFilter setCamera(boolean camera) {
         mIsCamera = camera;
+        return this;
     }
 
     @Override

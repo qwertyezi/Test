@@ -8,7 +8,8 @@ import android.view.WindowManager;
 import android.widget.Button;
 
 import com.yezi.testmedia.filter.BaseFilter;
-import com.yezi.testmedia.filter.BeautyVideoFilter;
+import com.yezi.testmedia.filter.BeautyFilter;
+import com.yezi.testmedia.filter.BlurFilter;
 import com.yezi.testmedia.filter.BrightnessFilter;
 import com.yezi.testmedia.filter.GrayFilter;
 import com.yezi.testmedia.utils.camera.CameraInstance;
@@ -23,7 +24,8 @@ public class TestCameraGLActivity extends AppCompatActivity {
     private final BaseFilter[] filters = {
             new GrayFilter(FilterType.VIDEO),
             new BrightnessFilter(FilterType.VIDEO).setBrightness(-0.3f),
-            new BeautyVideoFilter(FilterType.VIDEO).setFlag(6)
+            new BeautyFilter(FilterType.VIDEO).setFlag(6).setCamera(true),
+            new BlurFilter(FilterType.VIDEO).setIntensity(16)
     };
     private final ScaleType[] scaleTypes = {
             ScaleType.CENTER_INSIDE, ScaleType.CENTER_CROP, ScaleType.FIT_XY
@@ -83,7 +85,7 @@ public class TestCameraGLActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        mSurfaceView.onResume();
+//        mSurfaceView.onResume();
     }
 
     @Override

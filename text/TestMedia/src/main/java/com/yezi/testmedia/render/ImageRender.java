@@ -3,9 +3,7 @@ package com.yezi.testmedia.render;
 import android.graphics.Bitmap;
 import android.opengl.GLES20;
 import android.opengl.GLUtils;
-
 import com.yezi.testmedia.filter.BaseFilter;
-
 import javax.microedition.khronos.opengles.GL10;
 
 public class ImageRender extends BaseRender {
@@ -18,7 +16,7 @@ public class ImageRender extends BaseRender {
     }
 
     public ImageRender(BaseFilter filter) {
-        mFilter = filter;
+        super(filter);
     }
 
     public void setBitmap(Bitmap bitmap) {
@@ -34,35 +32,20 @@ public class ImageRender extends BaseRender {
 
     @Override
     public void onDrawFrame(GL10 gl) {
-        mFilter.setTextureId(createTexture(mFilter.getTextureId()));
+        texImage();
+        mFilter.setTextureId(mTextureId);
 
         super.onDrawFrame(gl);
     }
 
-    @Override
-    public int createTexture(int textureId) {
-        int[] texture = new int[1];
-        if (mBitmap != null) {
-            if (textureId == BaseFilter.NO_FILTER) {
-                GLES20.glGenTextures(1, texture, 0);
-                GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, texture[0]);
-                GLES20.glTexParameterf(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_MIN_FILTER, GLES20.GL_LINEAR);
-                GLES20.glTexParameterf(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_MAG_FILTER, GLES20.GL_LINEAR);
-                GLES20.glTexParameterf(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_WRAP_S, GLES20.GL_CLAMP_TO_EDGE);
-                GLES20.glTexParameterf(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_WRAP_T, GLES20.GL_CLAMP_TO_EDGE);
-
-                GLUtils.texImage2D(GLES20.GL_TEXTURE_2D, 0, mBitmap, 0);
-            } else {
-                GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, textureId);
-                GLUtils.texImage2D(GLES20.GL_TEXTURE_2D, 0, mBitmap, 0);
-                texture[0] = textureId;
-            }
+    private void texImage() {
+        if (mBitmap != null && mTextureId != BaseFilter.NO_FILTER) {
+            GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, mTextureId);
+            GLUtils.texImage2D(GLES20.GL_TEXTURE_2D, 0, mBitmap, 0);
             if (mRecycleBitmap) {
                 mBitmap.recycle();
             }
-            return texture[0];
         }
-        return textureId;
     }
 
 }

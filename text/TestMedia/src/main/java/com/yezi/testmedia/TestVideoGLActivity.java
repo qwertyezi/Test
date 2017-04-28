@@ -7,7 +7,8 @@ import android.view.View;
 import android.widget.Button;
 
 import com.yezi.testmedia.filter.BaseFilter;
-import com.yezi.testmedia.filter.BeautyVideoFilter;
+import com.yezi.testmedia.filter.BeautyFilter;
+import com.yezi.testmedia.filter.BlurFilter;
 import com.yezi.testmedia.filter.BrightnessFilter;
 import com.yezi.testmedia.filter.GrayFilter;
 import com.yezi.testmedia.utils.enums.FilterType;
@@ -20,7 +21,8 @@ public class TestVideoGLActivity extends AppCompatActivity {
     private final BaseFilter[] filters = {
             new GrayFilter(FilterType.VIDEO),
             new BrightnessFilter(FilterType.VIDEO).setBrightness(-0.3f),
-            new BeautyVideoFilter(FilterType.VIDEO)
+            new BeautyFilter(FilterType.VIDEO),
+            new BlurFilter(FilterType.VIDEO).setIntensity(16)
     };
     private final ScaleType[] scaleTypes = {
             ScaleType.CENTER_INSIDE, ScaleType.CENTER_CROP, ScaleType.FIT_XY

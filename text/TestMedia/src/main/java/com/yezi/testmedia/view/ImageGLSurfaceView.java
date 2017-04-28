@@ -18,7 +18,6 @@ public class ImageGLSurfaceView extends GLSurfaceView {
 
     private ImageRender mImageRender;
     private BaseFilter mFilter;
-    private Context mContext;
 
     public ImageGLSurfaceView(Context context) {
         this(context, null);
@@ -27,7 +26,6 @@ public class ImageGLSurfaceView extends GLSurfaceView {
     public ImageGLSurfaceView(Context context, AttributeSet attrs) {
         super(context, attrs);
 
-        mContext = context;
         init();
     }
 

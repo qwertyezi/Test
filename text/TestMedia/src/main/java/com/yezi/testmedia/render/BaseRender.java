@@ -1,9 +1,11 @@
 package com.yezi.testmedia.render;
 
+import android.opengl.GLES11Ext;
 import android.opengl.GLES20;
 import android.opengl.GLSurfaceView;
 
 import com.yezi.testmedia.filter.BaseFilter;
+import com.yezi.testmedia.utils.enums.FilterType;
 import com.yezi.testmedia.utils.enums.ScaleType;
 
 import javax.microedition.khronos.egl.EGLConfig;
@@ -12,9 +14,11 @@ import javax.microedition.khronos.opengles.GL10;
 public class BaseRender implements GLSurfaceView.Renderer {
 
     protected BaseFilter mFilter;
+    protected int mTextureId;
+    protected int TEXTURE_2D_BINDABLE;
 
     public BaseRender() {
-        mFilter = new BaseFilter() {
+        this(new BaseFilter() {
 
             @Override
             public void onDraw() {
@@ -30,11 +34,25 @@ public class BaseRender implements GLSurfaceView.Renderer {
             public void onChanged(int width, int height) {
 
             }
-        };
+        });
     }
 
     public BaseRender(BaseFilter filter) {
         mFilter = filter;
+        TEXTURE_2D_BINDABLE = mFilter.getFilterType() == FilterType.VIDEO ? GLES11Ext.GL_TEXTURE_EXTERNAL_OES : GLES20.GL_TEXTURE_2D;
+        initTexture();
+    }
+
+    private void initTexture() {
+        int[] textures = new int[1];
+        GLES20.glGenTextures(1, textures, 0);
+        GLES20.glBindTexture(TEXTURE_2D_BINDABLE, textures[0]);
+
+        GLES20.glTexParameteri(TEXTURE_2D_BINDABLE, GLES20.GL_TEXTURE_MIN_FILTER, GLES20.GL_LINEAR);
+        GLES20.glTexParameteri(TEXTURE_2D_BINDABLE, GLES20.GL_TEXTURE_MAG_FILTER, GLES20.GL_LINEAR);
+        GLES20.glTexParameteri(TEXTURE_2D_BINDABLE, GLES20.GL_TEXTURE_WRAP_S, GLES20.GL_CLAMP_TO_EDGE);
+        GLES20.glTexParameteri(TEXTURE_2D_BINDABLE, GLES20.GL_TEXTURE_WRAP_T, GLES20.GL_CLAMP_TO_EDGE);
+        mTextureId = textures[0];
     }
 
     public void setFilter(BaseFilter filter) {
@@ -76,9 +94,5 @@ public class BaseRender implements GLSurfaceView.Renderer {
     @Override
     public void onDrawFrame(GL10 gl) {
         mFilter.onDrawFrame();
-    }
-
-    public int createTexture(int textureId) {
-        return BaseFilter.NO_FILTER;
     }
 }

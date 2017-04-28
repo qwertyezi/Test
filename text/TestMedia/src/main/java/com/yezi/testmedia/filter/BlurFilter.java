@@ -1,19 +1,35 @@
 package com.yezi.testmedia.filter;
 
 import android.opengl.GLES20;
+import android.opengl.Matrix;
+
+import com.yezi.testmedia.utils.GL2Utils;
+import com.yezi.testmedia.utils.enums.FilterType;
+import com.yezi.testmedia.utils.enums.ScaleType;
 
 public class BlurFilter extends BaseFilter {
 
     private int[] mTextureDownScale;
     private FrameBufferObject mFramebuffer;
-    private final int mLevel = 32;
+    private static final int LEVEL = 30;
     private int mIntensity = 0;
+    private float[] mFlipMatrix = new float[16];
+    private static final int BLUR_SIZE = 512;
+
+    public BlurFilter() {
+        this(FilterType.IMAGE);
+    }
+
+    public BlurFilter(FilterType filterType) {
+        super();
+        setFilterType(filterType);
+    }
 
     public BlurFilter setIntensity(int intensity) {
         if (intensity != mIntensity && intensity >= 0) {
             mIntensity = intensity;
-            if (mIntensity > mLevel)
-                mIntensity = mLevel;
+            if (mIntensity > LEVEL)
+                mIntensity = LEVEL;
         }
         return this;
     }
@@ -24,12 +40,12 @@ public class BlurFilter extends BaseFilter {
 
     @Override
     public void onCreated(int mProgram) {
-        mTextureDownScale = new int[mLevel];
-        GLES20.glGenTextures(mLevel, mTextureDownScale, 0);
+        mTextureDownScale = new int[LEVEL];
+        GLES20.glGenTextures(LEVEL, mTextureDownScale, 0);
 
-        for (int i = 0; i < mLevel; ++i) {
+        for (int i = 0; i < LEVEL; ++i) {
             GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, mTextureDownScale[i]);
-            GLES20.glTexImage2D(GLES20.GL_TEXTURE_2D, 0, GLES20.GL_RGBA, calcMips(mViewWidth, i + 1), calcMips(mViewHeight, i + 1), 0, GLES20.GL_RGBA, GLES20.GL_UNSIGNED_BYTE, null);
+            GLES20.glTexImage2D(GLES20.GL_TEXTURE_2D, 0, GLES20.GL_RGBA, calcMips(BLUR_SIZE, i + 1), calcMips(BLUR_SIZE, i + 1), 0, GLES20.GL_RGBA, GLES20.GL_UNSIGNED_BYTE, null);
             GLES20.glTexParameteri(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_MIN_FILTER, GLES20.GL_LINEAR);
             GLES20.glTexParameteri(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_MAG_FILTER, GLES20.GL_LINEAR);
             GLES20.glTexParameteri(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_WRAP_S, GLES20.GL_CLAMP_TO_EDGE);
@@ -46,32 +62,34 @@ public class BlurFilter extends BaseFilter {
             return;
         }
 
+        setScaleType(ScaleType.FIT_XY);
         GLES20.glActiveTexture(GLES20.GL_TEXTURE0);
-
-        mTextureDownScale[0] = getTextureId();
 
         mFramebuffer.bindTexture(mTextureDownScale[0]);
 
+        GLES20.glViewport(0, 0, calcMips(BLUR_SIZE, 1), calcMips(BLUR_SIZE, 1));
         super.onDrawFrame();
 
         for (int i = 1; i < mIntensity; ++i) {
             mFramebuffer.bindTexture(mTextureDownScale[i]);
-            GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, mTextureDownScale[i - 1]);
-            GLES20.glViewport(0, 0, calcMips(512, i + 1), calcMips(512, i + 1));
+            setTextureId(mTextureDownScale[i - 1]);
+            GLES20.glViewport(0, 0, calcMips(BLUR_SIZE, i + 1), calcMips(BLUR_SIZE, i + 1));
             super.onDrawFrame();
         }
 
         for (int i = mIntensity - 1; i > 0; --i) {
             mFramebuffer.bindTexture(mTextureDownScale[i - 1]);
-            GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, mTextureDownScale[i]);
-            GLES20.glViewport(0, 0, calcMips(512, i), calcMips(512, i));
+            setTextureId(mTextureDownScale[i]);
+            GLES20.glViewport(0, 0, calcMips(BLUR_SIZE, i), calcMips(BLUR_SIZE, i));
             super.onDrawFrame();
         }
 
         GLES20.glViewport(0, 0, mViewWidth, mViewHeight);
         GLES20.glBindFramebuffer(GLES20.GL_FRAMEBUFFER, 0);
-        GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, mTextureDownScale[0]);
-
+        setTextureId(mTextureDownScale[0]);
+        setScaleType(ScaleType.CENTER_INSIDE);
+        Matrix.multiplyMM(mFlipMatrix, 0, getMVPMatrix(), 0, GL2Utils.flip(GL2Utils.getOriginalMatrix(), false, true), 0);
+        setMVPMatrix(mFlipMatrix);
         super.onDrawFrame();
     }
 
