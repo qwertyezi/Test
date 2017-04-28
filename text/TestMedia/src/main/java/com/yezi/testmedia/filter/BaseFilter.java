@@ -13,6 +13,7 @@ import com.yezi.testmedia.utils.ShaderUtils;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
+import java.util.Arrays;
 
 public abstract class BaseFilter implements IRendererCallback {
 
@@ -107,7 +108,7 @@ public abstract class BaseFilter implements IRendererCallback {
     }
 
     public float[] getMVPMatrix() {
-        return mMVPMatrix;
+        return Arrays.copyOf(mMVPMatrix, mMVPMatrix.length);
     }
 
     public void setMVPMatrix(float[] MVPMatrix) {

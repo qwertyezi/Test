@@ -77,7 +77,7 @@ public class CameraGLSurfaceView extends GLSurfaceView implements SurfaceTexture
 
     private void init() {
         mVideoRender = new VideoRecordRender(VideoType.CAMERA);
-        mVideoRender.setScaleType(ScaleType.FIT_XY);
+        mVideoRender.setScaleType(ScaleType.CENTER_CROP);
         setEGLContextClientVersion(2);
         setRenderer(mVideoRender);
         setRenderMode(RENDERMODE_WHEN_DIRTY);
