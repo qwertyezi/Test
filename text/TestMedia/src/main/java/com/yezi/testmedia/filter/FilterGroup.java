@@ -15,6 +15,7 @@ public class FilterGroup extends BaseFilter {
     private int[] mFrameBuffers;
     private int[] mTextures;
     private float[] mFlipMatrix = new float[16];
+    private ScaleType mGroupScaleType = ScaleType.CENTER_INSIDE;
     private List<BaseFilter> mFilterList = new ArrayList<>();
 
     public FilterGroup() {
@@ -36,21 +37,33 @@ public class FilterGroup extends BaseFilter {
     private void initFilters(BaseFilter... filters) {
         Collections.addAll(mFilterList, filters);
         if (mDataWidth != 0 && mDataHeight != 0) {
-            initFiltersSize(mDataWidth, mDataHeight);
+            setDataSize(mDataWidth, mDataHeight);
+            setScaleType(mGroupScaleType);
         }
     }
 
     @Override
     public void setDataSize(int width, int height) {
         super.setDataSize(width, height);
-        initFiltersSize(width, height);
+        for (int i = 0; i < mFilterList.size(); i++) {
+            mFilterList.get(i).setDataSize(width, height);
+        }
     }
 
-    private void initFiltersSize(int width, int height) {
-        for (BaseFilter filter : mFilterList) {
-            filter.setDataSize(width, height);
-            filter.setScaleType(ScaleType.FIT_XY);
+    @Override
+    public BaseFilter setScaleType(ScaleType type) {
+        mGroupScaleType = type;
+        super.setScaleType(ScaleType.FIT_XY);
+        int size = mFilterList.size();
+        for (int i = 0; i < size; i++) {
+            mFilterList.get(i).setScaleType(i == size - 1 ? mGroupScaleType : ScaleType.FIT_XY);
         }
+        return this;
+    }
+
+    @Override
+    public ScaleType getScaleType() {
+        return mGroupScaleType;
     }
 
     @Override
@@ -77,27 +90,37 @@ public class FilterGroup extends BaseFilter {
         if (mFrameBuffers == null || mTextures == null) {
             return;
         }
-        int previousTexture = getTextureId();
+
+        GLES20.glBindFramebuffer(GLES20.GL_FRAMEBUFFER, mFrameBuffers[0]);
+        GLES20.glViewport(0, 0, mDataWidth, mDataHeight);
+        super.onDrawFrame();
+
+        int previousTexture = mTextures[0];
+
         if (mFilterList != null) {
             int size = mFilterList.size();
-            for (int i = 0; i < size; i++) {
+            for (int i = 0; i < size - 1; i++) {
                 BaseFilter filter = mFilterList.get(i);
-                GLES20.glBindFramebuffer(GLES20.GL_FRAMEBUFFER, mFrameBuffers[i]);
+                GLES20.glBindFramebuffer(GLES20.GL_FRAMEBUFFER, mFrameBuffers[i + 1]);
                 filter.setTextureId(previousTexture);
                 GLES20.glViewport(0, 0, mDataWidth, mDataHeight);
                 filter.onDrawFrame();
                 GLES20.glBindFramebuffer(GLES20.GL_FRAMEBUFFER, 0);
-                previousTexture = mTextures[i];
+                previousTexture = mTextures[i + 1];
             }
-            if (size % 2 == 1) {
-                Matrix.multiplyMM(mFlipMatrix, 0, getMVPMatrix(), 0, GL2Utils.flip(GL2Utils.getOriginalMatrix(), false, true), 0);
-                setMVPMatrix(mFlipMatrix);
-            }
-        }
-        setTextureId(previousTexture);
 
-        GLES20.glViewport(0, 0, mViewWidth, mViewHeight);
-        super.onDrawFrame();
+            BaseFilter filter = mFilterList.get(size - 1);
+            GLES20.glBindFramebuffer(GLES20.GL_FRAMEBUFFER, 0);
+            if (size % 2 == 1) {
+                Matrix.multiplyMM(mFlipMatrix, 0, filter.getMVPMatrix(), 0,
+                        GL2Utils.flip(GL2Utils.getOriginalMatrix(), false, true), 0);
+                filter.setMVPMatrix(mFlipMatrix);
+            }
+            filter.setTextureId(previousTexture);
+            GLES20.glViewport(0, 0, mViewWidth, mViewHeight);
+            filter.onDrawFrame();
+        }
+
     }
 
     private void initFrameBuffer() {
@@ -109,19 +132,19 @@ public class FilterGroup extends BaseFilter {
             for (int i = 0; i < size; i++) {
                 GLES20.glGenFramebuffers(1, mFrameBuffers, i);
                 GLES20.glGenTextures(1, mTextures, i);
-                GLES20.glBindTexture(TEXTURE_2D_BINDABLE, mTextures[i]);
-                GLES20.glTexImage2D(TEXTURE_2D_BINDABLE, 0, GLES20.GL_RGBA, mDataWidth, mDataHeight, 0,
+                GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, mTextures[i]);
+                GLES20.glTexImage2D(GLES20.GL_TEXTURE_2D, 0, GLES20.GL_RGBA, mDataWidth, mDataHeight, 0,
                         GLES20.GL_RGBA, GLES20.GL_UNSIGNED_BYTE, null);
-                GLES20.glTexParameterf(TEXTURE_2D_BINDABLE, GLES20.GL_TEXTURE_MIN_FILTER, GLES20.GL_LINEAR);
-                GLES20.glTexParameterf(TEXTURE_2D_BINDABLE, GLES20.GL_TEXTURE_MAG_FILTER, GLES20.GL_LINEAR);
-                GLES20.glTexParameterf(TEXTURE_2D_BINDABLE, GLES20.GL_TEXTURE_WRAP_S, GLES20.GL_CLAMP_TO_EDGE);
-                GLES20.glTexParameterf(TEXTURE_2D_BINDABLE, GLES20.GL_TEXTURE_WRAP_T, GLES20.GL_CLAMP_TO_EDGE);
+                GLES20.glTexParameterf(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_MIN_FILTER, GLES20.GL_LINEAR);
+                GLES20.glTexParameterf(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_MAG_FILTER, GLES20.GL_LINEAR);
+                GLES20.glTexParameterf(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_WRAP_S, GLES20.GL_CLAMP_TO_EDGE);
+                GLES20.glTexParameterf(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_WRAP_T, GLES20.GL_CLAMP_TO_EDGE);
 
                 GLES20.glBindFramebuffer(GLES20.GL_FRAMEBUFFER, mFrameBuffers[i]);
                 GLES20.glFramebufferTexture2D(GLES20.GL_FRAMEBUFFER, GLES20.GL_COLOR_ATTACHMENT0,
-                        TEXTURE_2D_BINDABLE, mTextures[i], 0);
+                        GLES20.GL_TEXTURE_2D, mTextures[i], 0);
 
-                GLES20.glBindTexture(TEXTURE_2D_BINDABLE, 0);
+                GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, 0);
                 GLES20.glBindFramebuffer(GLES20.GL_FRAMEBUFFER, 0);
             }
         }

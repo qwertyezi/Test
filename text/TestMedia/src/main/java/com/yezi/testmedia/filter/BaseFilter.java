@@ -41,7 +41,7 @@ public abstract class BaseFilter implements IRendererCallback {
     private float[] mProjectMatrix = new float[16];
     private float[] mMVPMatrix = new float[16];
     protected float[] mTransformMatrix = new float[16];
-    private ScaleType mScaleType = ScaleType.CENTER_INSIDE;
+    protected ScaleType mScaleType = ScaleType.CENTER_INSIDE;
     protected FilterType mFilterType = FilterType.IMAGE;
     protected int TEXTURE_2D_BINDABLE;
 

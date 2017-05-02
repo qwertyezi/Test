@@ -56,10 +56,10 @@ public class BaseRender implements GLSurfaceView.Renderer {
     }
 
     public void setFilter(BaseFilter filter) {
-        filter.setTextureId(mFilter.getTextureId());
-        filter.setDataSize(mFilter.getDataWidth(), mFilter.getDataHeight());
         filter.setScaleType(mFilter.getScaleType());
         filter.setFilterType(mFilter.getFilterType());
+        filter.setTextureId(mFilter.getTextureId());
+        filter.setDataSize(mFilter.getDataWidth(), mFilter.getDataHeight());
 
         filter.onSurfaceCreated();
         filter.onSurfaceChanged(mFilter.getViewWidth(), mFilter.getViewHeight());
