@@ -15,6 +15,8 @@ public class BlurFilter extends BaseFilter {
     private int mIntensity = 0;
     private float[] mFlipMatrix = new float[16];
     private static final int BLUR_SIZE = 512;
+    private NoFilter mNoFilter;
+    private ScaleType mGroupScaleType = ScaleType.CENTER_INSIDE;
 
     public BlurFilter() {
         this(FilterType.IMAGE);
@@ -23,6 +25,10 @@ public class BlurFilter extends BaseFilter {
     public BlurFilter(FilterType filterType) {
         super();
         setFilterType(filterType);
+
+        mNoFilter = new NoFilter();
+        mNoFilter.setScaleType(ScaleType.FIT_XY);
+        mNoFilter.setDataSize(mDataWidth, mDataHeight);
     }
 
     public BlurFilter setIntensity(int intensity) {
@@ -34,16 +40,36 @@ public class BlurFilter extends BaseFilter {
         return this;
     }
 
+    @Override
+    public void setDataSize(int width, int height) {
+        super.setDataSize(width, height);
+        mNoFilter.setDataSize(width, height);
+    }
+
+    @Override
+    public BaseFilter setScaleType(ScaleType type) {
+        mGroupScaleType = type;
+        return this;
+    }
+
+    @Override
+    public ScaleType getScaleType() {
+        return mGroupScaleType;
+    }
+
     private int calcMips(int len, int level) {
         return len / (level + 1);
     }
 
-    @Override
-    public void onCreated(int mProgram) {
-        mTextureDownScale = new int[LEVEL];
-        GLES20.glGenTextures(LEVEL, mTextureDownScale, 0);
 
-        for (int i = 0; i < LEVEL; ++i) {
+    @Override
+    public void onSurfaceCreated() {
+        super.onSurfaceCreated();
+
+        mTextureDownScale = new int[mIntensity];
+        GLES20.glGenTextures(mIntensity, mTextureDownScale, 0);
+
+        for (int i = 0; i < mIntensity; ++i) {
             GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, mTextureDownScale[i]);
             GLES20.glTexImage2D(GLES20.GL_TEXTURE_2D, 0, GLES20.GL_RGBA, calcMips(BLUR_SIZE, i + 1), calcMips(BLUR_SIZE, i + 1), 0, GLES20.GL_RGBA, GLES20.GL_UNSIGNED_BYTE, null);
             GLES20.glTexParameteri(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_MIN_FILTER, GLES20.GL_LINEAR);
@@ -53,44 +79,58 @@ public class BlurFilter extends BaseFilter {
         }
 
         mFramebuffer = new FrameBufferObject();
+
+        mNoFilter.onSurfaceCreated();
+    }
+
+    @Override
+    public void onSurfaceChanged(int width, int height) {
+        super.onSurfaceChanged(width, height);
+
+        mNoFilter.onSurfaceChanged(width, height);
+        Matrix.multiplyMM(mFlipMatrix, 0, getMVPMatrix(), 0, GL2Utils.flip(GL2Utils.getOriginalMatrix(), false, true), 0);
+        setMVPMatrix(mFlipMatrix);
     }
 
     @Override
     public void onDrawFrame() {
         if (mIntensity == 0) {
+            GLES20.glViewport(0, 0, mViewWidth, mViewHeight);
+            super.setScaleType(mGroupScaleType);
             super.onDrawFrame();
             return;
         }
 
-        setScaleType(ScaleType.FIT_XY);
-        GLES20.glActiveTexture(GLES20.GL_TEXTURE0);
-
         mFramebuffer.bindTexture(mTextureDownScale[0]);
-
         GLES20.glViewport(0, 0, calcMips(BLUR_SIZE, 1), calcMips(BLUR_SIZE, 1));
+        super.setScaleType(ScaleType.FIT_XY);
         super.onDrawFrame();
 
+        mNoFilter.setScaleType(ScaleType.FIT_XY);
         for (int i = 1; i < mIntensity; ++i) {
             mFramebuffer.bindTexture(mTextureDownScale[i]);
-            setTextureId(mTextureDownScale[i - 1]);
+            mNoFilter.setTextureId(mTextureDownScale[i - 1]);
             GLES20.glViewport(0, 0, calcMips(BLUR_SIZE, i + 1), calcMips(BLUR_SIZE, i + 1));
-            super.onDrawFrame();
+            mNoFilter.onDrawFrame();
         }
 
         for (int i = mIntensity - 1; i > 0; --i) {
             mFramebuffer.bindTexture(mTextureDownScale[i - 1]);
-            setTextureId(mTextureDownScale[i]);
+            mNoFilter.setTextureId(mTextureDownScale[i]);
             GLES20.glViewport(0, 0, calcMips(BLUR_SIZE, i), calcMips(BLUR_SIZE, i));
-            super.onDrawFrame();
+            mNoFilter.onDrawFrame();
         }
 
-        GLES20.glViewport(0, 0, mViewWidth, mViewHeight);
         GLES20.glBindFramebuffer(GLES20.GL_FRAMEBUFFER, 0);
-        setTextureId(mTextureDownScale[0]);
-        setScaleType(ScaleType.CENTER_INSIDE);
-        Matrix.multiplyMM(mFlipMatrix, 0, getMVPMatrix(), 0, GL2Utils.flip(GL2Utils.getOriginalMatrix(), false, true), 0);
-        setMVPMatrix(mFlipMatrix);
-        super.onDrawFrame();
+        GLES20.glViewport(0, 0, mViewWidth, mViewHeight);
+        mNoFilter.setScaleType(mGroupScaleType);
+        mNoFilter.setTextureId(mTextureDownScale[0]);
+        mNoFilter.onDrawFrame();
+    }
+
+    @Override
+    public void onCreated(int mProgram) {
+
     }
 
     @Override

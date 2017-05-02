@@ -12,11 +12,11 @@ import java.util.List;
 
 public class FilterGroup extends BaseFilter {
 
-    private int[] mFrameBuffers;
-    private int[] mTextures;
-    private float[] mFlipMatrix = new float[16];
+    protected int[] mFrameBuffers;
+    protected int[] mTextures;
+    protected float[] mFlipMatrix = new float[16];
     private ScaleType mGroupScaleType = ScaleType.CENTER_INSIDE;
-    private List<BaseFilter> mFilterList = new ArrayList<>();
+    protected List<BaseFilter> mFilterList = new ArrayList<>();
 
     public FilterGroup() {
 
@@ -34,7 +34,7 @@ public class FilterGroup extends BaseFilter {
         mFilterList.clear();
     }
 
-    private void initFilters(BaseFilter... filters) {
+    protected void initFilters(BaseFilter... filters) {
         Collections.addAll(mFilterList, filters);
         if (mDataWidth != 0 && mDataHeight != 0) {
             setDataSize(mDataWidth, mDataHeight);
@@ -80,8 +80,16 @@ public class FilterGroup extends BaseFilter {
     public void onSurfaceChanged(int width, int height) {
         super.onSurfaceChanged(width, height);
 
-        for (BaseFilter filter : mFilterList) {
+        int size = mFilterList.size();
+        for (int i = 0; i < size; i++) {
+            BaseFilter filter = mFilterList.get(i);
             filter.onSurfaceChanged(width, height);
+
+            if (i == size - 1 && size % 2 == 1) {
+                Matrix.multiplyMM(mFlipMatrix, 0, filter.getMVPMatrix(), 0,
+                        GL2Utils.flip(GL2Utils.getOriginalMatrix(), false, true), 0);
+                filter.setMVPMatrix(mFlipMatrix);
+            }
         }
     }
 
@@ -111,11 +119,6 @@ public class FilterGroup extends BaseFilter {
 
             BaseFilter filter = mFilterList.get(size - 1);
             GLES20.glBindFramebuffer(GLES20.GL_FRAMEBUFFER, 0);
-            if (size % 2 == 1) {
-                Matrix.multiplyMM(mFlipMatrix, 0, filter.getMVPMatrix(), 0,
-                        GL2Utils.flip(GL2Utils.getOriginalMatrix(), false, true), 0);
-                filter.setMVPMatrix(mFlipMatrix);
-            }
             filter.setTextureId(previousTexture);
             GLES20.glViewport(0, 0, mViewWidth, mViewHeight);
             filter.onDrawFrame();
@@ -123,7 +126,7 @@ public class FilterGroup extends BaseFilter {
 
     }
 
-    private void initFrameBuffer() {
+    protected void initFrameBuffer() {
         if (mFilterList != null && mFilterList.size() > 0) {
             int size = mFilterList.size();
             mFrameBuffers = new int[size];

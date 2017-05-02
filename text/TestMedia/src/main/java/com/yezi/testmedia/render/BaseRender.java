@@ -5,6 +5,7 @@ import android.opengl.GLES20;
 import android.opengl.GLSurfaceView;
 
 import com.yezi.testmedia.filter.BaseFilter;
+import com.yezi.testmedia.filter.NoFilter;
 import com.yezi.testmedia.utils.enums.FilterType;
 import com.yezi.testmedia.utils.enums.ScaleType;
 
@@ -18,23 +19,7 @@ public class BaseRender implements GLSurfaceView.Renderer {
     protected int TEXTURE_2D_BINDABLE;
 
     public BaseRender() {
-        this(new BaseFilter() {
-
-            @Override
-            public void onDraw() {
-
-            }
-
-            @Override
-            public void onCreated(int mProgram) {
-
-            }
-
-            @Override
-            public void onChanged(int width, int height) {
-
-            }
-        });
+        this(new NoFilter());
     }
 
     public BaseRender(BaseFilter filter) {

@@ -10,6 +10,7 @@ import android.widget.SeekBar;
 
 import com.yezi.testmedia.filter.BaseFilter;
 import com.yezi.testmedia.filter.BeautyFilter;
+import com.yezi.testmedia.filter.BlurFilter;
 import com.yezi.testmedia.filter.BrightnessFilter;
 import com.yezi.testmedia.filter.FilterGroup;
 import com.yezi.testmedia.filter.GrayFilter;
@@ -27,7 +28,7 @@ public class TestImageGLActivity extends AppCompatActivity {
     };
     private final BaseFilter[] filters = {
             new GrayFilter(),
-//            new BlurFilter().setIntensity(16),
+            new BlurFilter().setIntensity(6),
             new BrightnessFilter().setBrightness(-0.3f),
             new BeautyFilter().setFlag(6),
             new FilterGroup(new BeautyFilter().setFlag(6), new GrayFilter())
