@@ -27,7 +27,7 @@ public class ImageRender extends BaseRender {
         mBitmap = bitmap;
         mRecycleBitmap = recycleBitmap;
 
-        mFilter.setDataSize(mBitmap.getWidth(), mBitmap.getHeight());
+        setDataSize(mBitmap.getWidth(), mBitmap.getHeight());
     }
 
     @Override

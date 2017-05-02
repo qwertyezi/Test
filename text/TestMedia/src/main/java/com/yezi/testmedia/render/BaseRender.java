@@ -68,6 +68,10 @@ public class BaseRender implements GLSurfaceView.Renderer {
         mFilter = filter;
     }
 
+    public void setDataSize(int width, int height) {
+        mFilter.setDataSize(width, height);
+    }
+
     public void setScaleType(ScaleType scaleType) {
         mFilter.setScaleType(scaleType);
     }

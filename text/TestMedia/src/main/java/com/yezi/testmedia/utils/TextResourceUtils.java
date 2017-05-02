@@ -45,7 +45,7 @@ public class TextResourceUtils {
         if (TextUtils.isEmpty(vertex)) {
             return null;
         }
-        return vertex.replace("%s", filterType == FilterType.IMAGE ? "1.0" : "uSTMatrix");
+        return vertex.replace("%s", filterType == FilterType.IMAGE ? " " : "uSTMatrix * ");
     }
 
     public static String formatFragmentSource(FilterType filterType, String fragment) {

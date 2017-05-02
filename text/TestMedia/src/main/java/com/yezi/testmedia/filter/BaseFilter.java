@@ -43,6 +43,7 @@ public abstract class BaseFilter implements IRendererCallback {
     protected float[] mTransformMatrix = new float[16];
     private ScaleType mScaleType = ScaleType.CENTER_INSIDE;
     protected FilterType mFilterType = FilterType.IMAGE;
+    protected int TEXTURE_2D_BINDABLE;
 
     public BaseFilter() {
         this(0, 0);
@@ -160,6 +161,8 @@ public abstract class BaseFilter implements IRendererCallback {
     public void onSurfaceCreated() {
         initBuffer();
 
+        TEXTURE_2D_BINDABLE = mFilterType == FilterType.VIDEO ? GLES11Ext.GL_TEXTURE_EXTERNAL_OES : GLES20.GL_TEXTURE_2D;
+
         mProgram = ShaderUtils.createProgram(mFilterType, mVertex, mFragment);
 
         glPosition = GLES20.glGetAttribLocation(mProgram, "aPosition");
@@ -233,15 +236,14 @@ public abstract class BaseFilter implements IRendererCallback {
 
         if (mTextureId != NO_FILTER) {
             GLES20.glActiveTexture(GLES20.GL_TEXTURE0);
-            GLES20.glBindTexture(mFilterType == FilterType.IMAGE ?
-                    GLES20.GL_TEXTURE_2D : GLES11Ext.GL_TEXTURE_EXTERNAL_OES, mTextureId);
+            GLES20.glBindTexture(TEXTURE_2D_BINDABLE, mTextureId);
             GLES20.glUniform1i(glTexture, 0);
         }
 
         GLES20.glDrawArrays(GLES20.GL_TRIANGLE_STRIP, 0, 4);
         GLES20.glDisableVertexAttribArray(glPosition);
         GLES20.glDisableVertexAttribArray(glCoordinate);
-        GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, 0);
+        GLES20.glBindTexture(TEXTURE_2D_BINDABLE, 0);
     }
 
     public abstract void onDraw();

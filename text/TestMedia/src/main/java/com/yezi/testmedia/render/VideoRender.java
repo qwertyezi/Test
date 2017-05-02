@@ -23,10 +23,6 @@ public class VideoRender extends BaseRender {
         super(filter);
     }
 
-    public void setDataSize(int width, int height) {
-        mFilter.setDataSize(width, height);
-    }
-
     public interface onSurfaceCreatedListener {
         void onSurfaceCreated();
     }
