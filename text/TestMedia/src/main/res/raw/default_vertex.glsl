@@ -8,5 +8,5 @@ varying vec2 vCoordinate;
 
 void main(){
     gl_Position=uMatrix*aPosition;
-    vCoordinate=(%saCoordinate).xy;
+    vCoordinate=(%s*aCoordinate).xy;
 }

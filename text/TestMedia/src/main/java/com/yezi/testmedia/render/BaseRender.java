@@ -40,7 +40,6 @@ public class BaseRender implements GLSurfaceView.Renderer {
     public BaseRender(BaseFilter filter) {
         mFilter = filter;
         TEXTURE_2D_BINDABLE = mFilter.getFilterType() == FilterType.VIDEO ? GLES11Ext.GL_TEXTURE_EXTERNAL_OES : GLES20.GL_TEXTURE_2D;
-        initTexture();
     }
 
     private void initTexture() {
@@ -52,6 +51,7 @@ public class BaseRender implements GLSurfaceView.Renderer {
         GLES20.glTexParameteri(TEXTURE_2D_BINDABLE, GLES20.GL_TEXTURE_MAG_FILTER, GLES20.GL_LINEAR);
         GLES20.glTexParameteri(TEXTURE_2D_BINDABLE, GLES20.GL_TEXTURE_WRAP_S, GLES20.GL_CLAMP_TO_EDGE);
         GLES20.glTexParameteri(TEXTURE_2D_BINDABLE, GLES20.GL_TEXTURE_WRAP_T, GLES20.GL_CLAMP_TO_EDGE);
+
         mTextureId = textures[0];
     }
 
@@ -85,6 +85,7 @@ public class BaseRender implements GLSurfaceView.Renderer {
         GLES20.glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
         GLES20.glEnable(GLES20.GL_TEXTURE_2D);
 
+        initTexture();
         mFilter.onSurfaceCreated();
     }
 

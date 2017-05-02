@@ -109,19 +109,19 @@ public class FilterGroup extends BaseFilter {
             for (int i = 0; i < size; i++) {
                 GLES20.glGenFramebuffers(1, mFrameBuffers, i);
                 GLES20.glGenTextures(1, mTextures, i);
-                GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, mTextures[i]);
-                GLES20.glTexImage2D(GLES20.GL_TEXTURE_2D, 0, GLES20.GL_RGBA, mDataWidth, mDataHeight, 0,
+                GLES20.glBindTexture(TEXTURE_2D_BINDABLE, mTextures[i]);
+                GLES20.glTexImage2D(TEXTURE_2D_BINDABLE, 0, GLES20.GL_RGBA, mDataWidth, mDataHeight, 0,
                         GLES20.GL_RGBA, GLES20.GL_UNSIGNED_BYTE, null);
-                GLES20.glTexParameterf(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_MIN_FILTER, GLES20.GL_LINEAR);
-                GLES20.glTexParameterf(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_MAG_FILTER, GLES20.GL_LINEAR);
-                GLES20.glTexParameterf(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_WRAP_S, GLES20.GL_CLAMP_TO_EDGE);
-                GLES20.glTexParameterf(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_WRAP_T, GLES20.GL_CLAMP_TO_EDGE);
+                GLES20.glTexParameterf(TEXTURE_2D_BINDABLE, GLES20.GL_TEXTURE_MIN_FILTER, GLES20.GL_LINEAR);
+                GLES20.glTexParameterf(TEXTURE_2D_BINDABLE, GLES20.GL_TEXTURE_MAG_FILTER, GLES20.GL_LINEAR);
+                GLES20.glTexParameterf(TEXTURE_2D_BINDABLE, GLES20.GL_TEXTURE_WRAP_S, GLES20.GL_CLAMP_TO_EDGE);
+                GLES20.glTexParameterf(TEXTURE_2D_BINDABLE, GLES20.GL_TEXTURE_WRAP_T, GLES20.GL_CLAMP_TO_EDGE);
 
                 GLES20.glBindFramebuffer(GLES20.GL_FRAMEBUFFER, mFrameBuffers[i]);
                 GLES20.glFramebufferTexture2D(GLES20.GL_FRAMEBUFFER, GLES20.GL_COLOR_ATTACHMENT0,
-                        GLES20.GL_TEXTURE_2D, mTextures[i], 0);
+                        TEXTURE_2D_BINDABLE, mTextures[i], 0);
 
-                GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, 0);
+                GLES20.glBindTexture(TEXTURE_2D_BINDABLE, 0);
                 GLES20.glBindFramebuffer(GLES20.GL_FRAMEBUFFER, 0);
             }
         }

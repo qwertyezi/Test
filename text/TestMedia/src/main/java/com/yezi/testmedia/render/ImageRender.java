@@ -3,7 +3,9 @@ package com.yezi.testmedia.render;
 import android.graphics.Bitmap;
 import android.opengl.GLES20;
 import android.opengl.GLUtils;
+
 import com.yezi.testmedia.filter.BaseFilter;
+
 import javax.microedition.khronos.opengles.GL10;
 
 public class ImageRender extends BaseRender {
