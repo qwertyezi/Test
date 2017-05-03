@@ -3,6 +3,7 @@ package com.yezi.testmedia.render;
 import android.graphics.SurfaceTexture;
 
 import com.yezi.testmedia.filter.BaseFilter;
+import com.yezi.testmedia.filter.NoFilter;
 import com.yezi.testmedia.utils.enums.FilterType;
 
 import javax.microedition.khronos.egl.EGLConfig;
@@ -14,8 +15,7 @@ public class VideoRender extends BaseRender {
     protected float[] mTransformMatrix = new float[16];
 
     public VideoRender() {
-        super();
-        mFilter.setFilterType(FilterType.VIDEO);
+        super(new NoFilter().setFilterType(FilterType.VIDEO));
     }
 
     public VideoRender(BaseFilter filter) {

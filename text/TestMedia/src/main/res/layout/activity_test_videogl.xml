@@ -20,12 +20,6 @@
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:onClick="onPlayClick"
-            android:text="播放"/>
-
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
             android:onClick="onFilterChangeClick"
             android:text="切换滤镜"/>
 

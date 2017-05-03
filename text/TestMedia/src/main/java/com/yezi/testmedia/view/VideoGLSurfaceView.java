@@ -37,6 +37,32 @@ public class VideoGLSurfaceView extends GLSurfaceView implements SurfaceTexture.
         setEGLContextClientVersion(2);
         setRenderer(mVideoRender);
         setRenderMode(RENDERMODE_WHEN_DIRTY);
+
+        mVideoRender.setOnSurfaceCreatedListener(new VideoRender.onSurfaceCreatedListener() {
+            @Override
+            public void onSurfaceCreated() {
+                if (mMediaPlayer == null) {
+                    mMediaPlayer = new MediaPlayer();
+                    mMediaPlayer.setLooping(mLoopPlay);
+                    mVideoRender.getSurfaceTexture().setOnFrameAvailableListener(VideoGLSurfaceView.this);
+                    mMediaPlayer.setSurface(new Surface(mVideoRender.getSurfaceTexture()));
+                    try {
+                        mMediaPlayer.setDataSource(getContext(), mUri);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    mMediaPlayer.prepareAsync();
+                    mMediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+                        @Override
+                        public void onPrepared(MediaPlayer mp) {
+                            mVideoRender.setDataSize(mp.getVideoWidth(), mp.getVideoHeight());
+
+                            mp.start();
+                        }
+                    });
+                }
+            }
+        });
     }
 
     public void setLoopPlay(boolean loopPlay) {
@@ -54,31 +80,11 @@ public class VideoGLSurfaceView extends GLSurfaceView implements SurfaceTexture.
         }
     }
 
-    public void playVideo(String uri) {
+    public void setVideoUri(String uri) {
         if (TextUtils.isEmpty(uri)) {
             return;
         }
         mUri = Uri.parse(uri);
-        if (mMediaPlayer == null) {
-            mMediaPlayer = new MediaPlayer();
-            mMediaPlayer.setLooping(mLoopPlay);
-            mVideoRender.getSurfaceTexture().setOnFrameAvailableListener(this);
-            mMediaPlayer.setSurface(new Surface(mVideoRender.getSurfaceTexture()));
-            try {
-                mMediaPlayer.setDataSource(getContext(), mUri);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            mMediaPlayer.prepareAsync();
-            mMediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-                @Override
-                public void onPrepared(MediaPlayer mp) {
-                    mVideoRender.setDataSize(mp.getVideoWidth(), mp.getVideoHeight());
-
-                    mp.start();
-                }
-            });
-        }
     }
 
     public void setScaleType(ScaleType scaleType) {

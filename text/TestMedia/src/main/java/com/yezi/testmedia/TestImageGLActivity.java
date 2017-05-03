@@ -114,12 +114,9 @@ public class TestImageGLActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        mSurfaceView.onPause();
-    }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
+        mSurfaceView.onPause();
         mSurfaceView.release();
     }
+
 }

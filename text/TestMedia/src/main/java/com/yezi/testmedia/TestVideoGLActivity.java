@@ -41,13 +41,10 @@ public class TestVideoGLActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_test_videogl);
         mSurfaceView = (VideoGLSurfaceView) findViewById(R.id.surface_view);
+        mSurfaceView.setLoopPlay(true);
+        mSurfaceView.setVideoUri("android.resource://" + getPackageName() + "/" + R.raw.test);
         mBtnScaleType = (Button) findViewById(R.id.btn_scale_type);
         mBtnScaleType.setText(mSurfaceView.getScaleType().toString());
-    }
-
-    public void onPlayClick(View view) {
-        mSurfaceView.setLoopPlay(true);
-        mSurfaceView.playVideo("android.resource://" + getPackageName() + "/" + R.raw.test);
     }
 
     public void onFilterChangeClick(View view) {
@@ -76,12 +73,8 @@ public class TestVideoGLActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        mSurfaceView.onPause();
-    }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
+        mSurfaceView.onPause();
         mSurfaceView.release();
     }
 }
