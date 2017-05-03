@@ -95,11 +95,6 @@ public class ImageGLSurfaceView extends GLSurfaceView {
     }
 
     public void release() {
-        queueEvent(new Runnable() {
-            @Override
-            public void run() {
-                mFilter.release();
-            }
-        });
+        mImageRender.release();
     }
 }

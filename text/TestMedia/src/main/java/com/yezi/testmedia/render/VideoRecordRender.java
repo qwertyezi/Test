@@ -12,7 +12,6 @@ import com.yezi.testmedia.recorder.RenderHandler;
 
 import java.io.IOException;
 
-import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
 public class VideoRecordRender extends VideoRender {
@@ -25,11 +24,7 @@ public class VideoRecordRender extends VideoRender {
     private boolean mIsRecording = false;
 
     public VideoRecordRender() {
-    }
-
-    @Override
-    public void onSurfaceCreated(GL10 gl, EGLConfig config) {
-        super.onSurfaceCreated(gl, config);
+        super();
     }
 
     @Override
@@ -43,9 +38,12 @@ public class VideoRecordRender extends VideoRender {
     }
 
     public void startRecording(EGLContext eglContext) {
+        if (mIsRecording) {
+            return;
+        }
         if (DEBUG) Log.v(TAG, "startRecording:");
         try {
-            mMuxer = new MediaMuxerWrapper(null);    // if you record audio only, ".m4a" is also OK.
+            mMuxer = new MediaMuxerWrapper(null);
             MediaVideoEncoder videoEncoder = new MediaVideoEncoder(mMuxer, mMediaEncoderListener, 720, 1280);
             new MediaAudioEncoder(mMuxer, mMediaEncoderListener);
             mMuxer.prepare();
@@ -60,6 +58,9 @@ public class VideoRecordRender extends VideoRender {
     }
 
     public void stopRecording() {
+        if (!mIsRecording) {
+            return;
+        }
         if (DEBUG) Log.v(TAG, "stopRecording:mMuxer=" + mMuxer);
         if (mMuxer != null) {
             mMuxer.stopRecording();

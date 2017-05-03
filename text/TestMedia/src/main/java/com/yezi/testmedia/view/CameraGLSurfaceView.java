@@ -57,9 +57,10 @@ public class CameraGLSurfaceView extends GLSurfaceView implements SurfaceTexture
         CameraInstance.getInstance().resumeCamera();
     }
 
-    public void onDestroy() {
+    public void release() {
         mVideoRender.stopRecording();
         CameraInstance.getInstance().releaseCamera();
+        mVideoRender.release();
     }
 
     public void stopRecording() {
@@ -85,7 +86,7 @@ public class CameraGLSurfaceView extends GLSurfaceView implements SurfaceTexture
             @Override
             public void onSurfaceCreated() {
                 mVideoRender.getSurfaceTexture().setOnFrameAvailableListener(CameraGLSurfaceView.this);
-                CameraInstance.getInstance().setCameraSize(600, 800,false);
+                CameraInstance.getInstance().setCameraSize(720, 1280, false);
                 CameraInstance.getInstance().openCamera();
                 mVideoRender.setDataSize(CameraInstance.getInstance().getPreviewSize().height, CameraInstance.getInstance().getPreviewSize().width);
                 CameraInstance.getInstance().startPreview(mVideoRender.getSurfaceTexture());

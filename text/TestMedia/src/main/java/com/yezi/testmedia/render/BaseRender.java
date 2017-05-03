@@ -24,7 +24,6 @@ public class BaseRender implements GLSurfaceView.Renderer {
 
     public BaseRender(BaseFilter filter) {
         mFilter = filter;
-        TEXTURE_2D_BINDABLE = mFilter.getFilterType() == FilterType.VIDEO ? GLES11Ext.GL_TEXTURE_EXTERNAL_OES : GLES20.GL_TEXTURE_2D;
     }
 
     private void initTexture() {
@@ -70,6 +69,8 @@ public class BaseRender implements GLSurfaceView.Renderer {
         GLES20.glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
         GLES20.glEnable(GLES20.GL_TEXTURE_2D);
 
+        TEXTURE_2D_BINDABLE = mFilter.getFilterType() == FilterType.VIDEO ? GLES11Ext.GL_TEXTURE_EXTERNAL_OES : GLES20.GL_TEXTURE_2D;
+
         initTexture();
         mFilter.onSurfaceCreated();
     }
@@ -84,5 +85,9 @@ public class BaseRender implements GLSurfaceView.Renderer {
     @Override
     public void onDrawFrame(GL10 gl) {
         mFilter.onDrawFrame();
+    }
+
+    public void release() {
+        mFilter.release();
     }
 }

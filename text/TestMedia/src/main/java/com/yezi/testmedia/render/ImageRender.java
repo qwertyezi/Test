@@ -50,4 +50,12 @@ public class ImageRender extends BaseRender {
         }
     }
 
+    @Override
+    public void release() {
+        super.release();
+        if (mBitmap != null) {
+            mBitmap.recycle();
+            mBitmap = null;
+        }
+    }
 }

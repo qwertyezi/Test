@@ -11,7 +11,6 @@ import javax.microedition.khronos.opengles.GL10;
 public class VideoRender extends BaseRender {
 
     protected SurfaceTexture mSurfaceTexture;
-    private int[] mTextures = new int[1];
     protected float[] mTransformMatrix = new float[16];
 
     public VideoRender() {
@@ -38,7 +37,7 @@ public class VideoRender extends BaseRender {
         super.onSurfaceCreated(gl, config);
 
         mFilter.setTextureId(mTextureId);
-        mSurfaceTexture = new SurfaceTexture(mTextures[0]);
+        mSurfaceTexture = new SurfaceTexture(mTextureId);
 
         if (mListener != null) {
             mListener.onSurfaceCreated();
@@ -59,13 +58,13 @@ public class VideoRender extends BaseRender {
         return mSurfaceTexture;
     }
 
+    @Override
     public void release() {
+        super.release();
         if (mSurfaceTexture != null) {
             mSurfaceTexture.release();
             mSurfaceTexture = null;
         }
-
-        mFilter.release();
     }
 
 }
