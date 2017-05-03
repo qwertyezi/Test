@@ -1,15 +1,9 @@
 package com.yezi.testmedia.filter;
 
 import android.opengl.GLES20;
-import android.opengl.Matrix;
 
 import com.yezi.testmedia.R;
-import com.yezi.testmedia.utils.GL2Utils;
-import com.yezi.testmedia.utils.camera.CameraInstance;
 import com.yezi.testmedia.utils.enums.FilterType;
-
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
 
 public class BeautyFilter extends BaseFilter {
 
@@ -20,10 +14,6 @@ public class BeautyFilter extends BaseFilter {
     private float aaCoef;
     private float mixCoef;
     private int iternum;
-
-    private float[] mOriginalMVPMatrix = new float[16];
-    private float[] mMatrix = new float[16];
-    private boolean mIsCamera = false;
 
     public BeautyFilter() {
         this(FilterType.IMAGE);
@@ -68,38 +58,10 @@ public class BeautyFilter extends BaseFilter {
     }
 
     @Override
-    public void initTextureBuffer() {
-        if (mFilterType == FilterType.IMAGE || (mFilterType == FilterType.VIDEO && !mIsCamera)) {
-            super.initTextureBuffer();
-            return;
-        }
-        mCoord = ByteBuffer
-                .allocateDirect(GL2Utils.FRAGMENT_POSITION_BEAUTY.length * 4)
-                .order(ByteOrder.nativeOrder())
-                .asFloatBuffer()
-                .put(GL2Utils.FRAGMENT_POSITION_BEAUTY);
-        mCoord.position(0);
-    }
-
-    public BeautyFilter setCamera(boolean camera) {
-        mIsCamera = camera;
-        return this;
-    }
-
-    @Override
     public void onDraw() {
         GLES20.glUniform1f(glAaCoef, aaCoef);
         GLES20.glUniform1f(glMixCoef, mixCoef);
         GLES20.glUniform1i(glIternum, iternum);
-
-        if (mFilterType == FilterType.VIDEO && mIsCamera) {
-            if (!CameraInstance.getInstance().isFrontCamera()) {
-                Matrix.multiplyMM(mMatrix, 0, mOriginalMVPMatrix, 0, GL2Utils.flip(GL2Utils.getOriginalMatrix(), false, true), 0);
-                setMVPMatrix(mMatrix);
-            } else {
-                setMVPMatrix(mOriginalMVPMatrix);
-            }
-        }
     }
 
     @Override
@@ -111,6 +73,5 @@ public class BeautyFilter extends BaseFilter {
 
     @Override
     public void onChanged(int width, int height) {
-        mOriginalMVPMatrix = getMVPMatrix();
     }
 }

@@ -38,13 +38,6 @@ public class GL2Utils {
             1.0f, -1.0f
     };
 
-    public static final float[] FRAGMENT_POSITION_BEAUTY = {
-            1.0f, 1.0f,
-            0.0f, 1.0f,
-            1.0f, 0.0f,
-            0.0f, 0.0f,
-    };
-
     public static final float[] FRAGMENT_POSITION_VIDEO = {
             0.0f, 1.0f,
             0.0f, 0.0f,
