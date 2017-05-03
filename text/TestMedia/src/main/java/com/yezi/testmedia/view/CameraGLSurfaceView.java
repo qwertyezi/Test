@@ -58,9 +58,14 @@ public class CameraGLSurfaceView extends GLSurfaceView implements SurfaceTexture
     }
 
     public void release() {
+        queueEvent(new Runnable() {
+            @Override
+            public void run() {
+                mVideoRender.release();
+            }
+        });
         mVideoRender.stopRecording();
         CameraInstance.getInstance().releaseCamera();
-        mVideoRender.release();
     }
 
     public void stopRecording() {
@@ -94,11 +99,11 @@ public class CameraGLSurfaceView extends GLSurfaceView implements SurfaceTexture
         });
     }
 
-    public interface ResultBitmapCallback {
+    private interface ResultBitmapCallback {
         void resultBitmap(Bitmap bitmap);
     }
 
-    public synchronized void getResultBitmap(final ResultBitmapCallback callback) {
+    private synchronized void getResultBitmap(final ResultBitmapCallback callback) {
         if (callback == null) {
             return;
         }

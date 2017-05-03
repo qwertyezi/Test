@@ -88,7 +88,7 @@ public class TestCameraGLActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-//        mSurfaceView.onResume();
+        mSurfaceView.onResume();
     }
 
     @Override

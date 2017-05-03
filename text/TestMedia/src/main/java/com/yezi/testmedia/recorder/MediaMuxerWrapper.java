@@ -7,7 +7,7 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import com.yezi.testmedia.BuildConfig;
-import com.yezi.testmedia.TestMediaApp;
+import com.yezi.testmedia.utils.FileUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -27,7 +27,7 @@ public class MediaMuxerWrapper {
         try {
             File file;
             if (TextUtils.isEmpty(filePath)) {
-                file = new File(TestMediaApp.getAppContext().getExternalMediaDirs()[0].getAbsolutePath() + "/" + System.currentTimeMillis() + ".mp4");
+                file = new File(FileUtils.getFilePath(), System.currentTimeMillis() + ".mp4");
             } else {
                 file = new File(filePath);
             }
@@ -38,10 +38,6 @@ public class MediaMuxerWrapper {
         mMediaMuxer = new MediaMuxer(mOutputPath, MediaMuxer.OutputFormat.MUXER_OUTPUT_MPEG_4);
         mEncoderCount = mStatredCount = 0;
         mIsStarted = false;
-    }
-
-    public String getOutputPath() {
-        return mOutputPath;
     }
 
     public void frameAvailableSoon() {

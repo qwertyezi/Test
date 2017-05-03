@@ -28,7 +28,7 @@ public class TestImageGLActivity extends AppCompatActivity {
     };
     private final BaseFilter[] filters = {
             new GrayFilter(),
-            new BlurFilter().setIntensity(6),
+            new BlurFilter().setIntensity(16),
             new BrightnessFilter().setBrightness(-0.3f),
             new BeautyFilter().setFlag(6),
             new FilterGroup(new BeautyFilter().setFlag(6), new GrayFilter())

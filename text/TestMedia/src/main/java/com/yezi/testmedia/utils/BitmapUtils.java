@@ -1,10 +1,7 @@
 package com.yezi.testmedia.utils;
 
 import android.graphics.Bitmap;
-import android.opengl.GLES20;
 import android.text.TextUtils;
-
-import com.yezi.testmedia.TestMediaApp;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -19,7 +16,7 @@ public class BitmapUtils {
         }
         File file;
         if (TextUtils.isEmpty(filePath)) {
-            file = new File(TestMediaApp.getAppContext().getExternalMediaDirs()[0].getAbsolutePath() + "/" + System.currentTimeMillis() + ".jpg");
+            file = new File(FileUtils.getFilePath(), System.currentTimeMillis() + ".jpg");
         } else {
             file = new File(filePath);
         }

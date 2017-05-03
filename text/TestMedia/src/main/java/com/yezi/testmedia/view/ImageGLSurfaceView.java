@@ -29,11 +29,11 @@ public class ImageGLSurfaceView extends GLSurfaceView {
         init();
     }
 
-    public interface ResultBitmapCallback {
+    private interface ResultBitmapCallback {
         void resultBitmap(Bitmap bitmap);
     }
 
-    public synchronized void getResultBitmap(final ResultBitmapCallback callback) {
+    private synchronized void getResultBitmap(final ResultBitmapCallback callback) {
         if (callback == null) {
             return;
         }
@@ -95,6 +95,11 @@ public class ImageGLSurfaceView extends GLSurfaceView {
     }
 
     public void release() {
-        mImageRender.release();
+        queueEvent(new Runnable() {
+            @Override
+            public void run() {
+                mImageRender.release();
+            }
+        });
     }
 }
