@@ -2,6 +2,7 @@ package com.yezi.testmedia.view;
 
 import android.content.Context;
 import android.graphics.SurfaceTexture;
+import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.opengl.GLSurfaceView;
@@ -9,43 +10,43 @@ import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.Surface;
 
-import com.yezi.testmedia.filter.BaseFilter;
 import com.yezi.testmedia.render.VideoRender;
 import com.yezi.testmedia.utils.enums.ScaleType;
 
 import java.io.IOException;
 
-public class VideoGLSurfaceView extends GLSurfaceView implements SurfaceTexture.OnFrameAvailableListener {
+public class VideoGLSurfaceView extends BaseGLSurfaceView implements SurfaceTexture.OnFrameAvailableListener {
 
-    private VideoRender mVideoRender;
     private Uri mUri;
     private MediaPlayer mMediaPlayer;
     private boolean mLoopPlay = false;
+    private float mCurrentVolume;
+    private boolean mHasVolume = true;
 
     public VideoGLSurfaceView(Context context) {
-        this(context, null);
+        super(context);
     }
 
     public VideoGLSurfaceView(Context context, AttributeSet attrs) {
         super(context, attrs);
-
-        init();
     }
 
-    private void init() {
-        mVideoRender = new VideoRender();
-        setEGLContextClientVersion(2);
-        setRenderer(mVideoRender);
-        setRenderMode(RENDERMODE_WHEN_DIRTY);
+    @Override
+    protected void init() {
+        mBaseRender = new VideoRender();
+        mBaseRender.setScaleType(ScaleType.CENTER_CROP);
+        setRenderer(mBaseRender);
+        setRenderMode(GLSurfaceView.RENDERMODE_WHEN_DIRTY);
+        getCurrentVolume();
 
-        mVideoRender.setOnSurfaceCreatedListener(new VideoRender.onSurfaceCreatedListener() {
+        ((VideoRender) mBaseRender).setOnSurfaceCreatedListener(new VideoRender.onSurfaceCreatedListener() {
             @Override
             public void onSurfaceCreated() {
                 if (mMediaPlayer == null) {
                     mMediaPlayer = new MediaPlayer();
                     mMediaPlayer.setLooping(mLoopPlay);
-                    mVideoRender.getSurfaceTexture().setOnFrameAvailableListener(VideoGLSurfaceView.this);
-                    mMediaPlayer.setSurface(new Surface(mVideoRender.getSurfaceTexture()));
+                    ((VideoRender) mBaseRender).getSurfaceTexture().setOnFrameAvailableListener(VideoGLSurfaceView.this);
+                    mMediaPlayer.setSurface(new Surface(((VideoRender) mBaseRender).getSurfaceTexture()));
                     try {
                         mMediaPlayer.setDataSource(getContext(), mUri);
                     } catch (IOException e) {
@@ -55,7 +56,7 @@ public class VideoGLSurfaceView extends GLSurfaceView implements SurfaceTexture.
                     mMediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
                         @Override
                         public void onPrepared(MediaPlayer mp) {
-                            mVideoRender.setDataSize(mp.getVideoWidth(), mp.getVideoHeight());
+                            mBaseRender.setDataSize(mp.getVideoWidth(), mp.getVideoHeight());
 
                             mp.start();
                         }
@@ -69,17 +70,6 @@ public class VideoGLSurfaceView extends GLSurfaceView implements SurfaceTexture.
         mLoopPlay = loopPlay;
     }
 
-    public void setFilter(final BaseFilter filter) {
-        if (filter != null) {
-            queueEvent(new Runnable() {
-                @Override
-                public void run() {
-                    mVideoRender.setFilter(filter);
-                }
-            });
-        }
-    }
-
     public void setVideoUri(String uri) {
         if (TextUtils.isEmpty(uri)) {
             return;
@@ -87,14 +77,26 @@ public class VideoGLSurfaceView extends GLSurfaceView implements SurfaceTexture.
         mUri = Uri.parse(uri);
     }
 
-    public void setScaleType(ScaleType scaleType) {
-        mVideoRender.setScaleType(scaleType);
+    private void getCurrentVolume() {
+        AudioManager audioManager = (AudioManager) getContext().getSystemService(Context.AUDIO_SERVICE);
+        int volume = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
+        int maxVolume = audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
+        mCurrentVolume = volume / (float) maxVolume;
     }
 
-    public ScaleType getScaleType() {
-        return mVideoRender.getScaleType();
+    public void setVolume(float volume) {
+        if (mMediaPlayer == null) {
+            return;
+        }
+        mMediaPlayer.setVolume(volume, volume);
     }
 
+    public void toggleVolume() {
+        mHasVolume = !mHasVolume;
+        setVolume(mHasVolume ? mCurrentVolume : 0.0f);
+    }
+
+    @Override
     public void release() {
         queueEvent(new Runnable() {
             @Override
@@ -108,7 +110,7 @@ public class VideoGLSurfaceView extends GLSurfaceView implements SurfaceTexture.
                     mMediaPlayer = null;
                 }
 
-                mVideoRender.release();
+                mBaseRender.release();
             }
         });
     }

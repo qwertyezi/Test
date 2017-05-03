@@ -64,6 +64,10 @@ public class TestVideoGLActivity extends AppCompatActivity {
         mBtnScaleType.setText(scaleTypes[mCurrentScaleType].toString());
     }
 
+    public void onVolumeClick(View view) {
+        mSurfaceView.toggleVolume();
+    }
+
     @Override
     protected void onResume() {
         super.onResume();

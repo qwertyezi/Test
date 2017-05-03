@@ -12,9 +12,9 @@
         android:layout_weight="1"/>
 
     <LinearLayout
-        android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:orientation="horizontal"
         android:padding="@dimen/activity_horizontal_margin">
 
         <Button
@@ -29,6 +29,13 @@
             android:layout_height="wrap_content"
             android:onClick="onScaleTypeChangeClick"
             android:text="显示模式"/>
+
+        <Button
+            android:id="@+id/btn_volume"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="onVolumeClick"
+            android:text="声音"/>
 
     </LinearLayout>
 
