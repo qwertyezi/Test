@@ -3,8 +3,10 @@
 precision highp float;
 
 uniform %2s uTexture;
-uniform vec2 singleStepOffset; 
-uniform highp vec4 params;
+uniform int uIternum;
+uniform float uAaCoef; //参数
+uniform float uMixCoef; //混合系数
+uniform vec2 singleStepOffset;
 
 varying highp vec2 vCoordinate;
 
@@ -67,28 +69,20 @@ void main(){
 	
 	float highpass = centralColor.g - sampleColor + 0.5;
 	
-	for(int i = 0; i < 5;i++)
+	for(int i = 0; i < uIternum;i++)
 	{
 		highpass = hardlight(highpass);
 	}
-	float lumance = dot(centralColor, W);
-	
-	float alpha = pow(lumance, params.r);
 
-	vec3 smoothColor = centralColor + (centralColor-vec3(highpass))*alpha*0.1;
-	
-	smoothColor.r = clamp(pow(smoothColor.r, params.g),0.0,1.0);
-	smoothColor.g = clamp(pow(smoothColor.g, params.g),0.0,1.0);
-	smoothColor.b = clamp(pow(smoothColor.b, params.g),0.0,1.0);
-	
-	vec3 lvse = vec3(1.0)-(vec3(1.0)-smoothColor)*(vec3(1.0)-centralColor);
-	vec3 bianliang = max(smoothColor, centralColor);
-	vec3 rouguang = 2.0*centralColor*smoothColor + centralColor*centralColor - 2.0*centralColor*centralColor*smoothColor;
-	
-	gl_FragColor = vec4(mix(centralColor, lvse, alpha), 1.0);
-	gl_FragColor.rgb = mix(gl_FragColor.rgb, bianliang, alpha);
-	gl_FragColor.rgb = mix(gl_FragColor.rgb, rouguang, params.b);
-	
-	vec3 satcolor = gl_FragColor.rgb * saturateMatrix;
-	gl_FragColor.rgb = mix(gl_FragColor.rgb, satcolor, params.a);
+    float aa = 1.0 + pow( centralColor.g, 0.3 )*uAaCoef;
+    vec3 smoothColor = centralColor*aa - vec3( highpass )*(aa - 1.0);
+
+    smoothColor = clamp( smoothColor, vec3( 0.0 ), vec3( 1.0 ) );
+    smoothColor = mix( centralColor, smoothColor, pow( centralColor.g, 0.33 ) );
+    smoothColor = mix( centralColor, smoothColor, pow( centralColor.g, uMixCoef ) );
+
+    gl_FragColor = vec4( pow( smoothColor, vec3( 0.96 ) ), 1.0 );
+
+    vec3 satcolor = gl_FragColor.rgb * saturateMatrix;
+    gl_FragColor.rgb = mix( gl_FragColor.rgb, satcolor, 0.23 );
 }

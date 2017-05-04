@@ -9,11 +9,17 @@ import java.nio.FloatBuffer;
 
 public class BeautyFilter3 extends BaseFilter {
 
+    private int glAaCoef;
+    private int glMixCoef;
+    private int glIternum;
+
+    private float aaCoef;
+    private float mixCoef;
+    private int iternum;
+
     private int mWidth, mHeight;
-    private float[] mLocation;
 
     private int mSingleStepOffsetLocation;
-    private int mParamsLocation;
 
     public BeautyFilter3() {
         this(FilterType.IMAGE);
@@ -27,36 +33,50 @@ public class BeautyFilter3 extends BaseFilter {
     public BeautyFilter3 setBeautyLevel(int level) {
         switch (level) {
             case 1:
-                mLocation = new float[]{1.0f, 1.0f, 0.15f, 0.15f};
+                a(1, 0.19f, 0.54f);
                 break;
             case 2:
-                mLocation = new float[]{0.8f, 0.9f, 0.2f, 0.2f};
+                a(2, 0.29f, 0.54f);
                 break;
             case 3:
-                mLocation = new float[]{0.6f, 0.8f, 0.25f, 0.25f};
+                a(3, 0.17f, 0.39f);
                 break;
             case 4:
-                mLocation = new float[]{0.4f, 0.7f, 0.38f, 0.3f};
+                a(3, 0.25f, 0.54f);
                 break;
             case 5:
-                mLocation = new float[]{0.33f, 0.63f, 0.4f, 0.35f};
+                a(4, 0.13f, 0.54f);
+                break;
+            case 6:
+                a(4, 0.19f, 0.69f);
                 break;
             default:
+                a(0, 0f, 0f);
                 break;
         }
         return this;
     }
 
+    private void a(int a, float b, float c) {
+        this.iternum = a;
+        this.aaCoef = b;
+        this.mixCoef = c;
+    }
+
     @Override
     public void onDraw() {
         GLES20.glUniform2fv(mSingleStepOffsetLocation, 1, FloatBuffer.wrap(new float[]{2.0f / mWidth, 2.0f / mHeight}));
-        GLES20.glUniform4fv(mParamsLocation, 1, FloatBuffer.wrap(mLocation));
+        GLES20.glUniform1f(glAaCoef, aaCoef);
+        GLES20.glUniform1f(glMixCoef, mixCoef);
+        GLES20.glUniform1i(glIternum, iternum);
     }
 
     @Override
     public void onCreated(int mProgram) {
         mSingleStepOffsetLocation = GLES20.glGetUniformLocation(mProgram, "singleStepOffset");
-        mParamsLocation = GLES20.glGetUniformLocation(mProgram, "params");
+        glAaCoef = GLES20.glGetUniformLocation(mProgram, "uAaCoef");
+        glMixCoef = GLES20.glGetUniformLocation(mProgram, "uMixCoef");
+        glIternum = GLES20.glGetUniformLocation(mProgram, "uIternum");
     }
 
     @Override

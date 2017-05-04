@@ -5,8 +5,8 @@ precision highp int;
 
 uniform %2s uTexture;
 uniform int uIternum;
-uniform float uAaCoef; //参数
-uniform float uMixCoef; //混合系数
+uniform float uAaCoef;
+uniform float uMixCoef;
 uniform float uWidth;
 uniform float uHeight;
 

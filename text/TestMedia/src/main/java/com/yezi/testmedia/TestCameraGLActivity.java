@@ -27,7 +27,7 @@ public class TestCameraGLActivity extends AppCompatActivity {
             new NoFilter(),
             new BeautyFilter(FilterType.VIDEO).setFlag(6),
             new BeautyFilter2(FilterType.VIDEO).setBeautyLevel(5),
-            new BeautyFilter3(FilterType.VIDEO).setBeautyLevel(5),
+            new BeautyFilter3(FilterType.VIDEO).setBeautyLevel(6),
             new BlurFilter(FilterType.VIDEO).setIntensity(16),
     };
     private final ScaleType[] scaleTypes = {
