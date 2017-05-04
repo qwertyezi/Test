@@ -8,14 +8,19 @@ import android.net.Uri;
 import android.opengl.GLSurfaceView;
 import android.text.TextUtils;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.Surface;
 
+import com.yezi.testmedia.BuildConfig;
 import com.yezi.testmedia.render.VideoRender;
 import com.yezi.testmedia.utils.enums.ScaleType;
 
 import java.io.IOException;
 
 public class VideoGLSurfaceView extends BaseGLSurfaceView implements SurfaceTexture.OnFrameAvailableListener {
+
+    private static final boolean DEBUG = BuildConfig.DEBUG;
+    private static final String TAG = "VideoGLSurfaceView";
 
     private Uri mUri;
     private MediaPlayer mMediaPlayer;
@@ -115,8 +120,23 @@ public class VideoGLSurfaceView extends BaseGLSurfaceView implements SurfaceText
         });
     }
 
+    private int mFrameCount = 0;
+    private long mLastTime = 0;
+
     @Override
     public void onFrameAvailable(SurfaceTexture surfaceTexture) {
         requestRender();
+
+        if (DEBUG) {
+            if (mLastTime == 0) {
+                mLastTime = System.currentTimeMillis();
+            }
+            ++mFrameCount;
+            if (System.currentTimeMillis() - mLastTime >= 1000) {
+                Log.i(TAG, "视频帧率：" + mFrameCount);
+                mFrameCount = 0;
+                mLastTime = 0;
+            }
+        }
     }
 }

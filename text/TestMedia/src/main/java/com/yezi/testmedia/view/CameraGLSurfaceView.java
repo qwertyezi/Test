@@ -5,13 +5,18 @@ import android.graphics.SurfaceTexture;
 import android.opengl.EGL14;
 import android.opengl.GLSurfaceView;
 import android.util.AttributeSet;
+import android.util.Log;
 
+import com.yezi.testmedia.BuildConfig;
 import com.yezi.testmedia.render.VideoRecordRender;
 import com.yezi.testmedia.render.VideoRender;
 import com.yezi.testmedia.utils.camera.CameraInstance;
 import com.yezi.testmedia.utils.enums.ScaleType;
 
 public class CameraGLSurfaceView extends BaseGLSurfaceView implements SurfaceTexture.OnFrameAvailableListener {
+
+    private static final boolean DEBUG = BuildConfig.DEBUG;
+    private static final String TAG = "CameraGLSurfaceView";
 
     public CameraGLSurfaceView(Context context) {
         super(context);
@@ -71,8 +76,36 @@ public class CameraGLSurfaceView extends BaseGLSurfaceView implements SurfaceTex
         });
     }
 
+    private int mFrameCount = 0;
+    private long mLastTime = 0;
+
+    public interface onFrameCountListener {
+        void onFrameCount(int count);
+    }
+
+    private onFrameCountListener mFrameCountListener;
+
+    public void setFrameCountListener(onFrameCountListener listener) {
+        mFrameCountListener = listener;
+    }
+
     @Override
     public void onFrameAvailable(SurfaceTexture surfaceTexture) {
         requestRender();
+
+        if (DEBUG) {
+            if (mLastTime == 0) {
+                mLastTime = System.currentTimeMillis();
+            }
+            ++mFrameCount;
+            if (System.currentTimeMillis() - mLastTime >= 1000) {
+                Log.i(TAG, "相机帧率：" + mFrameCount);
+                if (mFrameCountListener != null) {
+                    mFrameCountListener.onFrameCount(mFrameCount);
+                }
+                mFrameCount = 0;
+                mLastTime = 0;
+            }
+        }
     }
 }

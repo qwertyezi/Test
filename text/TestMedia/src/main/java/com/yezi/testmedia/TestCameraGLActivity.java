@@ -6,13 +6,14 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.TextView;
 
 import com.yezi.testmedia.filter.BaseFilter;
 import com.yezi.testmedia.filter.BeautyFilter;
+import com.yezi.testmedia.filter.BeautyFilter2;
+import com.yezi.testmedia.filter.BeautyFilter3;
 import com.yezi.testmedia.filter.BlurFilter;
-import com.yezi.testmedia.filter.BrightnessFilter;
-import com.yezi.testmedia.filter.FilterGroup;
-import com.yezi.testmedia.filter.GrayFilter;
+import com.yezi.testmedia.filter.NoFilter;
 import com.yezi.testmedia.utils.camera.CameraInstance;
 import com.yezi.testmedia.utils.enums.FilterType;
 import com.yezi.testmedia.utils.enums.ScaleType;
@@ -23,12 +24,11 @@ public class TestCameraGLActivity extends AppCompatActivity {
     private CameraGLSurfaceView mSurfaceView;
 
     private final BaseFilter[] filters = {
-            new GrayFilter(FilterType.VIDEO),
-            new BrightnessFilter(FilterType.VIDEO).setBrightness(-0.3f),
+            new NoFilter(),
             new BeautyFilter(FilterType.VIDEO).setFlag(6),
+            new BeautyFilter2(FilterType.VIDEO).setBeautyLevel(5),
+            new BeautyFilter3(FilterType.VIDEO).setBeautyLevel(5),
             new BlurFilter(FilterType.VIDEO).setIntensity(16),
-            new FilterGroup(new BrightnessFilter().setBrightness(-0.3f))
-                    .setFilterType(FilterType.VIDEO)
     };
     private final ScaleType[] scaleTypes = {
             ScaleType.CENTER_INSIDE, ScaleType.CENTER_CROP, ScaleType.FIT_XY
@@ -37,6 +37,7 @@ public class TestCameraGLActivity extends AppCompatActivity {
     private int mCurrentFilter;
 
     private Button mBtnScaleType;
+    private TextView mTextFrameCount;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -46,10 +47,18 @@ public class TestCameraGLActivity extends AppCompatActivity {
         setContentView(R.layout.activity_test_cameragl);
 
         mSurfaceView = (CameraGLSurfaceView) findViewById(R.id.surface_view);
+        mTextFrameCount = (TextView) findViewById(R.id.text);
         mBtnScaleType = (Button) findViewById(R.id.btn_scale_type);
         mBtnScaleType.setText(mSurfaceView.getScaleType().toString());
 
         CameraInstance.getInstance().setRotation(getWindowManager().getDefaultDisplay().getRotation());
+
+        mSurfaceView.setFrameCountListener(new CameraGLSurfaceView.onFrameCountListener() {
+            @Override
+            public void onFrameCount(int count) {
+                mTextFrameCount.setText("相机帧率：" + count);
+            }
+        });
     }
 
     public void onSwitchClick(View view) {

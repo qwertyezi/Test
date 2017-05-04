@@ -10,17 +10,20 @@ public class BeautyFilter extends BaseFilter {
     private int glAaCoef;
     private int glMixCoef;
     private int glIternum;
+    private int glWidth;
+    private int glHeight;
 
     private float aaCoef;
     private float mixCoef;
     private int iternum;
+    private float mWidth, mHeight;
 
     public BeautyFilter() {
         this(FilterType.IMAGE);
     }
 
     public BeautyFilter(FilterType filterType) {
-        super(R.raw.beauty_vertex, R.raw.beauty_fragment);
+        super(0, R.raw.beauty_fragment);
         setFilterType(filterType);
     }
 
@@ -62,6 +65,8 @@ public class BeautyFilter extends BaseFilter {
         GLES20.glUniform1f(glAaCoef, aaCoef);
         GLES20.glUniform1f(glMixCoef, mixCoef);
         GLES20.glUniform1i(glIternum, iternum);
+        GLES20.glUniform1f(glWidth, mWidth);
+        GLES20.glUniform1f(glHeight, mHeight);
     }
 
     @Override
@@ -69,9 +74,13 @@ public class BeautyFilter extends BaseFilter {
         glAaCoef = GLES20.glGetUniformLocation(mProgram, "uAaCoef");
         glMixCoef = GLES20.glGetUniformLocation(mProgram, "uMixCoef");
         glIternum = GLES20.glGetUniformLocation(mProgram, "uIternum");
+        glWidth = GLES20.glGetUniformLocation(mProgram, "uWidth");
+        glHeight = GLES20.glGetUniformLocation(mProgram, "uHeight");
     }
 
     @Override
     public void onChanged(int width, int height) {
+        mWidth = width;
+        mHeight = height;
     }
 }
