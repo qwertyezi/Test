@@ -19,4 +19,8 @@ public class BezierActivity extends AppCompatActivity {
         this.startActivity(new Intent(this, QQBezierListActivity.class));
     }
 
+    public void TestClick(View view) {
+        this.startActivity(new Intent(this, SearchViewActivity.class));
+    }
+
 }

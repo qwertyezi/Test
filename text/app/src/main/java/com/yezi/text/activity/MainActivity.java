@@ -2,6 +2,7 @@ package com.yezi.text.activity;
 
 import android.app.DatePickerDialog;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -44,20 +45,60 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         btLikeAnimation.setOnClickListener(this);
         btAnnotationProcessing.setOnClickListener(this);
         btCalendar.setOnClickListener(this);
+
+        ((TextView) findViewById(R.id.text_brand)).setText(Build.BRAND);
+
+        Log.i("LUCK", "A-->onCreate");
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        Log.i("LUCK", "A-->onStart");
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.i("LUCK", "A-->onResume");
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        Log.i("LUCK", "A-->onNewIntent");
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Log.i("LUCK", "A-->onPause");
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        Log.i("LUCK", "A-->onStop");
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Log.i("LUCK", "A-->onDestroy");
     }
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
 
-        Log.i("LUCK", "onSaveInstanceState");
+        Log.i("LUCK", "A-->onSaveInstanceState");
     }
 
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
 
-        Log.i("LUCK", "onRestoreInstanceState");
+        Log.i("LUCK", "A-->onRestoreInstanceState");
     }
 
     @Override
@@ -136,5 +177,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     public void Dagger2Click(View view) {
         this.startActivity(new Intent(this, Dagger2Activity.class));
+    }
+
+    public void TestFragmentAdapterClick(View view) {
+        this.startActivity(new Intent(this, TestFragmentAdapterActivity.class));
     }
 }

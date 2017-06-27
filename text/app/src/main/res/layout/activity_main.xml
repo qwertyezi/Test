@@ -145,6 +145,18 @@
             android:onClick="Dagger2Click"
             android:text="Dagger2"/>
 
+        <TextView
+            android:id="@+id/text_brand"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <Button
+            android:id="@+id/btn_test_fragment_adapter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="TestFragmentAdapterClick"
+            android:text="test_fragment_adapter"/>
+
     </LinearLayout>
 </ScrollView>
 

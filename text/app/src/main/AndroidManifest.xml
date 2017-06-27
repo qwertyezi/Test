@@ -3,12 +3,12 @@
     package="com.yezi.text"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
 
-    <uses-permission android:name="android.permission.READ_CALENDAR" />
-    <uses-permission android:name="android.permission.WRITE_CALENDAR" />
+    <uses-permission android:name="android.permission.READ_CALENDAR"/>
+    <uses-permission android:name="android.permission.WRITE_CALENDAR"/>
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
 
     <application
@@ -18,7 +18,9 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activity.MainActivity">
+        <activity
+            android:name=".activity.MainActivity"
+            android:launchMode="singleTask">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
@@ -27,7 +29,9 @@
         </activity>
 
         <activity android:name=".widget.MyRecycleview"/>
-        <activity android:name=".activity.SearchViewActivity"/>
+        <activity
+            android:name=".activity.SearchViewActivity"
+            android:launchMode="singleTask"/>
         <activity android:name=".activity.AdapterSampleActivity"/>
         <activity
             android:name=".activity.AnimatorSampleActivity"
@@ -50,6 +54,7 @@
         <activity android:name=".activity.SpringRecyclerViewActivity"/>
         <activity android:name=".activity.Dagger2Activity"/>
         <activity android:name=".activity.Dagger2OtherActivity"/>
+        <activity android:name=".activity.TestFragmentAdapterActivity"/>
     </application>
 
 </manifest>
